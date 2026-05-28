@@ -2,6 +2,8 @@ export type Direction = 'income' | 'expense';
 export type Kind = 'fixed' | 'variable';
 export type InstanceStatus = 'confirmed' | 'pending';
 export type Locale = 'tr' | 'en';
+export type LocaleMode = Locale | 'system';
+export type ThemeMode = 'light' | 'dark' | 'system';
 
 export type Entry = {
   id: string;

@@ -3,6 +3,7 @@ export const tr = {
 
   'tabs.home': 'Bu ay',
   'tabs.loans': 'Krediler',
+  'tabs.settings': 'Ayarlar',
 
   'home.confirmedRemaining': 'Kesin kalan',
   'home.estimatedRemaining': 'Tahmini kalan',
@@ -146,6 +147,16 @@ export const tr = {
   'common.save': 'Kaydet',
   'common.delete': 'Sil',
   'common.done': 'Tamam',
+
+  'settings.title': 'Ayarlar',
+  'settings.locale.title': 'Dil',
+  'settings.locale.tr': 'Türkçe',
+  'settings.locale.en': 'İngilizce',
+  'settings.locale.system': 'Sistem',
+  'settings.theme.title': 'Tema',
+  'settings.theme.light': 'Açık',
+  'settings.theme.dark': 'Koyu',
+  'settings.theme.system': 'Sistem',
 } as const;
 
 export type TranslationKey = keyof typeof tr;

@@ -1,4 +1,4 @@
-export const CURRENT_USER_VERSION = 4;
+export const CURRENT_USER_VERSION = 5;
 
 export const MIGRATIONS: Record<number, string[]> = {
   1: [
@@ -68,5 +68,12 @@ export const MIGRATIONS: Record<number, string[]> = {
     `ALTER TABLE loans ADD COLUMN num_installments INTEGER;`,
     `ALTER TABLE loans ADD COLUMN start_year INTEGER;`,
     `ALTER TABLE loans ADD COLUMN start_month INTEGER;`,
+  ],
+  5: [
+    `CREATE TABLE IF NOT EXISTS prefs (
+      key TEXT PRIMARY KEY NOT NULL,
+      value TEXT NOT NULL,
+      updated_at INTEGER NOT NULL
+    );`,
   ],
 };

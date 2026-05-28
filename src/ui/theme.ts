@@ -1,6 +1,7 @@
 import { useColorScheme } from 'react-native';
+import { useThemeModeStore } from '@/stores/themeMode';
 
-export type ThemeMode = 'light' | 'dark';
+export type ResolvedTheme = 'light' | 'dark';
 
 export type ThemeColors = {
   bg: string;
@@ -18,7 +19,7 @@ export type ThemeColors = {
 };
 
 export type Theme = {
-  mode: ThemeMode;
+  mode: ResolvedTheme;
   colors: ThemeColors;
   spacing: (n: number) => number;
   radius: { sm: number; md: number; lg: number; pill: number };
@@ -74,7 +75,15 @@ const base = {
 
 export function useTheme(): Theme {
   const scheme = useColorScheme();
-  const mode: ThemeMode = scheme === 'dark' ? 'dark' : 'light';
+  const override = useThemeModeStore((s) => s.mode);
+  const mode: ResolvedTheme =
+    override === 'light'
+      ? 'light'
+      : override === 'dark'
+        ? 'dark'
+        : scheme === 'dark'
+          ? 'dark'
+          : 'light';
   return {
     mode,
     colors: mode === 'dark' ? darkColors : lightColors,

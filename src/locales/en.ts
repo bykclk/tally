@@ -5,6 +5,7 @@ export const en: Record<TranslationKey, string> = {
 
   'tabs.home': 'This month',
   'tabs.loans': 'Loans',
+  'tabs.settings': 'Settings',
 
   'home.confirmedRemaining': 'Confirmed remaining',
   'home.estimatedRemaining': 'Estimated remaining',
@@ -152,4 +153,14 @@ export const en: Record<TranslationKey, string> = {
   'common.save': 'Save',
   'common.delete': 'Delete',
   'common.done': 'Done',
+
+  'settings.title': 'Settings',
+  'settings.locale.title': 'Language',
+  'settings.locale.tr': 'Turkish',
+  'settings.locale.en': 'English',
+  'settings.locale.system': 'System',
+  'settings.theme.title': 'Theme',
+  'settings.theme.light': 'Light',
+  'settings.theme.dark': 'Dark',
+  'settings.theme.system': 'System',
 };
