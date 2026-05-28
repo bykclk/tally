@@ -1,4 +1,5 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { haptics } from '@/lib/haptics';
 import { useTheme } from './theme';
 
 type Option<T extends string> = {
@@ -50,7 +51,12 @@ export function SegmentedControl<T extends string>({
           return (
             <Pressable
               key={opt.value}
-              onPress={() => onChange(opt.value)}
+              onPress={() => {
+                if (opt.value !== value) {
+                  haptics.select();
+                  onChange(opt.value);
+                }
+              }}
               style={({ pressed }) => [
                 styles.segment,
                 {

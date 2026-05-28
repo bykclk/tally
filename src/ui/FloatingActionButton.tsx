@@ -1,5 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable, StyleSheet, View } from 'react-native';
+import { haptics } from '@/lib/haptics';
 import { useTheme } from './theme';
 
 type Props = {
@@ -22,7 +23,10 @@ export function FloatingActionButton({
       style={styles.container}
     >
       <Pressable
-        onPress={onPress}
+        onPress={() => {
+          haptics.light();
+          onPress();
+        }}
         accessibilityRole="button"
         accessibilityLabel={accessibilityLabel}
         style={({ pressed }) => [

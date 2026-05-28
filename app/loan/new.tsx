@@ -17,6 +17,7 @@ import { SegmentedControl } from '@/ui/SegmentedControl';
 import { TextField } from '@/ui/TextField';
 import { useTheme, type Theme } from '@/ui/theme';
 import { useT, type TranslationKey } from '@/lib/i18n';
+import { haptics } from '@/lib/haptics';
 import { moneyValueToInput } from '@/lib/moneyInput';
 import { currentMonth } from '@/lib/date';
 import {
@@ -258,6 +259,7 @@ export default function LoanFormScreen() {
           }
         }
       }
+      haptics.success();
       router.back();
     } catch (e) {
       setSaving(false);
@@ -281,6 +283,7 @@ export default function LoanFormScreen() {
           onPress: async () => {
             try {
               await deleteLoan(id);
+              haptics.warning();
               router.dismissAll();
               router.back();
             } catch (e) {

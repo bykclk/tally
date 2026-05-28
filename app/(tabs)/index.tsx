@@ -152,10 +152,30 @@ export default function HomeScreen() {
                 color: theme.colors.textMuted,
                 fontSize: theme.font.size.sm,
                 textAlign: 'center',
+                marginBottom: theme.spacing(3),
               }}
             >
               {t('home.empty.subtitle')}
             </Text>
+            <Pressable
+              onPress={() => router.push('/entry/new')}
+              hitSlop={8}
+              style={({ pressed }) => ({
+                paddingVertical: theme.spacing(2),
+                paddingHorizontal: theme.spacing(3),
+                opacity: pressed ? 0.6 : 1,
+              })}
+            >
+              <Text
+                style={{
+                  color: theme.colors.accent,
+                  fontSize: theme.font.size.md,
+                  fontWeight: theme.font.weight.semibold,
+                }}
+              >
+                {t('home.empty.cta')}
+              </Text>
+            </Pressable>
           </Card>
         ) : (
           <>

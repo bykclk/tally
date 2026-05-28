@@ -14,6 +14,7 @@ import { MoneyField } from '@/ui/MoneyField';
 import { TextField } from '@/ui/TextField';
 import { useTheme, type Theme } from '@/ui/theme';
 import { useT, type TranslationKey } from '@/lib/i18n';
+import { haptics } from '@/lib/haptics';
 import { moneyValueToInput } from '@/lib/moneyInput';
 import { isoForDayInMonth, daysInMonth } from '@/lib/date';
 import { useMonthStore } from '@/stores/month';
@@ -130,6 +131,7 @@ export default function ConfirmInstanceScreen() {
         status: 'confirmed',
         isEstimate: false,
       });
+      haptics.success();
       router.back();
     } catch (e) {
       setSaving(false);
@@ -143,6 +145,7 @@ export default function ConfirmInstanceScreen() {
     setSaving(true);
     try {
       await deleteInstance(entry.id, year, month);
+      haptics.warning();
       router.back();
     } catch (e) {
       setSaving(false);

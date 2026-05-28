@@ -61,10 +61,30 @@ export default function LoansScreen() {
                 color: theme.colors.textMuted,
                 fontSize: theme.font.size.sm,
                 textAlign: 'center',
+                marginBottom: theme.spacing(3),
               }}
             >
               {t('loans.empty.subtitle')}
             </Text>
+            <Pressable
+              onPress={() => router.push('/loan/new')}
+              hitSlop={8}
+              style={({ pressed }) => ({
+                paddingVertical: theme.spacing(2),
+                paddingHorizontal: theme.spacing(3),
+                opacity: pressed ? 0.6 : 1,
+              })}
+            >
+              <Text
+                style={{
+                  color: theme.colors.accent,
+                  fontSize: theme.font.size.md,
+                  fontWeight: theme.font.weight.semibold,
+                }}
+              >
+                {t('loans.empty.cta')}
+              </Text>
+            </Pressable>
           </Card>
         ) : (
           <Card style={{ padding: 0, overflow: 'hidden' }}>

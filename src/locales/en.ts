@@ -10,6 +10,7 @@ export const en: Record<TranslationKey, string> = {
   'home.estimatedRemaining': 'Estimated remaining',
   'home.empty.title': 'No entries yet',
   'home.empty.subtitle': 'Start by adding your income and expenses.',
+  'home.empty.cta': '+ Add your first entry',
   'home.addEntry': '+ Add entry',
   'home.section.confirmed': 'Confirmed',
   'home.section.pending': 'Pending (estimated)',
@@ -19,6 +20,7 @@ export const en: Record<TranslationKey, string> = {
 
   'loans.empty.title': 'No loans yet',
   'loans.empty.subtitle': 'Add a loan to simulate an early payoff.',
+  'loans.empty.cta': '+ Add your first loan',
   'loans.addLoan': '+ Add loan',
 
   'entry.new.title': 'New entry',
@@ -85,6 +87,7 @@ export const en: Record<TranslationKey, string> = {
   'loan.detail.installment': 'Installment',
   'loan.payments.outOfSchedule': 'No installment for this month',
   'loan.detail.progress': 'Installments paid',
+  'loan.detail.lastPayment': 'Last payment',
   'loan.field.paidInstallments': 'Installments already paid (optional)',
   'loan.field.paidInstallments.hint':
     'How many installments have been paid so far? Mark the rest month by month later.',

@@ -8,6 +8,7 @@ export const tr = {
   'home.estimatedRemaining': 'Tahmini kalan',
   'home.empty.title': 'Henüz kayıt yok',
   'home.empty.subtitle': 'Gelir ve giderlerini eklemeye başla.',
+  'home.empty.cta': '+ İlk kaydını ekle',
   'home.addEntry': '+ Kayıt ekle',
   'home.section.confirmed': 'Kesinleşti',
   'home.section.pending': 'Bekleniyor (tahmini)',
@@ -17,6 +18,7 @@ export const tr = {
 
   'loans.empty.title': 'Henüz kredi yok',
   'loans.empty.subtitle': 'Bir kredi ekleyerek erken kapama simülasyonu yap.',
+  'loans.empty.cta': '+ İlk krediyi ekle',
   'loans.addLoan': '+ Kredi ekle',
 
   'entry.new.title': 'Yeni kayıt',
@@ -82,6 +84,7 @@ export const tr = {
   'loan.detail.installment': 'Taksit',
   'loan.payments.outOfSchedule': 'Bu ay için taksit yok',
   'loan.detail.progress': 'Ödenen taksit',
+  'loan.detail.lastPayment': 'Son ödeme',
   'loan.field.paidInstallments': 'Ödenmiş taksit (opsiyonel)',
   'loan.field.paidInstallments.hint':
     'Şu ana kadar kaç taksit ödendi? Kalanları sonradan ay ay işaretlersin.',

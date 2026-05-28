@@ -20,6 +20,7 @@ import { monthLabel, isoForDayInMonth, formatDate } from '@/lib/date';
 import { simulatePayoff, type SimResult } from '@/lib/loanSim';
 import { isMonthInLoanSchedule } from '@/lib/loanSchedule';
 import { SegmentedControl } from '@/ui/SegmentedControl';
+import { haptics } from '@/lib/haptics';
 import { useMonthStore } from '@/stores/month';
 import { getLoan } from '@/db/queries/loans';
 import {
@@ -190,7 +191,10 @@ export default function LoanDetailScreen() {
                 year,
                 month,
               );
-              if (!r.ok) {
+              if (r.ok) {
+                haptics.success();
+              } else {
+                haptics.warning();
                 Alert.alert(
                   t('loan.payments.errorTitle'),
                   reasonLabel(r.reason, t),
@@ -325,6 +329,13 @@ export default function LoanDetailScreen() {
                 theme={theme}
               />
             </>
+          )}
+          {latestPayment && (
+            <DetailRow
+              label={t('loan.detail.lastPayment')}
+              value={monthLabel(latestPayment.year, latestPayment.month, locale)}
+              theme={theme}
+            />
           )}
         </Card>
 
@@ -751,6 +762,7 @@ function InstallmentScheduleSection({
               setBusy(true);
               try {
                 await deleteLoanPayment(p.id);
+                haptics.warning();
                 await onRefresh();
               } finally {
                 setBusy(false);
@@ -779,7 +791,10 @@ function InstallmentScheduleSection({
                   item.year,
                   item.month,
                 );
-                if (!r.ok) {
+                if (r.ok) {
+                  haptics.success();
+                } else {
+                  haptics.warning();
                   Alert.alert(
                     t('loan.payments.errorTitle'),
                     reasonLabel(r.reason, t),
