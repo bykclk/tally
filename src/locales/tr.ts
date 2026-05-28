@@ -142,6 +142,7 @@ export const tr = {
   'common.cancel': 'Vazgeç',
   'common.save': 'Kaydet',
   'common.delete': 'Sil',
+  'common.done': 'Tamam',
 } as const;
 
 export type TranslationKey = keyof typeof tr;

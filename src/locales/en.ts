@@ -148,4 +148,5 @@ export const en: Record<TranslationKey, string> = {
   'common.cancel': 'Cancel',
   'common.save': 'Save',
   'common.delete': 'Delete',
+  'common.done': 'Done',
 };

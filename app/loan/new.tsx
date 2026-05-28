@@ -12,6 +12,7 @@ import {
   View,
 } from 'react-native';
 import { MoneyField } from '@/ui/MoneyField';
+import { MonthYearField } from '@/ui/MonthYearField';
 import { SegmentedControl } from '@/ui/SegmentedControl';
 import { TextField } from '@/ui/TextField';
 import { useTheme, type Theme } from '@/ui/theme';
@@ -446,42 +447,19 @@ export default function LoanFormScreen() {
                   : null
               }
             />
-            <View style={{ flexDirection: 'row', gap: theme.spacing(3) }}>
-              <View style={{ flex: 1 }}>
-                <TextField
-                  label={t('loan.field.startMonth')}
-                  value={form.startMonth}
-                  onChangeText={(v) =>
-                    update('startMonth', v.replace(/\D/g, '').slice(0, 2))
-                  }
-                  placeholder="1-12"
-                  keyboardType="number-pad"
-                  maxLength={2}
-                />
-              </View>
-              <View style={{ flex: 1 }}>
-                <TextField
-                  label={t('loan.field.startYear')}
-                  value={form.startYear}
-                  onChangeText={(v) =>
-                    update('startYear', v.replace(/\D/g, '').slice(0, 4))
-                  }
-                  placeholder="2026"
-                  keyboardType="number-pad"
-                  maxLength={4}
-                />
-              </View>
-            </View>
-            {submitted && errors.start && (
-              <Text
-                style={{
-                  color: theme.colors.danger,
-                  fontSize: theme.font.size.xs,
-                }}
-              >
-                {t(errors.start)}
-              </Text>
-            )}
+            <MonthYearField
+              label={t('loan.field.startMonth')}
+              year={Number(form.startYear) || new Date().getFullYear()}
+              month={Number(form.startMonth) || new Date().getMonth() + 1}
+              onChange={(y, m) =>
+                setForm((s) => ({
+                  ...s,
+                  startYear: String(y),
+                  startMonth: String(m),
+                }))
+              }
+              error={submitted && errors.start ? t(errors.start) : null}
+            />
             {!isEdit && (
               <View style={{ gap: theme.spacing(1) }}>
                 <TextField
