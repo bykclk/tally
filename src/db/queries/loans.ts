@@ -57,6 +57,29 @@ export async function listLoans(activeOnly = true): Promise<Loan[]> {
   return (r.rows as unknown as LoanRow[]).map(rowToLoan);
 }
 
+export type LoanWithProgress = Loan & { paidCount: number };
+
+export async function listLoansWithProgress(
+  activeOnly = true,
+): Promise<LoanWithProgress[]> {
+  const db = getDb();
+  const where = activeOnly ? 'WHERE l.active = 1' : '';
+  const r = await db.execute(
+    `SELECT l.*, COALESCE(p.cnt, 0) AS paid_count
+     FROM loans l
+     LEFT JOIN (
+       SELECT loan_id, COUNT(*) AS cnt
+       FROM loan_payments
+       GROUP BY loan_id
+     ) p ON p.loan_id = l.id
+     ${where}
+     ORDER BY l.name ASC;`,
+  );
+  return (r.rows as unknown as (LoanRow & { paid_count: number })[]).map(
+    (row) => ({ ...rowToLoan(row), paidCount: row.paid_count }),
+  );
+}
+
 export async function getLoan(id: string): Promise<Loan | null> {
   const db = getDb();
   const r = await db.execute('SELECT * FROM loans WHERE id = ? LIMIT 1;', [id]);

@@ -8,20 +8,22 @@ import { MoneyText } from '@/ui/MoneyText';
 import { useTheme, type Theme } from '@/ui/theme';
 import { useT } from '@/lib/i18n';
 import { formatTRY } from '@/lib/money';
-import { listLoans } from '@/db/queries/loans';
-import type { Loan } from '@/types';
+import {
+  listLoansWithProgress,
+  type LoanWithProgress,
+} from '@/db/queries/loans';
 
 export default function LoansScreen() {
   const theme = useTheme();
   const t = useT();
   const router = useRouter();
-  const [loans, setLoans] = useState<Loan[]>([]);
+  const [loans, setLoans] = useState<LoanWithProgress[]>([]);
 
   useFocusEffect(
     useCallback(() => {
       let cancelled = false;
       (async () => {
-        const list = await listLoans(true);
+        const list = await listLoansWithProgress(true);
         if (!cancelled) setLoans(list);
       })();
       return () => {
@@ -106,10 +108,15 @@ function LoanRow({
   theme,
   onPress,
 }: {
-  loan: Loan;
+  loan: LoanWithProgress;
   theme: Theme;
   onPress: () => void;
 }) {
+  const subtitle =
+    loan.loanType === 'installment' && loan.numInstallments != null
+      ? `${loan.paidCount}/${loan.numInstallments} · ${formatTRY(loan.monthlyPayment)}`
+      : `%${(loan.monthlyRate * 100).toFixed(2)} · ${formatTRY(loan.monthlyPayment)}`;
+
   return (
     <Pressable
       onPress={onPress}
@@ -140,7 +147,7 @@ function LoanRow({
             marginTop: 2,
           }}
         >
-          {(loan.monthlyRate * 100).toFixed(2)}% · {formatTRY(loan.monthlyPayment)}
+          {subtitle}
         </Text>
       </View>
       <MoneyText amount={loan.balance} size="md" bold />
