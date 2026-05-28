@@ -2,8 +2,8 @@ import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Button } from '@/ui/Button';
 import { Card } from '@/ui/Card';
+import { FloatingActionButton } from '@/ui/FloatingActionButton';
 import { MoneyText } from '@/ui/MoneyText';
 import { useTheme, type Theme } from '@/ui/theme';
 import { useT } from '@/lib/i18n';
@@ -35,7 +35,13 @@ export default function LoansScreen() {
       edges={['bottom']}
       style={[styles.root, { backgroundColor: theme.colors.bg }]}
     >
-      <ScrollView contentContainerStyle={{ padding: theme.spacing(4), gap: theme.spacing(3) }}>
+      <ScrollView
+        contentContainerStyle={{
+          padding: theme.spacing(4),
+          paddingBottom: theme.spacing(20),
+          gap: theme.spacing(3),
+        }}
+      >
         {loans.length === 0 ? (
           <Card style={{ alignItems: 'center', paddingVertical: theme.spacing(10) }}>
             <Text
@@ -87,15 +93,10 @@ export default function LoansScreen() {
         )}
       </ScrollView>
 
-      <View
-        style={{
-          padding: theme.spacing(4),
-          borderTopWidth: StyleSheet.hairlineWidth,
-          borderTopColor: theme.colors.border,
-        }}
-      >
-        <Button label={t('loans.addLoan')} onPress={() => router.push('/loan/new')} />
-      </View>
+      <FloatingActionButton
+        onPress={() => router.push('/loan/new')}
+        accessibilityLabel={t('loans.addLoan')}
+      />
     </SafeAreaView>
   );
 }

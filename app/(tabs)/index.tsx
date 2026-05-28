@@ -2,8 +2,8 @@ import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Button } from '@/ui/Button';
 import { Card } from '@/ui/Card';
+import { FloatingActionButton } from '@/ui/FloatingActionButton';
 import { ListItem } from '@/ui/ListItem';
 import { MoneyText } from '@/ui/MoneyText';
 import { useTheme, type Theme } from '@/ui/theme';
@@ -102,7 +102,11 @@ export default function HomeScreen() {
       </View>
 
       <ScrollView
-        contentContainerStyle={{ padding: theme.spacing(4), gap: theme.spacing(4) }}
+        contentContainerStyle={{
+          padding: theme.spacing(4),
+          paddingBottom: theme.spacing(20),
+          gap: theme.spacing(4),
+        }}
       >
         <View style={{ flexDirection: 'row', gap: theme.spacing(3) }}>
           <Card style={{ flex: 1 }}>
@@ -175,15 +179,10 @@ export default function HomeScreen() {
         )}
       </ScrollView>
 
-      <View
-        style={{
-          padding: theme.spacing(4),
-          borderTopWidth: StyleSheet.hairlineWidth,
-          borderTopColor: theme.colors.border,
-        }}
-      >
-        <Button label={t('home.addEntry')} onPress={() => router.push('/entry/new')} />
-      </View>
+      <FloatingActionButton
+        onPress={() => router.push('/entry/new')}
+        accessibilityLabel={t('home.addEntry')}
+      />
     </SafeAreaView>
   );
 }
