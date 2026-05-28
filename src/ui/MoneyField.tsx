@@ -1,4 +1,3 @@
-import { Platform } from 'react-native';
 import { TextField } from './TextField';
 import { useCurrency, currencySymbol } from '@/lib/money';
 import { formatMoneyInput } from '@/lib/moneyInput';
@@ -30,7 +29,7 @@ export function MoneyField({
       onChangeText={(raw) => onChangeText(formatMoneyInput(raw))}
       placeholder={placeholder}
       prefix={prefix ?? currencySymbol(currency)}
-      keyboardType={Platform.OS === 'ios' ? 'decimal-pad' : 'numeric'}
+      keyboardType="decimal-pad"
       autoFocus={autoFocus}
       error={error}
     />

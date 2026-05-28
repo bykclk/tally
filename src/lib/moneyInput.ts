@@ -1,47 +1,61 @@
 /**
- * Formats a TextInput value for Turkish money entry:
+ * Formats a TextInput value for Turkish-style money entry:
  *  - thousand separator: "." (dot)
  *  - decimal separator: "," (comma)
  *  - max 2 decimal digits
  *
- * Caller stores the formatted string in state and uses it both as `value` and
- * (after running through `parseAmount`) as the numeric source of truth.
- *
- * Note: all "." in the raw input are treated as thousand separators (or
- * leftovers from a previous format pass) and stripped. The "," is the only
- * decimal separator. On Android numeric keypads this means users may not be
- * able to type a decimal — accepted trade-off; TRY amounts are typically whole.
+ * Accepts both "," and "." as decimal candidates so users on Android — where
+ * the numeric keypad may only offer "." regardless of system locale — can
+ * still enter decimals. Detection rules:
+ *  - If the raw input contains a ",", it's treated as the decimal separator
+ *    (Turkish convention). Everything before it is integer (with stray
+ *    separators stripped as thousand seps).
+ *  - Else if there is exactly one "." trailing 1–2 digits, that "." is the
+ *    decimal. (A single "." followed by 3+ digits is read as a thousand
+ *    separator instead, which is the common Turkish reading.)
+ *  - Else every "." is a thousand separator and gets stripped.
  */
 export function formatMoneyInput(raw: string): string {
   if (!raw) return '';
 
-  // Keep only digits and commas; drop spaces, currency symbols, dots, etc.
-  let s = raw.replace(/[^\d,]/g, '');
+  // Keep only digits and separators
+  const s = raw.replace(/[^\d.,]/g, '');
+  if (!s) return '';
 
-  // Keep only the first comma; treat any later commas as stray.
-  const firstComma = s.indexOf(',');
-  if (firstComma !== -1) {
-    s = s.slice(0, firstComma + 1) + s.slice(firstComma + 1).replace(/,/g, '');
+  let intRaw: string;
+  let decPart: string | null = null;
+
+  const commaIdx = s.indexOf(',');
+  if (commaIdx !== -1) {
+    // Explicit Turkish decimal: comma is the decimal point.
+    intRaw = s.slice(0, commaIdx).replace(/[.,]/g, '');
+    decPart = s.slice(commaIdx + 1).replace(/[.,]/g, '').slice(0, 2);
+  } else {
+    const lastDot = s.lastIndexOf('.');
+    if (lastDot !== -1) {
+      const afterDot = s.slice(lastDot + 1);
+      if (/^\d{1,2}$/.test(afterDot)) {
+        // Single "." with 1–2 trailing digits → decimal.
+        intRaw = s.slice(0, lastDot).replace(/\./g, '');
+        decPart = afterDot;
+      } else {
+        // Treat every "." as thousand separator.
+        intRaw = s.replace(/\./g, '');
+      }
+    } else {
+      intRaw = s;
+    }
   }
 
-  if (s === '') return '';
-  if (s === ',') return '0,';
-
-  const hasComma = s.includes(',');
-  const [intRaw, decRaw = ''] = s.split(',');
-
-  // Strip leading zeros from integer, but preserve a single "0".
+  // Strip leading zeros, but preserve a single "0" when meaningful.
   let intDigits = intRaw.replace(/^0+/, '');
-  if (intDigits === '' && intRaw === '0') intDigits = '0';
-  if (intDigits === '' && hasComma) intDigits = '0';
+  if (intDigits === '' && (decPart !== null || intRaw === '0')) {
+    intDigits = '0';
+  }
 
-  // Cap decimals at 2 digits.
-  const decDigits = decRaw.slice(0, 2);
-
-  // Insert "." every three digits from the right.
   const formattedInt = intDigits.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 
-  return hasComma ? `${formattedInt},${decDigits}` : formattedInt;
+  return decPart !== null ? `${formattedInt},${decPart}` : formattedInt;
 }
 
 /**
