@@ -17,6 +17,7 @@ export const en: Record<TranslationKey, string> = {
   'home.section.pending': 'Pending (estimated)',
   'home.prevMonth': 'Previous month',
   'home.nextMonth': 'Next month',
+  'home.thisMonth': 'Back to this month',
   'home.tag.loan': 'Loan',
 
   'loans.empty.title': 'No loans yet',

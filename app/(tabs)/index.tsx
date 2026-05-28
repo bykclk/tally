@@ -8,7 +8,8 @@ import { ListItem } from '@/ui/ListItem';
 import { MoneyText } from '@/ui/MoneyText';
 import { useTheme, type Theme } from '@/ui/theme';
 import { useT, useLocale } from '@/lib/i18n';
-import { monthLabel } from '@/lib/date';
+import { currentMonth, monthLabel } from '@/lib/date';
+import { haptics } from '@/lib/haptics';
 import { useMonthStore } from '@/stores/month';
 import {
   buildMonthlyItems,
@@ -21,7 +22,9 @@ export default function HomeScreen() {
   const t = useT();
   const locale = useLocale();
   const router = useRouter();
-  const { year, month, next, prev } = useMonthStore();
+  const { year, month, next, prev, reset } = useMonthStore();
+  const cm = currentMonth();
+  const isCurrentMonth = year === cm.year && month === cm.month;
   const [items, setItems] = useState<MonthlyItem[]>([]);
 
   useFocusEffect(
@@ -79,16 +82,30 @@ export default function HomeScreen() {
             ‹
           </Text>
         </Pressable>
-        <Text
-          style={{
-            color: theme.colors.text,
-            fontSize: theme.font.size.lg,
-            fontWeight: theme.font.weight.semibold,
-            textTransform: 'capitalize',
-          }}
+        <Pressable
+          onPress={
+            isCurrentMonth
+              ? undefined
+              : () => {
+                  haptics.light();
+                  reset();
+                }
+          }
+          disabled={isCurrentMonth}
+          accessibilityLabel={t('home.thisMonth')}
+          hitSlop={8}
         >
-          {monthLabel(year, month, locale)}
-        </Text>
+          <Text
+            style={{
+              color: isCurrentMonth ? theme.colors.text : theme.colors.accent,
+              fontSize: theme.font.size.lg,
+              fontWeight: theme.font.weight.semibold,
+              textTransform: 'capitalize',
+            }}
+          >
+            {monthLabel(year, month, locale)}
+          </Text>
+        </Pressable>
         <Pressable
           onPress={next}
           hitSlop={12}

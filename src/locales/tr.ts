@@ -15,6 +15,7 @@ export const tr = {
   'home.section.pending': 'Bekleniyor (tahmini)',
   'home.prevMonth': 'Önceki ay',
   'home.nextMonth': 'Sonraki ay',
+  'home.thisMonth': 'Bu aya dön',
   'home.tag.loan': 'Kredi',
 
   'loans.empty.title': 'Henüz kredi yok',
