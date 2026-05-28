@@ -14,9 +14,8 @@
     "android": {
       "package": "com.omertally.app",
       "adaptiveIcon": {
-        "backgroundColor": "#FAFAF9",
+        "backgroundColor": "#0F766E",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false
@@ -32,9 +31,11 @@
         "expo-splash-screen",
         {
           "backgroundColor": "#FAFAF9",
-          "android": {
-            "image": "./assets/images/splash-icon.png",
-            "imageWidth": 76
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 180,
+          "dark": {
+            "backgroundColor": "#0A0A0A",
+            "image": "./assets/images/splash-icon-dark.png"
           }
         }
       ],

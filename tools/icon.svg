@@ -1,0 +1,15 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1024" height="1024" fill="#0F766E"/>
+
+  <!-- 4 vertical bars: leftmost is T's stem, plus 3 tally marks -->
+  <rect x="247" y="290" width="80" height="540" rx="40" fill="white"/>
+  <rect x="397" y="290" width="80" height="540" rx="40" fill="white"/>
+  <rect x="547" y="290" width="80" height="540" rx="40" fill="white"/>
+  <rect x="697" y="290" width="80" height="540" rx="40" fill="white"/>
+
+  <!-- T's horizontal cap on the leftmost bar -->
+  <rect x="197" y="290" width="180" height="70" rx="35" fill="white"/>
+
+  <!-- Diagonal slash (the 5th tally mark) -->
+  <line x1="200" y1="770" x2="820" y2="340" stroke="white" stroke-width="70" stroke-linecap="round"/>
+</svg>
