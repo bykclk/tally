@@ -7,7 +7,7 @@
     "@op-engineering/op-sqlite": "^16.2.0",
     "@react-native-community/datetimepicker": "9.1.0",
     "date-fns": "^4.3.0",
-    "expo": "~56.0.5",
+    "expo": "~56.0.6",
     "expo-constants": "~56.0.16",
     "expo-font": "~56.0.5",
     "expo-haptics": "~56.0.3",
