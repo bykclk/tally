@@ -15,7 +15,7 @@ import { PayoffChart } from '@/ui/PayoffChart';
 import { Slider } from '@/ui/Slider';
 import { useTheme, type Theme } from '@/ui/theme';
 import { useT, useLocale } from '@/lib/i18n';
-import { formatTRY } from '@/lib/money';
+import { useFormatMoney } from '@/lib/money';
 import { monthLabel, isoForDayInMonth, formatDate } from '@/lib/date';
 import { simulatePayoff, type SimResult } from '@/lib/loanSim';
 import { isMonthInLoanSchedule } from '@/lib/loanSchedule';
@@ -45,6 +45,7 @@ export default function LoanDetailScreen() {
   const t = useT();
   const locale = useLocale();
   const router = useRouter();
+  const formatMoney = useFormatMoney();
   const { id } = useLocalSearchParams<{ id: string }>();
 
   const year = useMonthStore((s) => s.year);
@@ -174,10 +175,10 @@ export default function LoanDetailScreen() {
     Alert.alert(
       t('loan.payments.confirmTitle'),
       t('loan.payments.confirmMessage', {
-        amount: formatTRY(payState.amount),
+        amount: formatMoney(payState.amount),
         principal: Math.round(payState.principal).toString(),
         interest: Math.round(payState.interest).toString(),
-        balanceAfter: formatTRY(payState.balanceAfter),
+        balanceAfter: formatMoney(payState.balanceAfter),
       }),
       [
         { text: t('common.cancel'), style: 'cancel' },
@@ -219,7 +220,7 @@ export default function LoanDetailScreen() {
     Alert.alert(
       t('loan.payments.undoConfirmTitle'),
       t('loan.payments.undoConfirmMessage', {
-        amount: formatTRY(last.principal),
+        amount: formatMoney(last.principal),
         month: monthLabel(last.year, last.month, locale),
       }),
       [
@@ -292,17 +293,17 @@ export default function LoanDetailScreen() {
             <>
               <DetailRow
                 label={t('loan.detail.totalAmount')}
-                value={formatTRY(loan.monthlyPayment * loan.numInstallments)}
+                value={formatMoney(loan.monthlyPayment * loan.numInstallments)}
                 theme={theme}
               />
               <DetailRow
                 label={t('loan.detail.remaining')}
-                value={formatTRY(loan.balance)}
+                value={formatMoney(loan.balance)}
                 theme={theme}
               />
               <DetailRow
                 label={t('loan.detail.installment')}
-                value={`${loan.numInstallments} × ${formatTRY(loan.monthlyPayment)}`}
+                value={`${loan.numInstallments} × ${formatMoney(loan.monthlyPayment)}`}
                 theme={theme}
               />
               <DetailRow
@@ -315,7 +316,7 @@ export default function LoanDetailScreen() {
             <>
               <DetailRow
                 label={t('loan.detail.balance')}
-                value={formatTRY(loan.balance)}
+                value={formatMoney(loan.balance)}
                 theme={theme}
               />
               <DetailRow
@@ -325,7 +326,7 @@ export default function LoanDetailScreen() {
               />
               <DetailRow
                 label={t('loan.detail.payment')}
-                value={formatTRY(loan.monthlyPayment)}
+                value={formatMoney(loan.monthlyPayment)}
                 theme={theme}
               />
             </>
@@ -366,7 +367,7 @@ export default function LoanDetailScreen() {
                     fontVariant: ['tabular-nums'],
                   }}
                 >
-                  {formatTRY(extra)}
+                  {formatMoney(extra)}
                 </Text>
               </View>
               <Slider
@@ -398,7 +399,7 @@ export default function LoanDetailScreen() {
                     fontVariant: ['tabular-nums'],
                   }}
                 >
-                  {formatTRY(extraMax)}
+                  {formatMoney(extraMax)}
                 </Text>
               </View>
             </Card>
@@ -513,9 +514,10 @@ function PaymentsSection({
   t: ReturnType<typeof useT>;
   locale: Locale;
 }) {
+  const formatMoney = useFormatMoney();
   const buttonLabel =
     payState && payState.disabledReason === null
-      ? `${t('loan.payments.payThisMonth')} · ${formatTRY(payState.amount)}`
+      ? `${t('loan.payments.payThisMonth')} · ${formatMoney(payState.amount)}`
       : payState?.disabledReason === 'paid_off'
         ? t('loan.payments.paidOff')
         : payState?.disabledReason === 'already_paid'
@@ -690,6 +692,7 @@ function InstallmentScheduleSection({
   onRefresh: () => Promise<void>;
   setBusy: (b: boolean) => void;
 }) {
+  const formatMoney = useFormatMoney();
   const [tab, setTab] = useState<'unpaid' | 'paid'>('unpaid');
 
   const schedule = useMemo<ScheduleItem[]>(() => {
@@ -731,7 +734,7 @@ function InstallmentScheduleSection({
 
   const buttonLabel =
     payState && payState.disabledReason === null
-      ? `${t('loan.payments.payThisMonth')} · ${formatTRY(payState.amount)}`
+      ? `${t('loan.payments.payThisMonth')} · ${formatMoney(payState.amount)}`
       : payState?.disabledReason === 'paid_off'
         ? t('loan.payments.paidOff')
         : payState?.disabledReason === 'already_paid'
@@ -751,7 +754,7 @@ function InstallmentScheduleSection({
         t('loan.schedule.undoMessage', {
           number: item.number,
           month: monthLabel(item.year, item.month, locale),
-          amount: formatTRY(p.amount),
+          amount: formatMoney(p.amount),
         }),
         [
           { text: t('common.cancel'), style: 'cancel' },
@@ -777,7 +780,7 @@ function InstallmentScheduleSection({
         t('loan.schedule.payMessage', {
           number: item.number,
           month: monthLabel(item.year, item.month, locale),
-          amount: formatTRY(item.amount),
+          amount: formatMoney(item.amount),
         }),
         [
           { text: t('common.cancel'), style: 'cancel' },
@@ -951,6 +954,7 @@ function ScheduleRow({
   t: ReturnType<typeof useT>;
   locale: Locale;
 }) {
+  const formatMoney = useFormatMoney();
   const dateLabel = `${loan.dayOfMonth} ${monthLabel(
     item.year,
     item.month,
@@ -1000,7 +1004,7 @@ function ScheduleRow({
           fontVariant: ['tabular-nums'],
         }}
       >
-        {formatTRY(item.amount)}
+        {formatMoney(item.amount)}
       </Text>
     </Pressable>
   );
@@ -1021,6 +1025,7 @@ function PaymentRow({
   t: ReturnType<typeof useT>;
   locale: Locale;
 }) {
+  const formatMoney = useFormatMoney();
   return (
     <View style={{ padding: theme.spacing(4), gap: theme.spacing(2) }}>
       <View
@@ -1050,17 +1055,17 @@ function PaymentRow({
       >
         <PaymentMini
           label={t('loan.payments.principal')}
-          value={formatTRY(payment.principal)}
+          value={formatMoney(payment.principal)}
           theme={theme}
         />
         <PaymentMini
           label={t('loan.payments.interest')}
-          value={formatTRY(payment.interest)}
+          value={formatMoney(payment.interest)}
           theme={theme}
         />
         <PaymentMini
           label={t('loan.payments.balanceAfter')}
-          value={formatTRY(payment.balanceAfter)}
+          value={formatMoney(payment.balanceAfter)}
           theme={theme}
         />
       </View>
@@ -1115,6 +1120,7 @@ function ResultsCard({
   theme: Theme;
   t: ReturnType<typeof useT>;
 }) {
+  const formatMoney = useFormatMoney();
   if (!baseline) return null;
 
   if (!baseline.ok) {
@@ -1205,7 +1211,7 @@ function ResultsCard({
                 }}
               >
                 {t('loan.sim.savingsInterest', {
-                  amount: formatTRY(interestSaved),
+                  amount: formatMoney(interestSaved),
                 })}
               </Text>
             </View>
@@ -1231,6 +1237,7 @@ function ResultBlock({
   theme: Theme;
   t: ReturnType<typeof useT>;
 }) {
+  const formatMoney = useFormatMoney();
   const color = tone === 'accent' ? theme.colors.text : theme.colors.textMuted;
   return (
     <View>
@@ -1270,7 +1277,7 @@ function ResultBlock({
             fontVariant: ['tabular-nums'],
           }}
         >
-          {t('loan.sim.interest', { amount: formatTRY(interest) })}
+          {t('loan.sim.interest', { amount: formatMoney(interest) })}
         </Text>
       </View>
     </View>

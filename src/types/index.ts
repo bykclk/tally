@@ -4,6 +4,7 @@ export type InstanceStatus = 'confirmed' | 'pending';
 export type Locale = 'tr' | 'en';
 export type LocaleMode = Locale | 'system';
 export type ThemeMode = 'light' | 'dark' | 'system';
+export type Currency = 'TRY' | 'USD' | 'EUR' | 'GBP';
 
 export type Entry = {
   id: string;

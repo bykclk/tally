@@ -157,6 +157,7 @@ export const tr = {
   'settings.theme.light': 'Açık',
   'settings.theme.dark': 'Koyu',
   'settings.theme.system': 'Sistem',
+  'settings.currency.title': 'Para birimi',
 } as const;
 
 export type TranslationKey = keyof typeof tr;

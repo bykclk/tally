@@ -7,7 +7,7 @@ import { FloatingActionButton } from '@/ui/FloatingActionButton';
 import { MoneyText } from '@/ui/MoneyText';
 import { useTheme, type Theme } from '@/ui/theme';
 import { useT } from '@/lib/i18n';
-import { formatTRY } from '@/lib/money';
+import { useFormatMoney } from '@/lib/money';
 import {
   listLoansWithProgress,
   type LoanWithProgress,
@@ -132,10 +132,11 @@ function LoanRow({
   theme: Theme;
   onPress: () => void;
 }) {
+  const formatMoney = useFormatMoney();
   const subtitle =
     loan.loanType === 'installment' && loan.numInstallments != null
-      ? `${loan.paidCount}/${loan.numInstallments} · ${formatTRY(loan.monthlyPayment)}`
-      : `%${(loan.monthlyRate * 100).toFixed(2)} · ${formatTRY(loan.monthlyPayment)}`;
+      ? `${loan.paidCount}/${loan.numInstallments} · ${formatMoney(loan.monthlyPayment)}`
+      : `%${(loan.monthlyRate * 100).toFixed(2)} · ${formatMoney(loan.monthlyPayment)}`;
 
   return (
     <Pressable

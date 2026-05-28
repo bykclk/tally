@@ -1,5 +1,6 @@
 import { Platform } from 'react-native';
 import { TextField } from './TextField';
+import { useCurrency, currencySymbol } from '@/lib/money';
 import { formatMoneyInput } from '@/lib/moneyInput';
 
 type Props = {
@@ -17,17 +18,18 @@ export function MoneyField({
   value,
   onChangeText,
   placeholder = '0',
-  prefix = '₺',
+  prefix,
   autoFocus,
   error,
 }: Props) {
+  const currency = useCurrency();
   return (
     <TextField
       label={label}
       value={value}
       onChangeText={(raw) => onChangeText(formatMoneyInput(raw))}
       placeholder={placeholder}
-      prefix={prefix}
+      prefix={prefix ?? currencySymbol(currency)}
       keyboardType={Platform.OS === 'ios' ? 'decimal-pad' : 'numeric'}
       autoFocus={autoFocus}
       error={error}

@@ -4,7 +4,8 @@ import { useTheme, type Theme } from '@/ui/theme';
 import { useT } from '@/lib/i18n';
 import { useLocaleStore } from '@/stores/locale';
 import { useThemeModeStore } from '@/stores/themeMode';
-import type { LocaleMode, ThemeMode } from '@/types';
+import { useCurrencyStore } from '@/stores/currency';
+import type { Currency, LocaleMode, ThemeMode } from '@/types';
 
 export default function SettingsScreen() {
   const theme = useTheme();
@@ -14,6 +15,8 @@ export default function SettingsScreen() {
   const setLocaleMode = useLocaleStore((s) => s.setMode);
   const themeModeValue = useThemeModeStore((s) => s.mode);
   const setThemeModeValue = useThemeModeStore((s) => s.setMode);
+  const currency = useCurrencyStore((s) => s.currency);
+  const setCurrency = useCurrencyStore((s) => s.setCurrency);
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.bg }}>
@@ -47,6 +50,21 @@ export default function SettingsScreen() {
               { value: 'light', label: t('settings.theme.light') },
               { value: 'dark', label: t('settings.theme.dark') },
               { value: 'system', label: t('settings.theme.system') },
+            ]}
+          />
+        </Section>
+
+        <Section title={t('settings.currency.title')} theme={theme}>
+          <SegmentedControl<Currency>
+            value={currency}
+            onChange={(v) => {
+              void setCurrency(v);
+            }}
+            options={[
+              { value: 'TRY', label: '₺ TRY' },
+              { value: 'USD', label: '$ USD' },
+              { value: 'EUR', label: '€ EUR' },
+              { value: 'GBP', label: '£ GBP' },
             ]}
           />
         </Section>

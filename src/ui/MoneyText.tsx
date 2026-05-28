@@ -1,5 +1,5 @@
 import { Text, type TextStyle } from 'react-native';
-import { formatTRY } from '@/lib/money';
+import { useFormatMoney } from '@/lib/money';
 import { useTheme } from './theme';
 
 type Tone = 'default' | 'muted' | 'income' | 'expense';
@@ -21,6 +21,7 @@ export function MoneyText({
   style,
 }: Props) {
   const theme = useTheme();
+  const formatMoney = useFormatMoney();
 
   const color =
     tone === 'muted'
@@ -45,7 +46,7 @@ export function MoneyText({
         style,
       ]}
     >
-      {formatTRY(amount)}
+      {formatMoney(amount)}
     </Text>
   );
 }

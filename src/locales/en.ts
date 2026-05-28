@@ -163,4 +163,5 @@ export const en: Record<TranslationKey, string> = {
   'settings.theme.light': 'Light',
   'settings.theme.dark': 'Dark',
   'settings.theme.system': 'System',
+  'settings.currency.title': 'Currency',
 };

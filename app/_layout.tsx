@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View, useColorScheme } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { runMigrations } from '@/db/client';
+import { useCurrencyStore } from '@/stores/currency';
 import { useLocaleStore } from '@/stores/locale';
 import { useThemeModeStore } from '@/stores/themeMode';
 import { useTheme } from '@/ui/theme';
@@ -21,6 +22,7 @@ export default function RootLayout() {
         await Promise.all([
           useLocaleStore.getState().loadFromPrefs(),
           useThemeModeStore.getState().loadFromPrefs(),
+          useCurrencyStore.getState().loadFromPrefs(),
         ]);
         setDbReady(true);
       } catch (e) {
