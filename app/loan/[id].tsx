@@ -16,7 +16,7 @@ import { Slider } from '@/ui/Slider';
 import { useTheme, type Theme } from '@/ui/theme';
 import { useT, useLocale } from '@/lib/i18n';
 import { useFormatMoney } from '@/lib/money';
-import { monthLabel, isoForDayInMonth, formatDate } from '@/lib/date';
+import { monthLabel, shortDate } from '@/lib/date';
 import { simulatePayoff, type SimResult } from '@/lib/loanSim';
 import { isMonthInLoanSchedule } from '@/lib/loanSchedule';
 import { SegmentedControl } from '@/ui/SegmentedControl';
@@ -334,7 +334,12 @@ export default function LoanDetailScreen() {
           {latestPayment && (
             <DetailRow
               label={t('loan.detail.lastPayment')}
-              value={monthLabel(latestPayment.year, latestPayment.month, locale)}
+              value={shortDate(
+                latestPayment.year,
+                latestPayment.month,
+                loan.dayOfMonth,
+                locale,
+              )}
               theme={theme}
             />
           )}

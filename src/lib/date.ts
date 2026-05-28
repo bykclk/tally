@@ -15,6 +15,17 @@ export function formatDate(iso: string, locale: Locale): string {
   return format(d, 'dd/MM/yyyy', { locale: locales[locale] });
 }
 
+export function shortDate(
+  year: number,
+  month: number,
+  day: number,
+  locale: Locale,
+): string {
+  const safeDay = Math.min(day, daysInMonth(year, month));
+  const d = new Date(year, month - 1, safeDay);
+  return format(d, 'd MMM yyyy', { locale: locales[locale] });
+}
+
 export function currentMonth(): { year: number; month: number } {
   const now = new Date();
   return { year: now.getFullYear(), month: now.getMonth() + 1 };
