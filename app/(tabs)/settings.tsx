@@ -1,5 +1,8 @@
-import { Alert, ScrollView, Switch, Text, View } from 'react-native';
+import { Alert, Pressable, ScrollView, Switch, Text, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import { SegmentedControl } from '@/ui/SegmentedControl';
+import { Card } from '@/ui/Card';
 import { useTheme, type Theme } from '@/ui/theme';
 import { useT } from '@/lib/i18n';
 import { useLocaleStore } from '@/stores/locale';
@@ -18,6 +21,7 @@ import type { Currency, LocaleMode, ThemeMode } from '@/types';
 export default function SettingsScreen() {
   const theme = useTheme();
   const t = useT();
+  const router = useRouter();
 
   const localeMode = useLocaleStore((s) => s.mode);
   const setLocaleMode = useLocaleStore((s) => s.setMode);
@@ -150,6 +154,29 @@ export default function SettingsScreen() {
             </View>
           )}
         </Section>
+
+        <Pressable
+          onPress={() => router.push('/about')}
+          style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
+        >
+          <Card
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              paddingVertical: theme.spacing(3),
+            }}
+          >
+            <Text style={{ color: theme.colors.text, fontSize: theme.font.size.md }}>
+              {t('about.title')}
+            </Text>
+            <Ionicons
+              name="chevron-forward"
+              size={18}
+              color={theme.colors.textMuted}
+            />
+          </Card>
+        </Pressable>
       </ScrollView>
     </View>
   );

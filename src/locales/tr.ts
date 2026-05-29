@@ -1,6 +1,28 @@
 export const tr = {
   'app.name': 'Tally',
 
+  'onboarding.title': 'Tally',
+  'onboarding.tagline': 'Ay sonunda cebinde ne kalacak? Excel\'siz, sade.',
+  'onboarding.point1': 'Gelir ve giderlerini gir; kesin ve tahmini kalanı anlık gör.',
+  'onboarding.point2': 'Kredilerini takip et, erken kapamada ne kazanacağını hesapla.',
+  'onboarding.point3': 'Tüm verin yalnızca bu telefonda kalır. Sunucu yok, takip yok.',
+  'onboarding.disclaimer':
+    'Tally finansal tavsiye vermez; yalnızca senin girdiğin verilerle hesap yapar. Faiz hesapları tahminidir.',
+  'onboarding.start': 'Başla',
+
+  'about.title': 'Hakkında',
+  'about.appName': 'Tally',
+  'about.version': 'Sürüm {version}',
+  'about.what.title': 'Tally nedir?',
+  'about.what.body':
+    'Aylık nakit akışını takip etmen ve kredilerini erken kapamayı planlaman için sade bir araç. Excel tablosunun yerini alır.',
+  'about.disclaimer.title': 'Sorumluluk reddi',
+  'about.disclaimer.body':
+    'Tally finansal tavsiye vermez. Yalnızca senin girdiğin sayılarla hesap yapar. Faiz ve erken kapama hesapları tahminidir; gerçek banka değerlerinden ufak farklar olabilir.',
+  'about.privacy.title': 'Gizlilik',
+  'about.privacy.body':
+    'Tüm verin yalnızca bu cihazda saklanır. Hiçbir bilgi sunucuya gönderilmez, hiçbir takip veya analiz yapılmaz. Banka bağlantısı yoktur.',
+
   'tabs.home': 'Bu ay',
   'tabs.loans': 'Krediler',
   'tabs.settings': 'Ayarlar',

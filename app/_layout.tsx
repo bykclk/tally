@@ -11,18 +11,23 @@ import {
 } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { runMigrations } from '@/db/client';
+import { getPref, setPref } from '@/db/queries/prefs';
 import { useCurrencyStore } from '@/stores/currency';
 import { useLocaleStore } from '@/stores/locale';
 import { useThemeModeStore } from '@/stores/themeMode';
 import { useNotificationStore } from '@/stores/notifications';
 import { initNotifications, rescheduleAll } from '@/lib/notifications';
+import { Onboarding } from '@/ui/Onboarding';
 import { useTheme } from '@/ui/theme';
+
+const ONBOARDING_KEY = 'onboarding.done';
 
 export default function RootLayout() {
   const scheme = useColorScheme();
   const theme = useTheme();
   const [dbReady, setDbReady] = useState(false);
   const [dbError, setDbError] = useState<string | null>(null);
+  const [onboardingDone, setOnboardingDone] = useState(true);
 
   useEffect(() => {
     (async () => {
@@ -34,6 +39,7 @@ export default function RootLayout() {
           useCurrencyStore.getState().loadFromPrefs(),
           useNotificationStore.getState().loadFromPrefs(),
         ]);
+        setOnboardingDone((await getPref(ONBOARDING_KEY)) === '1');
         setDbReady(true);
         await initNotifications();
         await rescheduleAll();
@@ -42,6 +48,11 @@ export default function RootLayout() {
       }
     })();
   }, []);
+
+  const completeOnboarding = () => {
+    setOnboardingDone(true);
+    void setPref(ONBOARDING_KEY, '1');
+  };
 
   useEffect(() => {
     const sub = AppState.addEventListener('change', (state) => {
@@ -65,6 +76,15 @@ export default function RootLayout() {
       <View style={[styles.center, { backgroundColor: theme.colors.bg }]}>
         <ActivityIndicator color={theme.colors.accent} />
       </View>
+    );
+  }
+
+  if (!onboardingDone) {
+    return (
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
+        <Onboarding onDone={completeOnboarding} />
+      </GestureHandlerRootView>
     );
   }
 
@@ -94,6 +114,7 @@ export default function RootLayout() {
         <Stack.Screen name="loan/[id]" options={{ title: '' }} />
         <Stack.Screen name="balance" options={{ presentation: 'modal', title: '' }} />
         <Stack.Screen name="breakdown" options={{ presentation: 'modal', title: '' }} />
+        <Stack.Screen name="about" options={{ presentation: 'modal', title: '' }} />
       </Stack>
     </GestureHandlerRootView>
   );

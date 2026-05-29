@@ -3,6 +3,31 @@ import type { TranslationKey } from './tr';
 export const en: Record<TranslationKey, string> = {
   'app.name': 'Tally',
 
+  'onboarding.title': 'Tally',
+  'onboarding.tagline': "What's left at the end of the month? No Excel, just clear.",
+  'onboarding.point1':
+    'Enter income and expenses; see your confirmed and estimated remaining live.',
+  'onboarding.point2':
+    'Track loans and see what an early payoff would save you.',
+  'onboarding.point3':
+    'All your data stays on this phone. No server, no tracking.',
+  'onboarding.disclaimer':
+    'Tally gives no financial advice; it only does math on the numbers you enter. Interest figures are estimates.',
+  'onboarding.start': 'Get started',
+
+  'about.title': 'About',
+  'about.appName': 'Tally',
+  'about.version': 'Version {version}',
+  'about.what.title': 'What is Tally?',
+  'about.what.body':
+    'A simple tool for tracking your monthly cash flow and planning early loan payoff. It replaces the spreadsheet.',
+  'about.disclaimer.title': 'Disclaimer',
+  'about.disclaimer.body':
+    'Tally gives no financial advice. It only does math on the numbers you enter. Interest and early-payoff figures are estimates and may differ slightly from real bank figures.',
+  'about.privacy.title': 'Privacy',
+  'about.privacy.body':
+    'All your data is stored only on this device. Nothing is sent to a server, and there is no tracking or analytics. There is no bank connection.',
+
   'tabs.home': 'This month',
   'tabs.loans': 'Loans',
   'tabs.settings': 'Settings',

@@ -9,7 +9,7 @@
     "userInterfaceStyle": "automatic",
     "ios": {
       "bundleIdentifier": "com.omertally.app",
-      "supportsTablet": true
+      "supportsTablet": false
     },
     "android": {
       "package": "com.omertally.app",
