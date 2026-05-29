@@ -1,3 +1,6 @@
+// One-off icon generator. `sharp` is NOT a project dependency (it fails to
+// build on EAS CI and isn't needed at runtime). To regenerate icons:
+//   npm i -D sharp && node tools/generate-icons.mjs && npm uninstall sharp
 import sharp from 'sharp';
 import { readFile, mkdir } from 'node:fs/promises';
 
