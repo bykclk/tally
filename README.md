@@ -27,8 +27,9 @@ Built with React Native (Expo). Turkish-first, with full English support.
 ## Privacy
 
 All data is stored **only on the device** in a local SQLite database. There is
-no server, no account, no tracking, and no bank connection. See
-[`PRIVACY.md`](./PRIVACY.md).
+no server, no account, no tracking, and no bank connection. See the
+[privacy policy](https://bykclk.github.io/tally/privacy)
+([source](./docs/privacy.md)).
 
 > Tally gives no financial advice. It only does math on the numbers you enter.
 > Interest and early-payoff figures are estimates.

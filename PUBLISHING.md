@@ -55,14 +55,15 @@ npx eas submit --platform ios --latest
 ## 3. Gizlilik politikası barındırma
 
 Apple, finans uygulamaları için **genel erişime açık bir gizlilik politikası
-URL'si** ister. `PRIVACY.md` hazır — onu bir yere yayınla:
+URL'si** ister. Politika `docs/privacy.md` olarak repo'da hazır ve GitHub
+Pages ile yayınlanıyor:
 
-- [ ] **GitHub Pages** (ücretsiz, en kolay): repo'da `docs/` klasörüne koy
-      (örn. `docs/privacy.md`), Settings → Pages'ten `docs/` ile yayınla.
+- [x] **GitHub Pages:** `docs/privacy.md` repo'da, Pages ile yayınlanıyor.
       URL: `https://bykclk.github.io/tally/privacy`
-      (GitHub kullanıcı adı: **bykclk**, repo adı: **tally** varsayıldı)
-- [ ] veya basit bir Notion/kişisel site sayfası
-- [ ] `PRIVACY.md` yer tutucuları zaten dolduruldu (tarih + e-posta)
+- [ ] GitHub → Settings → Pages → Source: **main** / **/docs** olduğundan
+      emin ol (build yeşil tik gelene kadar bekle)
+- [ ] Bu URL'i App Store Connect → App Privacy → "Privacy Policy URL"
+      alanına gir
 
 ---
 
