@@ -60,8 +60,8 @@ Pages ile yayınlanıyor:
 
 - [x] **GitHub Pages:** `docs/privacy.md` repo'da, Pages ile yayınlanıyor.
       URL: `https://bykclk.github.io/tally/privacy`
-- [ ] GitHub → Settings → Pages → Source: **main** / **/docs** olduğundan
-      emin ol (build yeşil tik gelene kadar bekle)
+- [x] GitHub → Settings → Pages → Source: **main** / **/docs** — yayında,
+      sayfa erişilebilir
 - [ ] Bu URL'i App Store Connect → App Privacy → "Privacy Policy URL"
       alanına gir
 
