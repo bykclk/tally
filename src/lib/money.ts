@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { useCurrencyStore } from '@/stores/currency';
-import type { Currency } from '@/types';
+import { useLocaleStore } from '@/stores/locale';
+import type { Currency, Locale } from '@/types';
 
 export const CURRENCY_SYMBOLS: Record<Currency, string> = {
   TRY: '₺',
@@ -9,32 +10,36 @@ export const CURRENCY_SYMBOLS: Record<Currency, string> = {
   GBP: '£',
 };
 
-const FORMAT_LOCALE = 'tr-TR';
+// App locale → BCP-47 tag for Intl. Controls number grouping/decimal style
+// and currency-symbol placement (e.g. "$1,250" in en vs "1.250 ₺" in tr).
+const INTL_LOCALE: Record<Locale, string> = {
+  tr: 'tr-TR',
+  en: 'en-US',
+};
 
-const formatterCache = new Map<Currency, Intl.NumberFormat>();
+const formatterCache = new Map<string, Intl.NumberFormat>();
 
-function getFormatter(currency: Currency): Intl.NumberFormat {
-  let f = formatterCache.get(currency);
+function getFormatter(locale: Locale, currency: Currency): Intl.NumberFormat {
+  const key = `${locale}:${currency}`;
+  let f = formatterCache.get(key);
   if (!f) {
-    f = new Intl.NumberFormat(FORMAT_LOCALE, {
+    f = new Intl.NumberFormat(INTL_LOCALE[locale], {
       style: 'currency',
       currency,
       maximumFractionDigits: 0,
       minimumFractionDigits: 0,
     });
-    formatterCache.set(currency, f);
+    formatterCache.set(key, f);
   }
   return f;
 }
 
-export function formatMoney(amount: number, currency: Currency): string {
-  return getFormatter(currency).format(Math.round(amount));
-}
-
-export function formatMoneySigned(amount: number, currency: Currency): string {
-  const rounded = Math.round(amount);
-  const sign = rounded > 0 ? '+' : '';
-  return `${sign}${getFormatter(currency).format(rounded)}`;
+export function formatMoney(
+  amount: number,
+  currency: Currency,
+  locale: Locale,
+): string {
+  return getFormatter(locale, currency).format(Math.round(amount));
 }
 
 export function currencySymbol(currency: Currency): string {
@@ -46,8 +51,15 @@ export function useCurrency(): Currency {
   return useCurrencyStore((s) => s.currency);
 }
 
-/** Hook returning a currency-bound formatter. Re-renders when currency changes. */
+/**
+ * Hook returning a formatter bound to the active currency and locale.
+ * Re-renders when either changes.
+ */
 export function useFormatMoney(): (amount: number) => string {
-  const currency = useCurrency();
-  return useCallback((amount: number) => formatMoney(amount, currency), [currency]);
+  const currency = useCurrencyStore((s) => s.currency);
+  const locale = useLocaleStore((s) => s.locale);
+  return useCallback(
+    (amount: number) => formatMoney(amount, currency, locale),
+    [currency, locale],
+  );
 }

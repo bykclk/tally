@@ -94,7 +94,7 @@ export async function rescheduleAll(): Promise<void> {
         title: item.name,
         body: translate(locale, 'notif.body', {
           date: shortDate(year, month, item.effectiveDay, locale),
-          amount: formatMoney(item.effectiveAmount, currency),
+          amount: formatMoney(item.effectiveAmount, currency, locale),
         }),
       });
     }
