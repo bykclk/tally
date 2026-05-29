@@ -1,56 +1,55 @@
-# Welcome to your Expo app 👋
+# Tally
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A simple, fully offline personal finance app for tracking monthly cash flow
+and planning early loan payoff. It answers one question well: **how much will
+be left in your pocket at the end of the month?** — and replaces a messy
+spreadsheet.
 
-## Get started
+Built with React Native (Expo). Turkish-first, with full English support.
 
-1. Install dependencies
+## Features
 
-   ```bash
-   npm install
-   ```
+- **Monthly view** — confirmed vs. estimated remaining, shown live as you
+  enter and confirm income and expenses.
+- **Fixed & variable entries** — utility bills (electricity, water, gas) whose
+  amount and due day change each month are estimated from the average of the
+  last three confirmed months.
+- **Loans** — both open-ended loans (with an early-payoff simulator showing
+  interest and time saved) and fixed-installment loans (with payment
+  tracking).
+- **Payment reminders** — local notifications a few days before each due date.
+- **Insights** — multi-month trend per entry and a by-category spending
+  breakdown.
+- **Starting balance** — per-month, with automatic rollover, so the remaining
+  figures are absolute amounts, not deltas.
+- Light/dark theme, TR/EN language, ₺/$/€/£ currency.
 
-2. Start the app
+## Privacy
 
-   ```bash
-   npx expo start
-   ```
+All data is stored **only on the device** in a local SQLite database. There is
+no server, no account, no tracking, and no bank connection. See
+[`PRIVACY.md`](./PRIVACY.md).
 
-In the output, you'll find options to open the app in a
+> Tally gives no financial advice. It only does math on the numbers you enter.
+> Interest and early-payoff figures are estimates.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## Tech stack
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- React Native + Expo (managed workflow, new architecture)
+- Expo Router (file-based routing, typed routes)
+- TypeScript (strict)
+- Local SQLite via `@op-engineering/op-sqlite` (source of truth, offline-first)
+- Zustand for state, `react-native-svg` for charts, `date-fns` for dates
 
-## Get a fresh project
-
-When you're ready, run:
+## Getting started
 
 ```bash
-npm run reset-project
+npm install
+
+# op-sqlite is a native module — a development build is required (not Expo Go).
+npx expo run:ios     # or: npx expo run:android
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Publishing
 
-### Other setup steps
-
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+See [`PUBLISHING.md`](./PUBLISHING.md) for the App Store release checklist.
