@@ -9,6 +9,7 @@ export const en: Record<TranslationKey, string> = {
 
   'home.confirmedRemaining': 'Confirmed remaining',
   'home.estimatedRemaining': 'Estimated remaining',
+  'home.startingBalance': 'Starting balance',
   'home.empty.title': 'No entries yet',
   'home.empty.subtitle': 'Start by adding your income and expenses.',
   'home.empty.cta': '+ Add your first entry',
@@ -154,6 +155,14 @@ export const en: Record<TranslationKey, string> = {
   'common.save': 'Save',
   'common.delete': 'Delete',
   'common.done': 'Done',
+
+  'balance.title': 'Starting — {month}',
+  'balance.subtitle':
+    "Enter how much money you have at the start of this month. Future months will roll over from this month's projected ending automatically.",
+  'balance.field': 'Starting balance',
+  'balance.auto': 'Switch to auto',
+  'balance.autoHint':
+    "Clear the manual value; this month's starting balance will be computed from the previous month's projected ending.",
 
   'settings.title': 'Settings',
   'settings.locale.title': 'Language',

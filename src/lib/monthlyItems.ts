@@ -132,7 +132,10 @@ function dayFromDate(iso: string): number | null {
   return m ? Number(m[1]) : null;
 }
 
-export function totalsFromItems(items: MonthlyItem[]): {
+export function totalsFromItems(
+  items: MonthlyItem[],
+  startingBalance = 0,
+): {
   confirmedRemaining: number;
   estimatedRemaining: number;
 } {
@@ -154,7 +157,7 @@ export function totalsFromItems(items: MonthlyItem[]): {
   }
 
   return {
-    confirmedRemaining: confirmedIncome - confirmedExpense,
-    estimatedRemaining: projectedIncome - projectedExpense,
+    confirmedRemaining: startingBalance + confirmedIncome - confirmedExpense,
+    estimatedRemaining: startingBalance + projectedIncome - projectedExpense,
   };
 }

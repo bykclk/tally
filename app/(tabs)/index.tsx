@@ -1,5 +1,6 @@
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useMemo, useState } from 'react';
+import { Ionicons } from '@expo/vector-icons';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Card } from '@/ui/Card';
@@ -16,6 +17,7 @@ import {
   totalsFromItems,
   type MonthlyItem,
 } from '@/lib/monthlyItems';
+import { resolveStartingBalance } from '@/lib/monthlyBalance';
 
 export default function HomeScreen() {
   const theme = useTheme();
@@ -26,13 +28,19 @@ export default function HomeScreen() {
   const cm = currentMonth();
   const isCurrentMonth = year === cm.year && month === cm.month;
   const [items, setItems] = useState<MonthlyItem[]>([]);
+  const [startingBalance, setStartingBalance] = useState(0);
 
   useFocusEffect(
     useCallback(() => {
       let cancelled = false;
       (async () => {
-        const next = await buildMonthlyItems(year, month);
-        if (!cancelled) setItems(next);
+        const [nextItems, start] = await Promise.all([
+          buildMonthlyItems(year, month),
+          resolveStartingBalance(year, month),
+        ]);
+        if (cancelled) return;
+        setItems(nextItems);
+        setStartingBalance(start);
       })();
       return () => {
         cancelled = true;
@@ -49,7 +57,10 @@ export default function HomeScreen() {
     return { confirmed: c, pending: p };
   }, [items]);
 
-  const totals = useMemo(() => totalsFromItems(items), [items]);
+  const totals = useMemo(
+    () => totalsFromItems(items, startingBalance),
+    [items, startingBalance],
+  );
   const hasAny = items.length > 0;
 
   const onItemPress = (item: MonthlyItem) => {
@@ -125,6 +136,43 @@ export default function HomeScreen() {
           gap: theme.spacing(4),
         }}
       >
+        <Pressable
+          onPress={() => router.push('/balance')}
+          style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
+        >
+          <Card
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              paddingVertical: theme.spacing(3),
+            }}
+          >
+            <Text
+              style={{
+                color: theme.colors.textMuted,
+                fontSize: theme.font.size.sm,
+              }}
+            >
+              {t('home.startingBalance')}
+            </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: theme.spacing(2),
+              }}
+            >
+              <MoneyText amount={startingBalance} size="md" />
+              <Ionicons
+                name="chevron-forward"
+                size={16}
+                color={theme.colors.textMuted}
+              />
+            </View>
+          </Card>
+        </Pressable>
+
         <View style={{ flexDirection: 'row', gap: theme.spacing(3) }}>
           <Card style={{ flex: 1 }}>
             <Text

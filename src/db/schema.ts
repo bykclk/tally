@@ -1,4 +1,4 @@
-export const CURRENT_USER_VERSION = 5;
+export const CURRENT_USER_VERSION = 6;
 
 export const MIGRATIONS: Record<number, string[]> = {
   1: [
@@ -74,6 +74,16 @@ export const MIGRATIONS: Record<number, string[]> = {
       key TEXT PRIMARY KEY NOT NULL,
       value TEXT NOT NULL,
       updated_at INTEGER NOT NULL
+    );`,
+  ],
+  6: [
+    `CREATE TABLE IF NOT EXISTS monthly_balances (
+      year INTEGER NOT NULL,
+      month INTEGER NOT NULL CHECK (month BETWEEN 1 AND 12),
+      starting_balance REAL NOT NULL,
+      created_at INTEGER NOT NULL,
+      updated_at INTEGER NOT NULL,
+      PRIMARY KEY (year, month)
     );`,
   ],
 };

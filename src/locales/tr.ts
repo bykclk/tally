@@ -7,6 +7,7 @@ export const tr = {
 
   'home.confirmedRemaining': 'Kesin kalan',
   'home.estimatedRemaining': 'Tahmini kalan',
+  'home.startingBalance': 'Başlangıç',
   'home.empty.title': 'Henüz kayıt yok',
   'home.empty.subtitle': 'Gelir ve giderlerini eklemeye başla.',
   'home.empty.cta': '+ İlk kaydını ekle',
@@ -148,6 +149,14 @@ export const tr = {
   'common.save': 'Kaydet',
   'common.delete': 'Sil',
   'common.done': 'Tamam',
+
+  'balance.title': '{month} başlangıç',
+  'balance.subtitle':
+    'Ay başında hesabında ne kadar para olduğunu yaz. Sonraki aylar bu ayın projeksiyonundan otomatik devralır.',
+  'balance.field': 'Başlangıç bakiyesi',
+  'balance.auto': 'Otomatik yap',
+  'balance.autoHint':
+    'Manuel değeri sil; bu ayın başlangıç bakiyesi önceki ayın kapanışından otomatik hesaplanır.',
 
   'settings.title': 'Ayarlar',
   'settings.locale.title': 'Dil',
