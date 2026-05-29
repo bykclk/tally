@@ -61,7 +61,13 @@ export const en: Record<TranslationKey, string> = {
   'confirm.field.day': 'Which day?',
   'confirm.unconfirm': 'Undo confirmation',
   'confirm.editTemplate': 'Edit template',
+  'confirm.history': 'Past months',
   'confirm.notFound': 'Entry not found.',
+
+  'history.title': 'History',
+  'history.empty':
+    'No confirmed months yet. Once you enter a few months, the trend will show up here.',
+  'history.average': '{n}-month average',
 
   'loan.new.title': 'New loan',
   'loan.field.name': 'Name',

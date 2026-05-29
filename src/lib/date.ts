@@ -10,6 +10,11 @@ export function monthLabel(year: number, month: number, locale: Locale): string 
   return format(d, 'LLLL yyyy', { locale: locales[locale] });
 }
 
+export function monthShort(year: number, month: number, locale: Locale): string {
+  const d = new Date(year, month - 1, 1);
+  return format(d, 'LLL', { locale: locales[locale] });
+}
+
 export function formatDate(iso: string, locale: Locale): string {
   const d = new Date(iso);
   return format(d, 'dd/MM/yyyy', { locale: locales[locale] });

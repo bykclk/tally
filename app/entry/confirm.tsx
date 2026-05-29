@@ -268,6 +268,33 @@ export default function ConfirmInstanceScreen() {
           error={submitted && errors.day ? t(errors.day) : null}
         />
 
+        {entry.kind === 'variable' && (
+          <Pressable
+            onPress={() =>
+              router.push({
+                pathname: '/entry/history',
+                params: { entryId: entry.id },
+              })
+            }
+            hitSlop={8}
+            style={({ pressed }) => [
+              styles.editLink,
+              { opacity: pressed ? 0.6 : 1 },
+            ]}
+          >
+            <Text
+              style={{
+                color: theme.colors.accent,
+                fontSize: theme.font.size.sm,
+                fontWeight: theme.font.weight.semibold,
+                textAlign: 'center',
+              }}
+            >
+              {t('confirm.history')}
+            </Text>
+          </Pressable>
+        )}
+
         <Pressable
           onPress={() =>
             router.replace({

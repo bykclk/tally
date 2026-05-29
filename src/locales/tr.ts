@@ -59,7 +59,12 @@ export const tr = {
   'confirm.field.day': 'Hangi gün?',
   'confirm.unconfirm': 'Onayı geri al',
   'confirm.editTemplate': 'Şablonu düzenle',
+  'confirm.history': 'Geçmiş aylar',
   'confirm.notFound': 'Kayıt bulunamadı.',
+
+  'history.title': 'Geçmiş',
+  'history.empty': 'Henüz kesinleşmiş aylık kayıt yok. Birkaç ay tutar girince trend burada görünecek.',
+  'history.average': 'Son {n} ay ortalaması',
 
   'loan.new.title': 'Yeni kredi',
   'loan.field.name': 'İsim',

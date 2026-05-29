@@ -86,6 +86,10 @@ export default function RootLayout() {
           name="entry/confirm"
           options={{ presentation: 'modal', title: '' }}
         />
+        <Stack.Screen
+          name="entry/history"
+          options={{ presentation: 'modal', title: '' }}
+        />
         <Stack.Screen name="loan/new" options={{ presentation: 'modal', title: '' }} />
         <Stack.Screen name="loan/[id]" options={{ title: '' }} />
         <Stack.Screen name="balance" options={{ presentation: 'modal', title: '' }} />
