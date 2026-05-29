@@ -18,33 +18,42 @@ Hedef: iOS, Türkiye App Store, Finans kategorisi.
 
 ## 1. EAS Build kurulumu
 
-```bash
-npm install -g eas-cli      # veya: npx eas-cli@latest
-npx eas login
-npx eas build:configure     # eas.json oluşturur
-```
+`eas.json` repo'da **hazır** (development / preview / production profilleri,
+production'da `autoIncrement` ile otomatik build numarası). Bundle identifier
+de ayarlı: `com.omertally.app` (app.json).
 
-`eas.json` içinde production profili olduğundan emin ol. Bundle identifier
-zaten ayarlı: `com.omertally.app` (app.json).
+```bash
+# eas-cli zaten kurulu (v20). Değilse: npm i -g eas-cli
+eas login                    # Expo hesabınla giriş
+eas init                     # projeyi EAS hesabına bağlar
+                             #   (app.json'a extra.eas.projectId yazar)
+```
 
 İlk production build (App Store için, bulutta imzalı):
 
 ```bash
-npx eas build --platform ios --profile production
+eas build --platform ios --profile production
 ```
 
-EAS, dağıtım sertifikası ve provisioning profile'ı senin için yönetir
-(Apple hesabınla giriş ister).
+İlk çalıştırmada EAS, **dağıtım sertifikası + provisioning profile'ı** senin
+için üretmeyi teklif eder → "Yes" de, Apple hesabınla giriş yapar, otomatik
+halleder. (En acı veren kısım buydu; EAS otomatik yönetiyor.)
 
-> Not: Yerel `expo run:ios` geliştirme içindir. Mağaza için EAS Build kullan.
+> **Mac'e geçiş:** İstersen sonra yerel Xcode'a geçebilirsin — kilitlenme yok.
+> `eas credentials` ile EAS'in ürettiği sertifikayı indirip Xcode'da
+> kullanabilir, ya da Xcode'un otomatik imzalamasına bırakabilirsin. Tek
+> dikkat: build numarası son yüklemeden büyük olmalı.
 
 ---
 
 ## 2. TestFlight (beta test)
 
 ```bash
-npx eas submit --platform ios --latest
+eas submit --platform ios --latest
 ```
+
+İlk submit'te Apple ID, App Store Connect app ID ve team ID sorar
+(interaktif) — girersin, sonraki seferler hatırlar.
 
 - [ ] Build, App Store Connect → TestFlight'a yüklenir
 - [ ] Kendi cihazında TestFlight ile test et
