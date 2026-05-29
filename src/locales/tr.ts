@@ -19,6 +19,12 @@ export const tr = {
   'home.thisMonth': 'Bu aya dön',
   'home.tag.loan': 'Kredi',
 
+  'breakdown.title': 'Harcama dağılımı',
+  'breakdown.totalExpense': 'toplam gider',
+  'breakdown.loan': 'Kredi',
+  'breakdown.uncategorized': 'Diğer',
+  'breakdown.empty': 'Bu ay için gider yok.',
+
   'loans.empty.title': 'Henüz kredi yok',
   'loans.empty.subtitle': 'Bir kredi ekleyerek erken kapama simülasyonu yap.',
   'loans.empty.cta': '+ İlk krediyi ekle',

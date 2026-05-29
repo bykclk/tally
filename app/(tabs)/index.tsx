@@ -83,49 +83,66 @@ export default function HomeScreen() {
       style={[styles.root, { backgroundColor: theme.colors.bg }]}
     >
       <View style={[styles.header, { paddingHorizontal: theme.spacing(4) }]}>
-        <Pressable
-          onPress={prev}
-          hitSlop={12}
-          accessibilityLabel={t('home.prevMonth')}
-          style={[styles.navBtn, { borderColor: theme.colors.border }]}
-        >
-          <Text style={{ color: theme.colors.text, fontSize: theme.font.size.lg }}>
-            ‹
-          </Text>
-        </Pressable>
-        <Pressable
-          onPress={
-            isCurrentMonth
-              ? undefined
-              : () => {
-                  haptics.light();
-                  reset();
-                }
-          }
-          disabled={isCurrentMonth}
-          accessibilityLabel={t('home.thisMonth')}
-          hitSlop={8}
-        >
-          <Text
-            style={{
-              color: isCurrentMonth ? theme.colors.text : theme.colors.accent,
-              fontSize: theme.font.size.lg,
-              fontWeight: theme.font.weight.semibold,
-              textTransform: 'capitalize',
-            }}
+        <View style={styles.monthNav}>
+          <Pressable
+            onPress={prev}
+            hitSlop={12}
+            accessibilityLabel={t('home.prevMonth')}
+            style={[styles.navBtn, { borderColor: theme.colors.border }]}
           >
-            {monthLabel(year, month, locale)}
-          </Text>
-        </Pressable>
+            <Text style={{ color: theme.colors.text, fontSize: theme.font.size.lg }}>
+              ‹
+            </Text>
+          </Pressable>
+          <Pressable
+            onPress={
+              isCurrentMonth
+                ? undefined
+                : () => {
+                    haptics.light();
+                    reset();
+                  }
+            }
+            disabled={isCurrentMonth}
+            accessibilityLabel={t('home.thisMonth')}
+            hitSlop={8}
+          >
+            <Text
+              style={{
+                color: isCurrentMonth ? theme.colors.text : theme.colors.accent,
+                fontSize: theme.font.size.lg,
+                fontWeight: theme.font.weight.semibold,
+                textTransform: 'capitalize',
+              }}
+            >
+              {monthLabel(year, month, locale)}
+            </Text>
+          </Pressable>
+          <Pressable
+            onPress={next}
+            hitSlop={12}
+            accessibilityLabel={t('home.nextMonth')}
+            style={[styles.navBtn, { borderColor: theme.colors.border }]}
+          >
+            <Text style={{ color: theme.colors.text, fontSize: theme.font.size.lg }}>
+              ›
+            </Text>
+          </Pressable>
+        </View>
         <Pressable
-          onPress={next}
+          onPress={() => router.push('/breakdown')}
           hitSlop={12}
-          accessibilityLabel={t('home.nextMonth')}
-          style={[styles.navBtn, { borderColor: theme.colors.border }]}
+          accessibilityLabel={t('breakdown.title')}
+          style={({ pressed }) => ({
+            padding: theme.spacing(2),
+            opacity: pressed ? 0.6 : 1,
+          })}
         >
-          <Text style={{ color: theme.colors.text, fontSize: theme.font.size.lg }}>
-            ›
-          </Text>
+          <Ionicons
+            name="pie-chart-outline"
+            size={22}
+            color={theme.colors.textMuted}
+          />
         </Pressable>
       </View>
 
@@ -324,6 +341,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: 12,
+  },
+  monthNav: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
   },
   navBtn: {
     width: 36,

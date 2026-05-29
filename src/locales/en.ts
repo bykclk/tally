@@ -21,6 +21,12 @@ export const en: Record<TranslationKey, string> = {
   'home.thisMonth': 'Back to this month',
   'home.tag.loan': 'Loan',
 
+  'breakdown.title': 'Spending breakdown',
+  'breakdown.totalExpense': 'total expense',
+  'breakdown.loan': 'Loans',
+  'breakdown.uncategorized': 'Other',
+  'breakdown.empty': 'No expenses for this month.',
+
   'loans.empty.title': 'No loans yet',
   'loans.empty.subtitle': 'Add a loan to simulate an early payoff.',
   'loans.empty.cta': '+ Add your first loan',
