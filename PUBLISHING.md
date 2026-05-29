@@ -128,8 +128,9 @@ Apple, belirli cihaz boyutlarında ekran görüntüsü ister (6.7" zorunlu):
   - Kategori dağılımı
   - Çoklu ay trendi
 
-> Simülatörde `Cmd+S` ile ekran görüntüsü alabilirsin. İçeride birkaç
-> örnek kayıt + kredi olsun ki dolu görünsün.
+> Simülatörde `Cmd+S` ile ekran görüntüsü alabilirsin. Dolu görünmesi için
+> önce **Ayarlar → Örnek veri yükle**'ye bas (bu seçenek yalnızca uygulama
+> boşken görünür).
 
 ---
 
@@ -137,8 +138,11 @@ Apple, belirli cihaz boyutlarında ekran görüntüsü ister (6.7" zorunlu):
 
 - [ ] **Yaş derecelendirmesi:** anketi doldur (finans = genelde 4+)
 - [ ] **Telif/içerik hakları:** sana ait
-- [ ] **App Review notları:** "Tamamen çevrimdışı, hesap gerektirmez, tüm
-      veri cihazda. Test için örnek veri uygulamada elle eklenebilir."
+- [ ] **App Review notları:** "Tamamen çevrimdışı, hesap/giriş gerektirmez,
+      tüm veri cihazda kalır. Dolu bir görünüm için: onboarding'i geç →
+      Ayarlar (Settings) sekmesi → 'Örnek veri yükle' (Load sample data).
+      Bu, gerçekçi örnek gelir/gider/kredi ekler. (İngilizce için Ayarlar →
+      Dil → İngilizce.)"
 - [ ] Build seç → **Submit for Review**
 
 ---

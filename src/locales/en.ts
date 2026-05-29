@@ -220,6 +220,29 @@ export const en: Record<TranslationKey, string> = {
   'settings.notif.deniedTitle': 'Notifications not allowed',
   'settings.notif.deniedBody':
     'To receive reminders, allow notifications for Tally in your phone settings.',
+  'settings.sample.title': 'Sample data',
+  'settings.sample.load': 'Load sample data',
+  'settings.sample.hint':
+    'Adds realistic example records so you can try the app. Only shown while the app is empty.',
+  'settings.sample.confirmTitle': 'Load sample data?',
+  'settings.sample.confirmBody':
+    'Adds example income, expenses, bills and loans so you can try the app. You can delete them individually later.',
+
+  'sample.salary': 'Salary',
+  'sample.sideIncome': 'Side income',
+  'sample.rent': 'Rent',
+  'sample.dues': 'Building dues',
+  'sample.internet': 'Internet',
+  'sample.electricity': 'Electricity',
+  'sample.water': 'Water',
+  'sample.gas': 'Natural gas',
+  'sample.groceries': 'Groceries',
+  'sample.cat.housing': 'Housing',
+  'sample.cat.bills': 'Bills',
+  'sample.cat.groceries': 'Groceries',
+  'sample.cat.freelance': 'Freelance',
+  'sample.loan.personal': 'Personal loan',
+  'sample.loan.installment': 'Fridge (installment)',
 
   'notif.body': 'Due {date} · around {amount}',
 };

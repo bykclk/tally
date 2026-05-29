@@ -210,6 +210,29 @@ export const tr = {
   'settings.notif.deniedTitle': 'Bildirim izni yok',
   'settings.notif.deniedBody':
     'Hatırlatma alabilmek için telefon ayarlarından Tally\'ye bildirim izni vermen gerekiyor.',
+  'settings.sample.title': 'Örnek veri',
+  'settings.sample.load': 'Örnek veri yükle',
+  'settings.sample.hint':
+    'Uygulamayı denemek için gerçekçi örnek kayıtlar ekler. Sadece uygulama boşken görünür.',
+  'settings.sample.confirmTitle': 'Örnek veri yüklensin mi?',
+  'settings.sample.confirmBody':
+    'Uygulamayı denemen için gelir, gider, fatura ve kredi örnekleri eklenir. Daha sonra tek tek silebilirsin.',
+
+  'sample.salary': 'Maaş',
+  'sample.sideIncome': 'Ek gelir',
+  'sample.rent': 'Kira',
+  'sample.dues': 'Aidat',
+  'sample.internet': 'İnternet',
+  'sample.electricity': 'Elektrik',
+  'sample.water': 'Su',
+  'sample.gas': 'Doğalgaz',
+  'sample.groceries': 'Market',
+  'sample.cat.housing': 'Konut',
+  'sample.cat.bills': 'Fatura',
+  'sample.cat.groceries': 'Market',
+  'sample.cat.freelance': 'Serbest',
+  'sample.loan.personal': 'İhtiyaç kredisi',
+  'sample.loan.installment': 'Buzdolabı (taksitli)',
 
   'notif.body': '{date} son ödeme · yaklaşık {amount}',
 } as const;

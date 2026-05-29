@@ -1,6 +1,7 @@
+import { useCallback, useState } from 'react';
 import { Alert, Pressable, ScrollView, Switch, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
 import { SegmentedControl } from '@/ui/SegmentedControl';
 import { Card } from '@/ui/Card';
 import { useTheme, type Theme } from '@/ui/theme';
@@ -16,12 +17,53 @@ import {
   rescheduleAll,
   requestNotificationPermission,
 } from '@/lib/notifications';
+import { isDataEmpty, seedSampleData } from '@/lib/sampleData';
+import { haptics } from '@/lib/haptics';
 import type { Currency, LocaleMode, ThemeMode } from '@/types';
 
 export default function SettingsScreen() {
   const theme = useTheme();
   const t = useT();
   const router = useRouter();
+
+  const [canSeed, setCanSeed] = useState(false);
+
+  useFocusEffect(
+    useCallback(() => {
+      let cancelled = false;
+      isDataEmpty().then((empty) => {
+        if (!cancelled) setCanSeed(empty);
+      });
+      return () => {
+        cancelled = true;
+      };
+    }, []),
+  );
+
+  const handleSeed = () => {
+    Alert.alert(
+      t('settings.sample.confirmTitle'),
+      t('settings.sample.confirmBody'),
+      [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('settings.sample.load'),
+          onPress: async () => {
+            try {
+              await seedSampleData();
+              setCanSeed(false);
+              await rescheduleAll();
+              haptics.success();
+              router.navigate('/');
+            } catch (e) {
+              // eslint-disable-next-line no-console
+              console.error('seedSampleData failed', e);
+            }
+          },
+        },
+      ],
+    );
+  };
 
   const localeMode = useLocaleStore((s) => s.mode);
   const setLocaleMode = useLocaleStore((s) => s.setMode);
@@ -154,6 +196,44 @@ export default function SettingsScreen() {
             </View>
           )}
         </Section>
+
+        {canSeed && (
+          <Section title={t('settings.sample.title')} theme={theme}>
+            <Pressable
+              onPress={handleSeed}
+              style={({ pressed }) => [
+                {
+                  borderColor: theme.colors.border,
+                  borderWidth: 1,
+                  borderRadius: theme.radius.md,
+                  paddingVertical: theme.spacing(3),
+                  alignItems: 'center',
+                  opacity: pressed ? 0.6 : 1,
+                },
+              ]}
+            >
+              <Text
+                style={{
+                  color: theme.colors.accent,
+                  fontSize: theme.font.size.md,
+                  fontWeight: theme.font.weight.semibold,
+                }}
+              >
+                {t('settings.sample.load')}
+              </Text>
+            </Pressable>
+            <Text
+              style={{
+                color: theme.colors.textMuted,
+                fontSize: theme.font.size.xs,
+                lineHeight: theme.font.size.xs * 1.4,
+                paddingHorizontal: theme.spacing(1),
+              }}
+            >
+              {t('settings.sample.hint')}
+            </Text>
+          </Section>
+        )}
 
         <Pressable
           onPress={() => router.push('/about')}
