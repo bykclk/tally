@@ -57,12 +57,12 @@ npx eas submit --platform ios --latest
 Apple, finans uygulamaları için **genel erişime açık bir gizlilik politikası
 URL'si** ister. `PRIVACY.md` hazır — onu bir yere yayınla:
 
-- [ ] **GitHub Pages** (ücretsiz, en kolay): repo'da `docs/` klasörüne koy,
-      Settings → Pages'ten yayınla. Örn:
-      `https://omertally.github.io/tally/privacy`
+- [ ] **GitHub Pages** (ücretsiz, en kolay): repo'da `docs/` klasörüne koy
+      (örn. `docs/privacy.md`), Settings → Pages'ten `docs/` ile yayınla.
+      URL: `https://bykclk.github.io/tally/privacy`
+      (GitHub kullanıcı adı: **bykclk**, repo adı: **tally** varsayıldı)
 - [ ] veya basit bir Notion/kişisel site sayfası
-- [ ] `PRIVACY.md` içindeki `[GG/AA/YYYY]` ve `[E-POSTA ADRESİ]`
-      yer tutucularını doldur
+- [ ] `PRIVACY.md` yer tutucuları zaten dolduruldu (tarih + e-posta)
 
 ---
 
