@@ -1,10 +1,18 @@
-import { ScrollView, Text, View } from 'react-native';
+import { Alert, ScrollView, Switch, Text, View } from 'react-native';
 import { SegmentedControl } from '@/ui/SegmentedControl';
 import { useTheme, type Theme } from '@/ui/theme';
 import { useT } from '@/lib/i18n';
 import { useLocaleStore } from '@/stores/locale';
 import { useThemeModeStore } from '@/stores/themeMode';
 import { useCurrencyStore } from '@/stores/currency';
+import {
+  useNotificationStore,
+  type DaysBefore,
+} from '@/stores/notifications';
+import {
+  rescheduleAll,
+  requestNotificationPermission,
+} from '@/lib/notifications';
 import type { Currency, LocaleMode, ThemeMode } from '@/types';
 
 export default function SettingsScreen() {
@@ -17,6 +25,30 @@ export default function SettingsScreen() {
   const setThemeModeValue = useThemeModeStore((s) => s.setMode);
   const currency = useCurrencyStore((s) => s.currency);
   const setCurrency = useCurrencyStore((s) => s.setCurrency);
+  const notifEnabled = useNotificationStore((s) => s.enabled);
+  const setNotifEnabled = useNotificationStore((s) => s.setEnabled);
+  const daysBefore = useNotificationStore((s) => s.daysBefore);
+  const setDaysBefore = useNotificationStore((s) => s.setDaysBefore);
+
+  const handleToggleNotif = async (value: boolean) => {
+    if (value) {
+      const granted = await requestNotificationPermission();
+      if (!granted) {
+        Alert.alert(
+          t('settings.notif.deniedTitle'),
+          t('settings.notif.deniedBody'),
+        );
+        return;
+      }
+    }
+    await setNotifEnabled(value);
+    await rescheduleAll();
+  };
+
+  const handleDaysChange = async (days: DaysBefore) => {
+    await setDaysBefore(days);
+    await rescheduleAll();
+  };
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.bg }}>
@@ -67,6 +99,56 @@ export default function SettingsScreen() {
               { value: 'GBP', label: '£ GBP' },
             ]}
           />
+        </Section>
+
+        <Section title={t('settings.notif.title')} theme={theme}>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
+            <Text
+              style={{
+                color: theme.colors.text,
+                fontSize: theme.font.size.md,
+              }}
+            >
+              {t('settings.notif.toggle')}
+            </Text>
+            <Switch
+              value={notifEnabled}
+              onValueChange={(v) => {
+                void handleToggleNotif(v);
+              }}
+              trackColor={{ true: theme.colors.accent }}
+            />
+          </View>
+          {notifEnabled && (
+            <View style={{ gap: theme.spacing(2), marginTop: theme.spacing(2) }}>
+              <Text
+                style={{
+                  color: theme.colors.textMuted,
+                  fontSize: theme.font.size.xs,
+                  paddingHorizontal: theme.spacing(1),
+                }}
+              >
+                {t('settings.notif.daysLabel')}
+              </Text>
+              <SegmentedControl<DaysBefore>
+                value={daysBefore}
+                onChange={(v) => {
+                  void handleDaysChange(v);
+                }}
+                options={[
+                  { value: 1, label: t('settings.notif.day1') },
+                  { value: 2, label: t('settings.notif.day2') },
+                  { value: 3, label: t('settings.notif.day3') },
+                ]}
+              />
+            </View>
+          )}
         </Section>
       </ScrollView>
     </View>

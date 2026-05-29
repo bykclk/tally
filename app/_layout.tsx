@@ -1,12 +1,21 @@
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, StyleSheet, Text, View, useColorScheme } from 'react-native';
+import {
+  ActivityIndicator,
+  AppState,
+  StyleSheet,
+  Text,
+  View,
+  useColorScheme,
+} from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { runMigrations } from '@/db/client';
 import { useCurrencyStore } from '@/stores/currency';
 import { useLocaleStore } from '@/stores/locale';
 import { useThemeModeStore } from '@/stores/themeMode';
+import { useNotificationStore } from '@/stores/notifications';
+import { initNotifications, rescheduleAll } from '@/lib/notifications';
 import { useTheme } from '@/ui/theme';
 
 export default function RootLayout() {
@@ -23,12 +32,22 @@ export default function RootLayout() {
           useLocaleStore.getState().loadFromPrefs(),
           useThemeModeStore.getState().loadFromPrefs(),
           useCurrencyStore.getState().loadFromPrefs(),
+          useNotificationStore.getState().loadFromPrefs(),
         ]);
         setDbReady(true);
+        await initNotifications();
+        await rescheduleAll();
       } catch (e) {
         setDbError(e instanceof Error ? e.message : String(e));
       }
     })();
+  }, []);
+
+  useEffect(() => {
+    const sub = AppState.addEventListener('change', (state) => {
+      if (state === 'active') void rescheduleAll();
+    });
+    return () => sub.remove();
   }, []);
 
   if (dbError) {

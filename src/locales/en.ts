@@ -174,4 +174,15 @@ export const en: Record<TranslationKey, string> = {
   'settings.theme.dark': 'Dark',
   'settings.theme.system': 'System',
   'settings.currency.title': 'Currency',
+  'settings.notif.title': 'Notifications',
+  'settings.notif.toggle': 'Payment reminders',
+  'settings.notif.daysLabel': 'How many days before?',
+  'settings.notif.day1': '1 day',
+  'settings.notif.day2': '2 days',
+  'settings.notif.day3': '3 days',
+  'settings.notif.deniedTitle': 'Notifications not allowed',
+  'settings.notif.deniedBody':
+    'To receive reminders, allow notifications for Tally in your phone settings.',
+
+  'notif.body': 'Due {date} · around {amount}',
 };

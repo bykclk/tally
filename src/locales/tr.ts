@@ -168,6 +168,17 @@ export const tr = {
   'settings.theme.dark': 'Koyu',
   'settings.theme.system': 'Sistem',
   'settings.currency.title': 'Para birimi',
+  'settings.notif.title': 'Bildirimler',
+  'settings.notif.toggle': 'Ödeme hatırlatması',
+  'settings.notif.daysLabel': 'Kaç gün önce hatırlatılsın?',
+  'settings.notif.day1': '1 gün',
+  'settings.notif.day2': '2 gün',
+  'settings.notif.day3': '3 gün',
+  'settings.notif.deniedTitle': 'Bildirim izni yok',
+  'settings.notif.deniedBody':
+    'Hatırlatma alabilmek için telefon ayarlarından Tally\'ye bildirim izni vermen gerekiyor.',
+
+  'notif.body': '{date} son ödeme · yaklaşık {amount}',
 } as const;
 
 export type TranslationKey = keyof typeof tr;

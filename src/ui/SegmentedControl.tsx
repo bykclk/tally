@@ -2,20 +2,20 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { haptics } from '@/lib/haptics';
 import { useTheme } from './theme';
 
-type Option<T extends string> = {
+type Option<T extends string | number> = {
   value: T;
   label: string;
   activeColor?: string;
 };
 
-type Props<T extends string> = {
+type Props<T extends string | number> = {
   options: Option<T>[];
   value: T;
   onChange: (value: T) => void;
   label?: string;
 };
 
-export function SegmentedControl<T extends string>({
+export function SegmentedControl<T extends string | number>({
   options,
   value,
   onChange,
