@@ -193,6 +193,11 @@ export const en: Record<TranslationKey, string> = {
   'common.delete': 'Delete',
   'common.done': 'Done',
 
+  'error.title': 'Something went wrong',
+  'error.body':
+    "An unexpected error occurred. Your data is safe — it's all stored on your phone.",
+  'error.retry': 'Try again',
+
   'balance.title': 'Starting — {month}',
   'balance.subtitle':
     "Enter how much money you have at the start of this month. Future months will roll over from this month's projected ending automatically.",

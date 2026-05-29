@@ -17,6 +17,7 @@ import { useLocaleStore } from '@/stores/locale';
 import { useThemeModeStore } from '@/stores/themeMode';
 import { useNotificationStore } from '@/stores/notifications';
 import { initNotifications, rescheduleAll } from '@/lib/notifications';
+import { ErrorBoundary } from '@/ui/ErrorBoundary';
 import { Onboarding } from '@/ui/Onboarding';
 import { useTheme } from '@/ui/theme';
 
@@ -91,15 +92,16 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
-      <Stack
-        screenOptions={{
-          headerStyle: { backgroundColor: theme.colors.bg },
-          headerTintColor: theme.colors.text,
-          headerBackTitle: '',
-          headerBackButtonDisplayMode: 'minimal',
-          contentStyle: { backgroundColor: theme.colors.bg },
-        }}
-      >
+      <ErrorBoundary>
+        <Stack
+          screenOptions={{
+            headerStyle: { backgroundColor: theme.colors.bg },
+            headerTintColor: theme.colors.text,
+            headerBackTitle: '',
+            headerBackButtonDisplayMode: 'minimal',
+            contentStyle: { backgroundColor: theme.colors.bg },
+          }}
+        >
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="entry/new" options={{ presentation: 'modal', title: '' }} />
         <Stack.Screen
@@ -115,7 +117,8 @@ export default function RootLayout() {
         <Stack.Screen name="balance" options={{ presentation: 'modal', title: '' }} />
         <Stack.Screen name="breakdown" options={{ presentation: 'modal', title: '' }} />
         <Stack.Screen name="about" options={{ presentation: 'modal', title: '' }} />
-      </Stack>
+        </Stack>
+      </ErrorBoundary>
     </GestureHandlerRootView>
   );
 }

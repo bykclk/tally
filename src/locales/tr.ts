@@ -183,6 +183,11 @@ export const tr = {
   'common.delete': 'Sil',
   'common.done': 'Tamam',
 
+  'error.title': 'Bir şey ters gitti',
+  'error.body':
+    'Beklenmeyen bir hata oluştu. Verilerin güvende — hepsi telefonunda kayıtlı.',
+  'error.retry': 'Tekrar dene',
+
   'balance.title': '{month} başlangıç',
   'balance.subtitle':
     'Ay başında hesabında ne kadar para olduğunu yaz. Sonraki aylar bu ayın projeksiyonundan otomatik devralır.',
