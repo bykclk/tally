@@ -1,6 +1,6 @@
 # Gizlilik Politikası — Tally
 
-**Son güncelleme:** [GG/AA/YYYY]
+**Son güncelleme:** 29/05/2026
 
 Tally, aylık nakit akışını takip etmen ve kredi planlaman için tasarlanmış,
 **tamamen çevrimdışı** çalışan bir kişisel finans uygulamasıdır.
@@ -57,13 +57,13 @@ bu adreste yayınlanır.
 
 ## İletişim
 
-Sorularını [E-POSTA ADRESİ] adresine iletebilirsin.
+Sorularını bykclk@icloud.com adresine iletebilirsin.
 
 ---
 
 # Privacy Policy — Tally (English)
 
-**Last updated:** [DD/MM/YYYY]
+**Last updated:** 29/05/2026
 
 Tally is a fully **offline** personal finance app for tracking monthly cash
 flow and planning loan payoff.
@@ -102,4 +102,4 @@ Interest and early-payoff figures are estimates.
 
 ## Contact
 
-Questions: [EMAIL ADDRESS]
+Questions: bykclk@icloud.com

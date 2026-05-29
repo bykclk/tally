@@ -10,7 +10,7 @@ Hedef: iOS, Türkiye App Store, Finans kategorisi.
 
 ## 0. Ön koşullar
 
-- [ ] **Apple Developer hesabı** (yıllık $99) — https://developer.apple.com
+- [x] **Apple Developer hesabı** (yıllık $99) — başvuruldu (29/05/2026), onay bekleniyor
 - [ ] **EAS hesabı** (Expo) — `npx eas login` (ücretsiz plan yeterli başlangıçta)
 - [ ] Mac'te Xcode kurulu (yerel build alacaksan)
 
@@ -70,16 +70,48 @@ URL'si** ister. `PRIVACY.md` hazır — onu bir yere yayınla:
 
 https://appstoreconnect.apple.com → My Apps → +
 
-- [ ] **İsim:** Tally — Bütçe & Kredi (veya kısaca Tally; isim benzersiz olmalı,
-      "Tally" alınmış olabilir — alternatif: "Tally Bütçe")
-- [ ] **Birincil dil:** Türkçe
+- [ ] **İsim:** "Tally" alınmış — benzersiz bir ad seç. İngilizce-birincil
+      olduğumuz için: **Tally — Budget & Loans** veya **Tally Budget**
+      (ana ekran adı "Tally" kalır; bu yalnızca mağaza listeleme adı)
+- [ ] **Birincil dil (Primary Language):** İngilizce (English) —
+      uluslararası erişim için. Türkçe'yi **ek bir lokalizasyon** olarak
+      ekle (aşağıda her iki metin de var). Uygulama UI'si zaten cihaz
+      diline göre TR/EN otomatik.
 - [ ] **Bundle ID:** com.omertally.app
 - [ ] **SKU:** tally-001 (serbest)
 - [ ] **Kategori:** Finans (Finance)
 
 ---
 
-## 5. Mağaza metni (Türkçe taslak)
+## 5. Mağaza metni
+
+### 5a. İngilizce (birincil dil — Primary)
+
+**Subtitle (max 30 chars):**
+> See what's left, plan ahead
+
+**Keywords (max 100 chars, comma-separated):**
+> budget,loan,bills,cash flow,expense,income,savings,finance,installment,money
+
+**Description:**
+> Tally shows you exactly what will be left in your pocket at the end of the
+> month. It replaces the spreadsheet.
+>
+> • Enter your income and expenses; see your "confirmed remaining" and
+>   "estimated remaining" update live.
+> • Variable bills (electricity, water, gas) are estimated automatically
+>   from the average of the last 3 months.
+> • Track your loans and calculate how much interest and time an early
+>   payoff would save you.
+> • Payment reminders, multi-month trends, category breakdown.
+>
+> Privacy first: all your data stays only on your phone. No server, no
+> tracking, no bank connection.
+>
+> Tally gives no financial advice; it only does math on the numbers you
+> enter. Interest figures are estimates.
+
+### 5b. Türkçe (ek lokalizasyon)
 
 **Altyazı (subtitle, max 30 karakter):**
 > Ay sonu kalanını gör, planla
