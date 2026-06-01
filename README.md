@@ -56,5 +56,5 @@ npx expo run:ios     # or: npx expo run:android
 ## Project docs
 
 - [`PUBLISHING.md`](./PUBLISHING.md) — App Store release checklist
-- [`IDEAS.md`](./IDEAS.md) — roadmap and cross-version changelog
+- [`CHANGELOG.md`](./CHANGELOG.md) — version history, backlog and out-of-scope notes
 - [`docs/privacy.md`](./docs/privacy.md) — privacy policy (also at the URL above)

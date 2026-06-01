@@ -11,6 +11,7 @@ import {
   View,
 } from 'react-native';
 import { MoneyField } from '@/ui/MoneyField';
+import { SegmentedControl } from '@/ui/SegmentedControl';
 import { TextField } from '@/ui/TextField';
 import { useTheme, type Theme } from '@/ui/theme';
 import { useT, useLocale, type TranslationKey } from '@/lib/i18n';
@@ -25,7 +26,7 @@ import {
   upsertInstance,
 } from '@/db/queries/instances';
 import { estimateForEntry } from '@/lib/estimate';
-import type { Entry, Locale } from '@/types';
+import type { Entry, InstanceStatus, Locale } from '@/types';
 
 type Errors = Partial<Record<'amount' | 'day', TranslationKey>>;
 
@@ -58,9 +59,10 @@ export default function ConfirmInstanceScreen() {
   const [notFound, setNotFound] = useState(false);
   const [amount, setAmount] = useState('');
   const [day, setDay] = useState('');
+  const [status, setStatus] = useState<InstanceStatus>('confirmed');
   const [submitted, setSubmitted] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [hasConfirmed, setHasConfirmed] = useState(false);
+  const [hasInstance, setHasInstance] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -95,7 +97,8 @@ export default function ConfirmInstanceScreen() {
       setEntry(e);
       setAmount(moneyValueToInput(defaultAmount, locale));
       setDay(String(defaultDay));
-      setHasConfirmed(existing?.status === 'confirmed');
+      setStatus(existing?.status ?? 'confirmed');
+      setHasInstance(existing !== null);
       setLoading(false);
     })();
     return () => {
@@ -128,8 +131,8 @@ export default function ConfirmInstanceScreen() {
         month,
         amount: amt,
         date: isoForDayInMonth(year, month, d),
-        status: 'confirmed',
-        isEstimate: false,
+        status,
+        isEstimate: status === 'pending',
       });
       haptics.success();
       router.back();
@@ -247,14 +250,24 @@ export default function ConfirmInstanceScreen() {
             lineHeight: theme.font.size.sm * 1.4,
           }}
         >
-          {hasConfirmed ? t('confirm.subtitle.edit') : t('confirm.subtitle')}
+          {hasInstance ? t('confirm.subtitle.edit') : t('confirm.subtitle')}
         </Text>
+
+        <SegmentedControl<InstanceStatus>
+          label={t('confirm.status')}
+          value={status}
+          onChange={setStatus}
+          options={[
+            { value: 'pending', label: t('confirm.status.pending') },
+            { value: 'confirmed', label: t('confirm.status.confirmed') },
+          ]}
+        />
 
         <MoneyField
           label={t('confirm.field.amount')}
           value={amount}
           onChangeText={setAmount}
-          autoFocus={!hasConfirmed}
+          autoFocus={!hasInstance}
           error={submitted && errors.amount ? t(errors.amount) : null}
         />
 
@@ -320,7 +333,7 @@ export default function ConfirmInstanceScreen() {
           </Text>
         </Pressable>
 
-        {hasConfirmed && (
+        {hasInstance && (
           <Pressable
             onPress={handleUnconfirm}
             disabled={saving}
@@ -344,7 +357,7 @@ export default function ConfirmInstanceScreen() {
                 textAlign: 'center',
               }}
             >
-              {t('confirm.unconfirm')}
+              {t('confirm.reset')}
             </Text>
           </Pressable>
         )}

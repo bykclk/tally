@@ -26,7 +26,7 @@ Sonra:
 - [ ] Yeni build'i seç → **Submit for Review**
 - [ ] Onay sonrası: otomatik/manuel yayınla
 - [ ] Yayınlanınca commit'i tag'le: `git tag v1.1.0 && git push --tags`
-      ve `IDEAS.md`'de **Çıkanlar**'a taşı
+      ve `CHANGELOG.md`'de **Unreleased**'i sürüm başlığına taşı
 
 > **Encryption / export compliance:** `app.json`'da
 > `ITSAppUsesNonExemptEncryption: false` gömülü → her build'de otomatik
