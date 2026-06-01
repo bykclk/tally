@@ -31,16 +31,7 @@ Bir özellik bitince **Çıkanlar**'a taşı, git tag'iyle eşleştir.
 
 ## Sırada (öncelikli adaylar)
 
-1. **Yedek / geri yükleme** 🔴 *en öncelikli — veri güvenliği*
-   - SQLite dosyasını iCloud/Dosyalar'a yedekle + geri yükle
-   - `expo-file-system` + `expo-sharing` + `expo-document-picker` (native dep → rebuild)
-   - WAL checkpoint sonrası kopyala; geri yüklemede DB kapat→değiştir→aç→migration
-   - Reset artık var ve yedeksiz; bu özellik onun güvenlik ağı
-
-2. **"Sıfırlamadan önce yedek al" uyarısı**
-   - Reset onayına "önce yedekle" seçeneği — yedek özelliği gelince
-
-3. **Locale-duyarlı para *girişi***
+1. **Locale-duyarlı para *girişi***
    - Gösterim locale-duyarlı oldu; giriş hâlâ Türkçe-stil (`1.250,50`)
    - İngilizce kullanıcı `1,250.50` yazabilsin — küçük ama uluslararası için doğru
 
@@ -59,6 +50,11 @@ Bir özellik bitince **Çıkanlar**'a taşı, git tag'iyle eşleştir.
 ## Kapsam dışı
 
 - **Banka entegrasyonu** — ❌ ASLA (CLAUDE.md). Güvenlik/gizlilik gereği masada değil.
+- **Uygulama-içi yedek / geri yükleme** — iOS, uygulama verisini cihaz iCloud
+  yedeğine zaten dahil ediyor (op-sqlite DB'si Documents'ta). Yeni telefona
+  geçiş/restore'da veri korunur → ayrı bir export/restore hayati değil,
+  power-user/taşınabilirlik özelliği. (Cihaz yedeği kapalı kullanıcı senaryosu
+  için ileride yeniden değerlendirilebilir.)
 - **Bütçe hedefleri / harcama limitleri** — app'i "budgeting"e çevirir; dikkatli düşünülmeli
 - **Çoklu para birimi *matematiği*** (kur dönüşümü) — online kur kaynağı ister, offline'ı zorlar. (Şu an: sadece gösterim sembolü değişir, dönüşüm yok.)
 - **Veri export (CSV/analiz)** — yedek ile karıştırma; bu "raporlama" ayrı bir karar
