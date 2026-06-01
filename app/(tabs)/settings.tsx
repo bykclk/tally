@@ -199,12 +199,11 @@ export default function SettingsScreen() {
             />
           </View>
           {notifEnabled && (
-            <View style={{ gap: theme.spacing(2), marginTop: theme.spacing(2) }}>
+            <View style={{ gap: theme.spacing(2) }}>
               <Text
                 style={{
                   color: theme.colors.textMuted,
                   fontSize: theme.font.size.xs,
-                  paddingHorizontal: theme.spacing(1),
                 }}
               >
                 {t('settings.notif.daysLabel')}
@@ -229,16 +228,11 @@ export default function SettingsScreen() {
             <>
               <Pressable
                 onPress={handleSeed}
-                style={({ pressed }) => [
-                  {
-                    borderColor: theme.colors.border,
-                    borderWidth: 1,
-                    borderRadius: theme.radius.md,
-                    paddingVertical: theme.spacing(3),
-                    alignItems: 'center',
-                    opacity: pressed ? 0.6 : 1,
-                  },
-                ]}
+                style={({ pressed }) => ({
+                  paddingVertical: theme.spacing(1),
+                  alignItems: 'center',
+                  opacity: pressed ? 0.6 : 1,
+                })}
               >
                 <Text
                   style={{
@@ -255,7 +249,6 @@ export default function SettingsScreen() {
                   color: theme.colors.textMuted,
                   fontSize: theme.font.size.xs,
                   lineHeight: theme.font.size.xs * 1.4,
-                  paddingHorizontal: theme.spacing(1),
                 }}
               >
                 {t('settings.sample.hint')}
@@ -265,16 +258,11 @@ export default function SettingsScreen() {
             <>
               <Pressable
                 onPress={handleReset}
-                style={({ pressed }) => [
-                  {
-                    borderColor: theme.colors.border,
-                    borderWidth: 1,
-                    borderRadius: theme.radius.md,
-                    paddingVertical: theme.spacing(3),
-                    alignItems: 'center',
-                    opacity: pressed ? 0.6 : 1,
-                  },
-                ]}
+                style={({ pressed }) => ({
+                  paddingVertical: theme.spacing(1),
+                  alignItems: 'center',
+                  opacity: pressed ? 0.6 : 1,
+                })}
               >
                 <Text
                   style={{
@@ -291,7 +279,6 @@ export default function SettingsScreen() {
                   color: theme.colors.textMuted,
                   fontSize: theme.font.size.xs,
                   lineHeight: theme.font.size.xs * 1.4,
-                  paddingHorizontal: theme.spacing(1),
                 }}
               >
                 {t('settings.reset.hint')}
@@ -350,7 +337,7 @@ function Section({
       >
         {title}
       </Text>
-      {children}
+      <Card style={{ gap: theme.spacing(2) }}>{children}</Card>
     </View>
   );
 }

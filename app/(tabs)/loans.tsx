@@ -1,5 +1,5 @@
 import { useFocusEffect, useRouter } from 'expo-router';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Card } from '@/ui/Card';
@@ -31,6 +31,16 @@ export default function LoansScreen() {
       };
     }, []),
   );
+
+  const totals = useMemo(() => {
+    let balance = 0;
+    let monthly = 0;
+    for (const l of loans) {
+      balance += l.balance;
+      if (l.balance > 0) monthly += l.monthlyPayment;
+    }
+    return { balance, monthly };
+  }, [loans]);
 
   return (
     <SafeAreaView
@@ -87,7 +97,40 @@ export default function LoansScreen() {
             </Pressable>
           </Card>
         ) : (
-          <Card style={{ padding: 0, overflow: 'hidden' }}>
+          <>
+            <Card style={{ gap: theme.spacing(3) }}>
+              <View>
+                <Text
+                  style={{
+                    color: theme.colors.textMuted,
+                    fontSize: theme.font.size.xs,
+                    fontWeight: theme.font.weight.semibold,
+                    textTransform: 'uppercase',
+                    letterSpacing: 0.6,
+                    marginBottom: theme.spacing(1),
+                  }}
+                >
+                  {t('loans.totalDebt')}
+                </Text>
+                <MoneyText amount={totals.balance} size="xxl" bold />
+              </View>
+              <View
+                style={{
+                  height: StyleSheet.hairlineWidth,
+                  backgroundColor: theme.colors.border,
+                }}
+              />
+              <View style={rowStyles.between}>
+                <Text
+                  style={{ color: theme.colors.textMuted, fontSize: theme.font.size.sm }}
+                >
+                  {t('loans.monthlyTotal')}
+                </Text>
+                <MoneyText amount={totals.monthly} size="md" tone="muted" />
+              </View>
+            </Card>
+
+            <Card style={{ padding: 0, overflow: 'hidden' }}>
             {loans.map((loan, idx) => (
               <View key={loan.id}>
                 {idx > 0 && (
@@ -111,7 +154,8 @@ export default function LoansScreen() {
                 />
               </View>
             ))}
-          </Card>
+            </Card>
+          </>
         )}
       </ScrollView>
 
@@ -133,10 +177,15 @@ function LoanRow({
   onPress: () => void;
 }) {
   const formatMoney = useFormatMoney();
-  const subtitle =
-    loan.loanType === 'installment' && loan.numInstallments != null
-      ? `${loan.paidCount}/${loan.numInstallments} · ${formatMoney(loan.monthlyPayment)}`
-      : `%${(loan.monthlyRate * 100).toFixed(2)} · ${formatMoney(loan.monthlyPayment)}`;
+  const isInstallment =
+    loan.loanType === 'installment' && loan.numInstallments != null;
+  const subtitle = isInstallment
+    ? `${loan.paidCount}/${loan.numInstallments} · ${formatMoney(loan.monthlyPayment)}`
+    : `%${(loan.monthlyRate * 100).toFixed(2)} · ${formatMoney(loan.monthlyPayment)}`;
+  const pct =
+    isInstallment && loan.numInstallments
+      ? Math.min(1, loan.paidCount / loan.numInstallments)
+      : null;
 
   return (
     <Pressable
@@ -150,7 +199,7 @@ function LoanRow({
         },
       ]}
     >
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, marginRight: theme.spacing(3), gap: 2 }}>
         <Text
           numberOfLines={1}
           style={{
@@ -165,11 +214,30 @@ function LoanRow({
           style={{
             color: theme.colors.textMuted,
             fontSize: theme.font.size.xs,
-            marginTop: 2,
           }}
         >
           {subtitle}
         </Text>
+        {pct !== null && (
+          <View
+            style={{
+              height: 4,
+              borderRadius: 2,
+              backgroundColor: theme.colors.surfaceMuted,
+              overflow: 'hidden',
+              marginTop: theme.spacing(1),
+            }}
+          >
+            <View
+              style={{
+                height: 4,
+                width: `${Math.max(2, pct * 100)}%`,
+                borderRadius: 2,
+                backgroundColor: theme.colors.accent,
+              }}
+            />
+          </View>
+        )}
       </View>
       <MoneyText amount={loan.balance} size="md" bold />
     </Pressable>
@@ -182,4 +250,9 @@ const styles = StyleSheet.create({
 
 const rowStyles = StyleSheet.create({
   row: { flexDirection: 'row', alignItems: 'center' },
+  between: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
 });

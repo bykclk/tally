@@ -52,6 +52,8 @@ export const en: Record<TranslationKey, string> = {
   'breakdown.uncategorized': 'Other',
   'breakdown.empty': 'No expenses for this month.',
 
+  'loans.totalDebt': 'Total remaining debt',
+  'loans.monthlyTotal': 'Monthly payment',
   'loans.empty.title': 'No loans yet',
   'loans.empty.subtitle': 'Add a loan to simulate an early payoff.',
   'loans.empty.cta': '+ Add your first loan',

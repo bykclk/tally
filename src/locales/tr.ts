@@ -47,6 +47,8 @@ export const tr = {
   'breakdown.uncategorized': 'Diğer',
   'breakdown.empty': 'Bu ay için gider yok.',
 
+  'loans.totalDebt': 'Toplam kalan borç',
+  'loans.monthlyTotal': 'Aylık ödeme',
   'loans.empty.title': 'Henüz kredi yok',
   'loans.empty.subtitle': 'Bir kredi ekleyerek erken kapama simülasyonu yap.',
   'loans.empty.cta': '+ İlk krediyi ekle',

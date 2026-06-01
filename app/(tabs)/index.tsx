@@ -153,69 +153,62 @@ export default function HomeScreen() {
           gap: theme.spacing(4),
         }}
       >
-        <Pressable
-          onPress={() => router.push('/balance')}
-          style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
-        >
-          <Card
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              paddingVertical: theme.spacing(3),
-            }}
-          >
-            <Text
-              style={{
-                color: theme.colors.textMuted,
-                fontSize: theme.font.size.sm,
-              }}
-            >
-              {t('home.startingBalance')}
-            </Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                gap: theme.spacing(2),
-              }}
-            >
-              <MoneyText amount={startingBalance} size="md" />
-              <Ionicons
-                name="chevron-forward"
-                size={16}
-                color={theme.colors.textMuted}
-              />
-            </View>
-          </Card>
-        </Pressable>
-
-        <View style={{ flexDirection: 'row', gap: theme.spacing(3) }}>
-          <Card style={{ flex: 1 }}>
+        <Card style={{ gap: theme.spacing(3) }}>
+          <View>
             <Text
               style={{
                 color: theme.colors.textMuted,
                 fontSize: theme.font.size.xs,
-                marginBottom: theme.spacing(2),
+                fontWeight: theme.font.weight.semibold,
+                textTransform: 'uppercase',
+                letterSpacing: 0.6,
+                marginBottom: theme.spacing(1),
               }}
             >
               {t('home.confirmedRemaining')}
             </Text>
-            <MoneyText amount={totals.confirmedRemaining} size="lg" bold />
-          </Card>
-          <Card variant="muted" style={{ flex: 1 }}>
-            <Text
-              style={{
-                color: theme.colors.textMuted,
-                fontSize: theme.font.size.xs,
-                marginBottom: theme.spacing(2),
-              }}
-            >
+            <MoneyText
+              amount={totals.confirmedRemaining}
+              size="xxl"
+              bold
+              tone={totals.confirmedRemaining < 0 ? 'expense' : 'default'}
+            />
+          </View>
+
+          <View
+            style={{ height: StyleSheet.hairlineWidth, backgroundColor: theme.colors.border }}
+          />
+
+          <View style={styles.summaryRow}>
+            <Text style={{ color: theme.colors.textMuted, fontSize: theme.font.size.sm }}>
               {t('home.estimatedRemaining')}
             </Text>
-            <MoneyText amount={totals.estimatedRemaining} size="lg" tone="muted" />
-          </Card>
-        </View>
+            <MoneyText amount={totals.estimatedRemaining} size="md" tone="muted" />
+          </View>
+
+          <View
+            style={{ height: StyleSheet.hairlineWidth, backgroundColor: theme.colors.border }}
+          />
+
+          <Pressable
+            onPress={() => router.push('/balance')}
+            style={({ pressed }) => [styles.summaryRow, { opacity: pressed ? 0.6 : 1 }]}
+          >
+            <Text style={{ color: theme.colors.textMuted, fontSize: theme.font.size.sm }}>
+              {t('home.startingBalance')}
+            </Text>
+            <View
+              style={{ flexDirection: 'row', alignItems: 'center', gap: theme.spacing(1) }}
+            >
+              <MoneyText amount={startingBalance} size="md" tone="muted" />
+              <Ionicons
+                name="chevron-forward"
+                size={15}
+                color={theme.colors.textMuted}
+              />
+            </View>
+          </Pressable>
+        </Card>
 
         {!hasAny ? (
           <Card style={{ alignItems: 'center', paddingVertical: theme.spacing(10) }}>
@@ -302,18 +295,36 @@ function Section({
 }) {
   return (
     <View style={{ gap: theme.spacing(2) }}>
-      <Text
+      <View
         style={{
-          color: theme.colors.textMuted,
-          fontSize: theme.font.size.xs,
-          fontWeight: theme.font.weight.semibold,
-          textTransform: 'uppercase',
-          letterSpacing: 0.6,
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
           paddingHorizontal: theme.spacing(1),
         }}
       >
-        {title}
-      </Text>
+        <Text
+          style={{
+            color: theme.colors.textMuted,
+            fontSize: theme.font.size.xs,
+            fontWeight: theme.font.weight.semibold,
+            textTransform: 'uppercase',
+            letterSpacing: 0.6,
+          }}
+        >
+          {title}
+        </Text>
+        <Text
+          style={{
+            color: theme.colors.textMuted,
+            fontSize: theme.font.size.xs,
+            fontWeight: theme.font.weight.semibold,
+            fontVariant: ['tabular-nums'],
+          }}
+        >
+          {items.length}
+        </Text>
+      </View>
       <Card style={{ padding: 0, overflow: 'hidden' }}>
         {items.map((it, idx) => (
           <View key={it.id}>
@@ -336,6 +347,11 @@ function Section({
 
 const styles = StyleSheet.create({
   root: { flex: 1 },
+  summaryRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
