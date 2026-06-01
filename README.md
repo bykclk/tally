@@ -14,6 +14,8 @@ Built with React Native (Expo). Turkish-first, with full English support.
 - **Fixed & variable entries** — utility bills (electricity, water, gas) whose
   amount and due day change each month are estimated from the average of the
   last three confirmed months.
+- **One-time entries** — a doctor visit, a gift, an unexpected purchase that
+  belongs only to the month it happens, so month-end remaining stays accurate.
 - **Loans** — both open-ended loans (with an early-payoff simulator showing
   interest and time saved) and fixed-installment loans (with payment
   tracking).
@@ -51,6 +53,8 @@ npm install
 npx expo run:ios     # or: npx expo run:android
 ```
 
-## Publishing
+## Project docs
 
-See [`PUBLISHING.md`](./PUBLISHING.md) for the App Store release checklist.
+- [`PUBLISHING.md`](./PUBLISHING.md) — App Store release checklist
+- [`IDEAS.md`](./IDEAS.md) — roadmap and cross-version changelog
+- [`docs/privacy.md`](./docs/privacy.md) — privacy policy (also at the URL above)
