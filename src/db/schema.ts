@@ -1,4 +1,4 @@
-export const CURRENT_USER_VERSION = 6;
+export const CURRENT_USER_VERSION = 7;
 
 export const MIGRATIONS: Record<number, string[]> = {
   1: [
@@ -85,5 +85,10 @@ export const MIGRATIONS: Record<number, string[]> = {
       updated_at INTEGER NOT NULL,
       PRIMARY KEY (year, month)
     );`,
+  ],
+  7: [
+    `ALTER TABLE entries ADD COLUMN recurrence TEXT NOT NULL DEFAULT 'monthly';`,
+    `ALTER TABLE entries ADD COLUMN one_time_year INTEGER;`,
+    `ALTER TABLE entries ADD COLUMN one_time_month INTEGER;`,
   ],
 };

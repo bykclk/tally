@@ -47,8 +47,16 @@ export async function buildMonthlyItems(
   const paymentByLoan = new Map<string, LoanPayment>();
   for (const p of loanPayments) paymentByLoan.set(p.loanId, p);
 
+  // Monthly entries recur every month; one-time entries appear only in their
+  // anchored (year, month).
+  const monthEntries = entries.filter(
+    (e) =>
+      e.recurrence !== 'once' ||
+      (e.oneTimeYear === year && e.oneTimeMonth === month),
+  );
+
   const entryItems: MonthlyItem[] = await Promise.all(
-    entries.map(async (entry): Promise<MonthlyItem> => {
+    monthEntries.map(async (entry): Promise<MonthlyItem> => {
       const instance = instanceByEntry.get(entry.id) ?? null;
 
       if (instance) {

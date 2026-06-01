@@ -12,27 +12,33 @@ import {
   View,
 } from 'react-native';
 import { MoneyField } from '@/ui/MoneyField';
+import { MonthYearField } from '@/ui/MonthYearField';
 import { SegmentedControl } from '@/ui/SegmentedControl';
 import { TextField } from '@/ui/TextField';
 import { useTheme, type Theme } from '@/ui/theme';
 import { useT, type TranslationKey } from '@/lib/i18n';
 import { haptics } from '@/lib/haptics';
+import { currentMonth } from '@/lib/date';
 import { moneyValueToInput } from '@/lib/moneyInput';
+import { useMonthStore } from '@/stores/month';
 import {
   createEntry,
   deleteEntry,
   getEntry,
   updateEntry,
 } from '@/db/queries/entries';
-import type { Direction, Entry, Kind } from '@/types';
+import type { Direction, Entry, Kind, Recurrence } from '@/types';
 
 type FormState = {
+  recurrence: Recurrence;
   direction: Direction;
   kind: Kind;
   name: string;
   amount: string;
   dayOfMonth: string;
   category: string;
+  year: number;
+  month: number;
 };
 
 type Errors = Partial<Record<'name' | 'amount' | 'dayOfMonth', TranslationKey>>;
@@ -60,13 +66,17 @@ function validate(form: FormState): Errors {
 }
 
 function entryToForm(entry: Entry): FormState {
+  const cm = currentMonth();
   return {
+    recurrence: entry.recurrence,
     direction: entry.direction,
     kind: entry.kind,
     name: entry.name,
     amount: moneyValueToInput(entry.amount),
     dayOfMonth: String(entry.dayOfMonth),
     category: entry.category ?? '',
+    year: entry.oneTimeYear ?? cm.year,
+    month: entry.oneTimeMonth ?? cm.month,
   };
 }
 
@@ -76,14 +86,18 @@ export default function EntryFormScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id?: string }>();
   const isEdit = Boolean(id);
+  const viewedMonth = useMonthStore.getState();
 
   const [form, setForm] = useState<FormState>({
+    recurrence: 'monthly',
     direction: 'expense',
     kind: 'fixed',
     name: '',
     amount: '',
     dayOfMonth: '',
     category: '',
+    year: viewedMonth.year,
+    month: viewedMonth.month,
   });
   const [loading, setLoading] = useState(isEdit);
   const [notFound, setNotFound] = useState(false);
@@ -124,13 +138,18 @@ export default function EntryFormScreen() {
     if (amount === null || day === null) return;
     setSaving(true);
     try {
+      const isOnce = form.recurrence === 'once';
       const payload = {
         name: form.name,
         direction: form.direction,
-        kind: form.kind,
+        // One-time entries have no fixed/variable estimate behaviour.
+        kind: isOnce ? ('fixed' as Kind) : form.kind,
         amount,
         dayOfMonth: day,
         category: form.category,
+        recurrence: form.recurrence,
+        oneTimeYear: isOnce ? form.year : null,
+        oneTimeMonth: isOnce ? form.month : null,
       };
       if (isEdit && id) {
         await updateEntry(id, payload);
@@ -174,7 +193,7 @@ export default function EntryFormScreen() {
   };
 
   const amountLabel =
-    form.kind === 'variable'
+    form.recurrence === 'monthly' && form.kind === 'variable'
       ? t('entry.field.amountEstimate')
       : t('entry.field.amount');
   const namePlaceholder =
@@ -260,6 +279,16 @@ export default function EntryFormScreen() {
         }}
         keyboardShouldPersistTaps="handled"
       >
+        <SegmentedControl<Recurrence>
+          label={t('entry.field.recurrence')}
+          value={form.recurrence}
+          onChange={(v) => update('recurrence', v)}
+          options={[
+            { value: 'monthly', label: t('entry.recurrence.monthly') },
+            { value: 'once', label: t('entry.recurrence.once') },
+          ]}
+        />
+
         <SegmentedControl<Direction>
           label={t('entry.field.direction')}
           value={form.direction}
@@ -278,26 +307,37 @@ export default function EntryFormScreen() {
           ]}
         />
 
-        <View style={{ gap: theme.spacing(1) }}>
-          <SegmentedControl<Kind>
-            label={t('entry.field.kind')}
-            value={form.kind}
-            onChange={(v) => update('kind', v)}
-            options={[
-              { value: 'fixed', label: t('entry.kind.fixed') },
-              { value: 'variable', label: t('entry.kind.variable') },
-            ]}
+        {form.recurrence === 'monthly' ? (
+          <View style={{ gap: theme.spacing(1) }}>
+            <SegmentedControl<Kind>
+              label={t('entry.field.kind')}
+              value={form.kind}
+              onChange={(v) => update('kind', v)}
+              options={[
+                { value: 'fixed', label: t('entry.kind.fixed') },
+                { value: 'variable', label: t('entry.kind.variable') },
+              ]}
+            />
+            <Text
+              style={{
+                color: theme.colors.textMuted,
+                fontSize: theme.font.size.xs,
+                lineHeight: theme.font.size.xs * 1.4,
+              }}
+            >
+              {kindHint}
+            </Text>
+          </View>
+        ) : (
+          <MonthYearField
+            label={t('entry.field.month')}
+            year={form.year}
+            month={form.month}
+            onChange={(y, m) =>
+              setForm((s) => ({ ...s, year: y, month: m }))
+            }
           />
-          <Text
-            style={{
-              color: theme.colors.textMuted,
-              fontSize: theme.font.size.xs,
-              lineHeight: theme.font.size.xs * 1.4,
-            }}
-          >
-            {kindHint}
-          </Text>
-        </View>
+        )}
 
         <TextField
           label={t('entry.field.name')}

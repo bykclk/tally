@@ -59,6 +59,10 @@ export const tr = {
   'entry.delete.confirmMessage':
     'Bu kayıt ve tüm aylık girişleri silinecek. Geri alınamaz.',
   'entry.notFound': 'Kayıt bulunamadı.',
+  'entry.field.recurrence': 'Tekrar',
+  'entry.recurrence.monthly': 'Her ay',
+  'entry.recurrence.once': 'Tek seferlik',
+  'entry.field.month': 'Ay',
   'entry.field.direction': 'Tür',
   'entry.field.kind': 'Tip',
   'entry.field.name': 'İsim',

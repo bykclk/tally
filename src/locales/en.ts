@@ -64,6 +64,10 @@ export const en: Record<TranslationKey, string> = {
   'entry.delete.confirmMessage':
     'This entry and all of its monthly records will be deleted. This cannot be undone.',
   'entry.notFound': 'Entry not found.',
+  'entry.field.recurrence': 'Recurrence',
+  'entry.recurrence.monthly': 'Monthly',
+  'entry.recurrence.once': 'One-time',
+  'entry.field.month': 'Month',
   'entry.field.direction': 'Type',
   'entry.field.kind': 'Kind',
   'entry.field.name': 'Name',

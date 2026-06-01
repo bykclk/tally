@@ -1,5 +1,6 @@
 export type Direction = 'income' | 'expense';
 export type Kind = 'fixed' | 'variable';
+export type Recurrence = 'monthly' | 'once';
 export type InstanceStatus = 'confirmed' | 'pending';
 export type Locale = 'tr' | 'en';
 export type LocaleMode = Locale | 'system';
@@ -14,6 +15,9 @@ export type Entry = {
   amount: number;
   dayOfMonth: number;
   category: string | null;
+  recurrence: Recurrence;
+  oneTimeYear: number | null;
+  oneTimeMonth: number | null;
   active: boolean;
   createdAt: number;
   updatedAt: number;

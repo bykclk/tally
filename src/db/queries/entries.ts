@@ -1,6 +1,6 @@
 import { getDb } from '../client';
 import { uuid } from '@/lib/uuid';
-import type { Entry, Direction, Kind } from '@/types';
+import type { Entry, Direction, Kind, Recurrence } from '@/types';
 
 export type CreateEntryInput = {
   name: string;
@@ -9,6 +9,9 @@ export type CreateEntryInput = {
   amount: number;
   dayOfMonth: number;
   category?: string | null;
+  recurrence?: Recurrence;
+  oneTimeYear?: number | null;
+  oneTimeMonth?: number | null;
 };
 
 type EntryRow = {
@@ -19,6 +22,9 @@ type EntryRow = {
   amount: number;
   day_of_month: number;
   category: string | null;
+  recurrence: Recurrence;
+  one_time_year: number | null;
+  one_time_month: number | null;
   active: number;
   created_at: number;
   updated_at: number;
@@ -33,6 +39,9 @@ function rowToEntry(r: EntryRow): Entry {
     amount: r.amount,
     dayOfMonth: r.day_of_month,
     category: r.category,
+    recurrence: r.recurrence,
+    oneTimeYear: r.one_time_year,
+    oneTimeMonth: r.one_time_month,
     active: r.active === 1,
     createdAt: r.created_at,
     updatedAt: r.updated_at,
@@ -100,6 +109,18 @@ export async function updateEntry(
     sets.push('category = ?');
     params.push(cat);
   }
+  if (patch.recurrence !== undefined) {
+    sets.push('recurrence = ?');
+    params.push(patch.recurrence);
+  }
+  if (patch.oneTimeYear !== undefined) {
+    sets.push('one_time_year = ?');
+    params.push(patch.oneTimeYear);
+  }
+  if (patch.oneTimeMonth !== undefined) {
+    sets.push('one_time_month = ?');
+    params.push(patch.oneTimeMonth);
+  }
   if (sets.length > 0) {
     const now = Date.now();
     sets.push('updated_at = ?');
@@ -125,10 +146,14 @@ export async function createEntry(input: CreateEntryInput): Promise<Entry> {
   const id = uuid();
   const now = Date.now();
   const category = input.category?.trim() ? input.category.trim() : null;
+  const recurrence: Recurrence = input.recurrence ?? 'monthly';
+  const oneTimeYear = recurrence === 'once' ? (input.oneTimeYear ?? null) : null;
+  const oneTimeMonth = recurrence === 'once' ? (input.oneTimeMonth ?? null) : null;
   await db.execute(
     `INSERT INTO entries
-      (id, name, direction, kind, amount, day_of_month, category, active, created_at, updated_at)
-     VALUES (?, ?, ?, ?, ?, ?, ?, 1, ?, ?);`,
+      (id, name, direction, kind, amount, day_of_month, category,
+       recurrence, one_time_year, one_time_month, active, created_at, updated_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?);`,
     [
       id,
       input.name.trim(),
@@ -137,6 +162,9 @@ export async function createEntry(input: CreateEntryInput): Promise<Entry> {
       input.amount,
       input.dayOfMonth,
       category,
+      recurrence,
+      oneTimeYear,
+      oneTimeMonth,
       now,
       now,
     ],
