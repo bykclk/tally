@@ -1,107 +1,68 @@
-# Yayın Hazırlığı — Tally (App Store)
+# Tally — Yayın Runbook'u (App Store)
 
-Bu, Tally'yi App Store'a çıkarmak için **senin yürüteceğin** dış adımların
-checklist'idir. Kod tarafındaki hazırlık (onboarding, Hakkında ekranı,
-sorumluluk reddi, ikon/splash) tamamlandı.
+İlk gönderim tamamlandı. Bu doküman artık **yeni sürüm yayınlama** döngüsü +
+bir kez yapılıp biten kurulumun kaydı.
 
-Hedef: iOS, Türkiye App Store, Finans kategorisi.
-
----
-
-## 0. Ön koşullar
-
-- [x] **Apple Developer hesabı** (yıllık $99) — başvuruldu (29/05/2026), onay bekleniyor
-- [ ] **EAS hesabı** (Expo) — `npx eas login` (ücretsiz plan yeterli başlangıçta)
-- [ ] Mac'te Xcode kurulu (yerel build alacaksan)
+- **App Store Connect:** https://appstoreconnect.apple.com/apps/6774515046
+- **Mağaza adı:** Cash Flow Tally · **Bundle ID:** com.omertally.app
+- **Build:** EAS (bulutta imzalı) · **Kategori:** Finance · **Fiyat:** Free
 
 ---
 
-## 1. EAS Build kurulumu
-
-`eas.json` repo'da **hazır** (development / preview / production profilleri,
-production'da `autoIncrement` ile otomatik build numarası). Bundle identifier
-de ayarlı: `com.omertally.app` (app.json).
+## Yeni sürüm yayınlama (her güncellemede tekrar)
 
 ```bash
-# eas-cli zaten kurulu (v20). Değilse: npm i -g eas-cli
-eas login                    # Expo hesabınla giriş
-eas init                     # projeyi EAS hesabına bağlar
-                             #   (app.json'a extra.eas.projectId yazar)
-```
+# 1. app.json → "version" artır (örn. 1.0.0 → 1.1.0)
+#    (build numarası EAS'te autoIncrement, elle dokunma)
 
-İlk production build (App Store için, bulutta imzalı):
-
-```bash
+# 2. Build + gönder
 eas build --platform ios --profile production
-```
-
-İlk çalıştırmada EAS, **dağıtım sertifikası + provisioning profile'ı** senin
-için üretmeyi teklif eder → "Yes" de, Apple hesabınla giriş yapar, otomatik
-halleder. (En acı veren kısım buydu; EAS otomatik yönetiyor.)
-
-> **Mac'e geçiş:** İstersen sonra yerel Xcode'a geçebilirsin — kilitlenme yok.
-> `eas credentials` ile EAS'in ürettiği sertifikayı indirip Xcode'da
-> kullanabilir, ya da Xcode'un otomatik imzalamasına bırakabilirsin. Tek
-> dikkat: build numarası son yüklemeden büyük olmalı.
-
----
-
-## 2. TestFlight (beta test)
-
-```bash
 eas submit --platform ios --latest
 ```
 
-İlk submit'te Apple ID, App Store Connect app ID ve team ID sorar
-(interaktif) — girersin, sonraki seferler hatırlar.
+Sonra:
+- [ ] TestFlight'ta işleme bitince **cihazda test et** (en kritik adım)
+- [ ] App Store Connect → yeni sürüm oluştur → **"What's New"** notu gir
+- [ ] Yeni build'i seç → **Submit for Review**
+- [ ] Onay sonrası: otomatik/manuel yayınla
+- [ ] Yayınlanınca commit'i tag'le: `git tag v1.1.0 && git push --tags`
+      ve `IDEAS.md`'de **Çıkanlar**'a taşı
 
-- [ ] Build, App Store Connect → TestFlight'a yüklenir
-- [ ] Kendi cihazında TestFlight ile test et
-- [ ] (Opsiyonel) birkaç kişiyi davet et
-
----
-
-## 3. Gizlilik politikası barındırma
-
-Apple, finans uygulamaları için **genel erişime açık bir gizlilik politikası
-URL'si** ister. Politika `docs/privacy.md` olarak repo'da hazır ve GitHub
-Pages ile yayınlanıyor:
-
-- [x] **GitHub Pages:** `docs/privacy.md` repo'da, Pages ile yayınlanıyor.
-      URL: `https://bykclk.github.io/tally/privacy`
-- [x] GitHub → Settings → Pages → Source: **main** / **/docs** — yayında,
-      sayfa erişilebilir
-- [ ] Bu URL'i App Store Connect → App Privacy → "Privacy Policy URL"
-      alanına gir
+> **Encryption / export compliance:** `app.json`'da
+> `ITSAppUsesNonExemptEncryption: false` gömülü → her build'de otomatik
+> muaf, soru çıkmaz.
 
 ---
 
-## 4. App Store Connect — uygulama kaydı
+## Bir kez yapıldı (kurulum kaydı)
 
-https://appstoreconnect.apple.com → My Apps → +
+- [x] Apple Developer hesabı (bireysel)
+- [x] EAS hesabı + `eas init` (projectId app.json'da) + dağıtım sertifikası /
+      provisioning profile EAS tarafından üretildi
+- [x] App Store Connect'te uygulama oluşturuldu (id 6774515046)
+- [x] **Gizlilik politikası** yayında: `https://bykclk.github.io/tally/privacy`
+      (kaynak: `docs/privacy.md`, GitHub Pages: main /docs)
+- [x] **Destek URL'i:** `https://bykclk.github.io/tally/support`
+- [x] **App Privacy:** "Data Not Collected"
+- [x] **Yaş derecelendirmesi:** 4+ · **İçerik hakları:** sana ait
+- [x] **App Review notu:** çevrimdışı, hesap yok; dolu görünüm için
+      Settings → Load sample data
+- [x] iPhone-only (`supportsTablet: false`)
 
-- [ ] **İsim:** "Tally" alınmış — benzersiz bir ad seç. İngilizce-birincil
-      olduğumuz için: **Tally — Budget & Loans** veya **Tally Budget**
-      (ana ekran adı "Tally" kalır; bu yalnızca mağaza listeleme adı)
-- [ ] **Birincil dil (Primary Language):** İngilizce (English) —
-      uluslararası erişim için. Türkçe'yi **ek bir lokalizasyon** olarak
-      ekle (aşağıda her iki metin de var). Uygulama UI'si zaten cihaz
-      diline göre TR/EN otomatik.
-- [ ] **Bundle ID:** com.omertally.app
-- [ ] **SKU:** tally-001 (serbest)
-- [ ] **Kategori:** Finans (Finance)
+> **Mac'e geçiş (opsiyonel):** EAS yerine yerel Xcode build'e geçebilirsin —
+> kilitlenme yok. `eas credentials` ile sertifikayı indir ya da Xcode otomatik
+> imzalamaya bırak; tek kural: build numarası son yüklemeden büyük olmalı.
 
 ---
 
-## 5. Mağaza metni
+## Mağaza metni (referans)
 
-### 5a. İngilizce (birincil dil — Primary)
+### İngilizce (birincil dil)
 
-**Subtitle (max 30 chars):**
-> See what's left, plan ahead
+**Subtitle (≤30):** `See what's left, plan ahead`
 
-**Keywords (max 100 chars, comma-separated):**
-> budget,loan,bills,cash flow,expense,income,savings,finance,installment,money
+**Keywords (≤100):**
+`budget,loan,bills,cash flow,expense,income,savings,finance,installment,money`
 
 **Description:**
 > Tally shows you exactly what will be left in your pocket at the end of the
@@ -111,6 +72,7 @@ https://appstoreconnect.apple.com → My Apps → +
 >   "estimated remaining" update live.
 > • Variable bills (electricity, water, gas) are estimated automatically
 >   from the average of the last 3 months.
+> • Record one-time costs (a doctor visit, a gift) that hit only that month.
 > • Track your loans and calculate how much interest and time an early
 >   payoff would save you.
 > • Payment reminders, multi-month trends, category breakdown.
@@ -121,13 +83,12 @@ https://appstoreconnect.apple.com → My Apps → +
 > Tally gives no financial advice; it only does math on the numbers you
 > enter. Interest figures are estimates.
 
-### 5b. Türkçe (ek lokalizasyon)
+### Türkçe (ek lokalizasyon)
 
-**Altyazı (subtitle, max 30 karakter):**
-> Ay sonu kalanını gör, planla
+**Altyazı (≤30):** `Ay sonu kalanını gör, planla`
 
-**Anahtar kelimeler (max 100 karakter, virgülle):**
-> bütçe,kredi,fatura,nakit,gider,gelir,birikim,finans,taksit,hesap
+**Anahtar kelimeler (≤100):**
+`bütçe,kredi,fatura,nakit,gider,gelir,birikim,finans,taksit,hesap`
 
 **Açıklama:**
 > Tally, ay sonunda cebinde ne kalacağını net olarak görmen için tasarlandı.
@@ -135,10 +96,11 @@ https://appstoreconnect.apple.com → My Apps → +
 >
 > • Gelir ve giderlerini gir; "kesin kalan" ve "tahmini kalan" rakamlarını
 >   anlık gör.
-> • Değişken faturalar (elektrik, su, doğalgaz) için tutar son 3 ayın
->   ortalamasından otomatik tahmin edilir.
-> • Kredilerini takip et; erken kapamada ne kadar faiz ve süre
->   kazanacağını hesapla.
+> • Değişken faturalar (elektrik, su, doğalgaz) son 3 ayın ortalamasından
+>   otomatik tahmin edilir.
+> • Tek seferlik harcamaları (doktor, hediye) sadece o aya işle.
+> • Kredilerini takip et; erken kapamada ne kadar faiz ve süre kazanacağını
+>   hesapla.
 > • Ödeme hatırlatmaları, çoklu ay trendi, kategori dağılımı.
 >
 > Gizlilik önceliklidir: tüm verin yalnızca telefonunda kalır. Sunucu yok,
@@ -147,64 +109,6 @@ https://appstoreconnect.apple.com → My Apps → +
 > Tally finansal tavsiye vermez; yalnızca senin girdiğin sayılarla hesap
 > yapar. Faiz hesapları tahminidir.
 
----
-
-## 6. App Privacy (veri toplama beyanı)
-
-App Store Connect → App Privacy:
-
-- [ ] **"Data Not Collected"** seç — Tally hiçbir veri toplamıyor. Bu güçlü
-      bir artı; dürüstçe işaretle.
-
----
-
-## 7. Ekran görüntüleri
-
-Apple, belirli cihaz boyutlarında ekran görüntüsü ister (6.7" zorunlu):
-
-- [ ] 6.7" iPhone (örn. 15/16 Pro Max) — **zorunlu**, en az 1, en fazla 10
-- [ ] (Opsiyonel) 6.5" ve diğer boyutlar
-- [ ] Önerilen kareler:
-  - Ana ekran (kesin/tahmini kalan + liste)
-  - Kredi simülatörü (slider + grafik)
-  - Kategori dağılımı
-  - Çoklu ay trendi
-
-> Simülatörde `Cmd+S` ile ekran görüntüsü alabilirsin. Dolu görünmesi için
-> önce **Ayarlar → Örnek veri yükle**'ye bas (bu seçenek yalnızca uygulama
-> boşken görünür).
-
----
-
-## 8. Derecelendirme & son adımlar
-
-- [ ] **Yaş derecelendirmesi:** anketi doldur (finans = genelde 4+)
-- [ ] **Telif/içerik hakları:** sana ait
-- [ ] **App Review notları:** "Tamamen çevrimdışı, hesap/giriş gerektirmez,
-      tüm veri cihazda kalır. Dolu bir görünüm için: onboarding'i geç →
-      Ayarlar (Settings) sekmesi → 'Örnek veri yükle' (Load sample data).
-      Bu, gerçekçi örnek gelir/gider/kredi ekler. (İngilizce için Ayarlar →
-      Dil → İngilizce.)"
-- [ ] Build seç → **Submit for Review**
-
----
-
-## 9. İnceleme sonrası
-
-- [ ] Red gelirse gerekçeyi oku, düzelt, tekrar gönder (finans uygulamaları
-      bazen "tavsiye vermediğini" netleştirmeni ister — sorumluluk reddi
-      metinleri tam bunun için var)
-- [ ] Onaylanınca: yayın tarihini ayarla veya hemen yayınla
-
----
-
-## Sürüm yükseltme (sonraki güncellemeler)
-
-```bash
-# app.json içinde "version" değerini artır (örn. 1.0.0 → 1.1.0)
-npx eas build --platform ios --profile production
-npx eas submit --platform ios --latest
-```
-
-App Store Connect'te yeni sürüm için "What's New" notu gir, yeni build'i
-seç, Submit.
+### Ekran görüntüleri (6.9"/6.7" iPhone)
+Simülatörde örnek veriyi yükle (Settings → Load sample data) → `Cmd+S`:
+ana ekran · kredi simülatörü · kategori dağılımı · çoklu ay trendi
