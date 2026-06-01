@@ -229,6 +229,7 @@ export const en: Record<TranslationKey, string> = {
   'settings.notif.deniedTitle': 'Notifications not allowed',
   'settings.notif.deniedBody':
     'To receive reminders, allow notifications for Tally in your phone settings.',
+  'settings.data.title': 'Data',
   'settings.sample.title': 'Sample data',
   'settings.sample.load': 'Load sample data',
   'settings.sample.hint':
@@ -236,6 +237,12 @@ export const en: Record<TranslationKey, string> = {
   'settings.sample.confirmTitle': 'Load sample data?',
   'settings.sample.confirmBody':
     'Adds example income, expenses, bills and loans so you can try the app. You can delete them individually later.',
+  'settings.reset.button': 'Reset all data',
+  'settings.reset.hint':
+    'Permanently deletes all entries, loans and balances. Your settings (language, theme, currency) are kept. This cannot be undone.',
+  'settings.reset.confirmTitle': 'Reset all data?',
+  'settings.reset.confirmBody':
+    'All your entries, loans and balances will be permanently deleted. This cannot be undone.',
 
   'sample.salary': 'Salary',
   'sample.sideIncome': 'Side income',

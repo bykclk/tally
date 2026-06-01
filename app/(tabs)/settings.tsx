@@ -18,6 +18,7 @@ import {
   requestNotificationPermission,
 } from '@/lib/notifications';
 import { isDataEmpty, seedSampleData } from '@/lib/sampleData';
+import { resetAllData } from '@/db/queries/reset';
 import { haptics } from '@/lib/haptics';
 import type { Currency, LocaleMode, ThemeMode } from '@/types';
 
@@ -58,6 +59,32 @@ export default function SettingsScreen() {
             } catch (e) {
               // eslint-disable-next-line no-console
               console.error('seedSampleData failed', e);
+            }
+          },
+        },
+      ],
+    );
+  };
+
+  const handleReset = () => {
+    Alert.alert(
+      t('settings.reset.confirmTitle'),
+      t('settings.reset.confirmBody'),
+      [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('settings.reset.button'),
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await resetAllData();
+              setCanSeed(true);
+              await rescheduleAll();
+              haptics.warning();
+              router.navigate('/');
+            } catch (e) {
+              // eslint-disable-next-line no-console
+              console.error('resetAllData failed', e);
             }
           },
         },
@@ -197,43 +224,81 @@ export default function SettingsScreen() {
           )}
         </Section>
 
-        {canSeed && (
-          <Section title={t('settings.sample.title')} theme={theme}>
-            <Pressable
-              onPress={handleSeed}
-              style={({ pressed }) => [
-                {
-                  borderColor: theme.colors.border,
-                  borderWidth: 1,
-                  borderRadius: theme.radius.md,
-                  paddingVertical: theme.spacing(3),
-                  alignItems: 'center',
-                  opacity: pressed ? 0.6 : 1,
-                },
-              ]}
-            >
+        <Section title={t('settings.data.title')} theme={theme}>
+          {canSeed ? (
+            <>
+              <Pressable
+                onPress={handleSeed}
+                style={({ pressed }) => [
+                  {
+                    borderColor: theme.colors.border,
+                    borderWidth: 1,
+                    borderRadius: theme.radius.md,
+                    paddingVertical: theme.spacing(3),
+                    alignItems: 'center',
+                    opacity: pressed ? 0.6 : 1,
+                  },
+                ]}
+              >
+                <Text
+                  style={{
+                    color: theme.colors.accent,
+                    fontSize: theme.font.size.md,
+                    fontWeight: theme.font.weight.semibold,
+                  }}
+                >
+                  {t('settings.sample.load')}
+                </Text>
+              </Pressable>
               <Text
                 style={{
-                  color: theme.colors.accent,
-                  fontSize: theme.font.size.md,
-                  fontWeight: theme.font.weight.semibold,
+                  color: theme.colors.textMuted,
+                  fontSize: theme.font.size.xs,
+                  lineHeight: theme.font.size.xs * 1.4,
+                  paddingHorizontal: theme.spacing(1),
                 }}
               >
-                {t('settings.sample.load')}
+                {t('settings.sample.hint')}
               </Text>
-            </Pressable>
-            <Text
-              style={{
-                color: theme.colors.textMuted,
-                fontSize: theme.font.size.xs,
-                lineHeight: theme.font.size.xs * 1.4,
-                paddingHorizontal: theme.spacing(1),
-              }}
-            >
-              {t('settings.sample.hint')}
-            </Text>
-          </Section>
-        )}
+            </>
+          ) : (
+            <>
+              <Pressable
+                onPress={handleReset}
+                style={({ pressed }) => [
+                  {
+                    borderColor: theme.colors.border,
+                    borderWidth: 1,
+                    borderRadius: theme.radius.md,
+                    paddingVertical: theme.spacing(3),
+                    alignItems: 'center',
+                    opacity: pressed ? 0.6 : 1,
+                  },
+                ]}
+              >
+                <Text
+                  style={{
+                    color: theme.colors.danger,
+                    fontSize: theme.font.size.md,
+                    fontWeight: theme.font.weight.semibold,
+                  }}
+                >
+                  {t('settings.reset.button')}
+                </Text>
+              </Pressable>
+              <Text
+                style={{
+                  color: theme.colors.textMuted,
+                  fontSize: theme.font.size.xs,
+                  lineHeight: theme.font.size.xs * 1.4,
+                  paddingHorizontal: theme.spacing(1),
+                }}
+              >
+                {t('settings.reset.hint')}
+              </Text>
+            </>
+          )}
+        </Section>
 
         <Pressable
           onPress={() => router.push('/about')}

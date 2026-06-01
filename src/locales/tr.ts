@@ -219,6 +219,7 @@ export const tr = {
   'settings.notif.deniedTitle': 'Bildirim izni yok',
   'settings.notif.deniedBody':
     'Hatırlatma alabilmek için telefon ayarlarından Tally\'ye bildirim izni vermen gerekiyor.',
+  'settings.data.title': 'Veri',
   'settings.sample.title': 'Örnek veri',
   'settings.sample.load': 'Örnek veri yükle',
   'settings.sample.hint':
@@ -226,6 +227,12 @@ export const tr = {
   'settings.sample.confirmTitle': 'Örnek veri yüklensin mi?',
   'settings.sample.confirmBody':
     'Uygulamayı denemen için gelir, gider, fatura ve kredi örnekleri eklenir. Daha sonra tek tek silebilirsin.',
+  'settings.reset.button': 'Tüm verileri sıfırla',
+  'settings.reset.hint':
+    'Tüm kayıt, kredi ve bakiyeleri kalıcı olarak siler. Ayarların (dil, tema, para birimi) korunur. Geri alınamaz.',
+  'settings.reset.confirmTitle': 'Tüm verileri sıfırla?',
+  'settings.reset.confirmBody':
+    'Tüm kayıtların, kredilerin ve bakiyelerin kalıcı olarak silinecek. Bu işlem geri alınamaz.',
 
   'sample.salary': 'Maaş',
   'sample.sideIncome': 'Ek gelir',
