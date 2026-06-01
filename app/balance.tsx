@@ -15,7 +15,7 @@ import { useTheme, type Theme } from '@/ui/theme';
 import { useT, useLocale } from '@/lib/i18n';
 import { haptics } from '@/lib/haptics';
 import { monthLabel } from '@/lib/date';
-import { moneyValueToInput } from '@/lib/moneyInput';
+import { moneyValueToInput, parseMoneyInput } from '@/lib/moneyInput';
 import {
   deleteMonthBalance,
   getMonthBalance,
@@ -23,13 +23,11 @@ import {
 } from '@/db/queries/monthlyBalances';
 import { resolveStartingBalance } from '@/lib/monthlyBalance';
 import { useMonthStore } from '@/stores/month';
+import type { Locale } from '@/types';
 
-function parseAmount(raw: string): number | null {
-  const normalized = raw.replace(/\./g, '').replace(',', '.').trim();
-  if (!normalized) return null;
-  const n = Number(normalized);
-  if (!Number.isFinite(n)) return null;
-  return n;
+function parseAmount(raw: string, locale: Locale): number | null {
+  // Balance may legitimately be 0 or negative, so no positivity check.
+  return parseMoneyInput(raw, locale);
 }
 
 export default function BalanceScreen() {
@@ -54,18 +52,18 @@ export default function BalanceScreen() {
       const resolved =
         stored !== null ? stored : await resolveStartingBalance(year, month);
       if (cancelled) return;
-      setAmount(moneyValueToInput(resolved));
+      setAmount(moneyValueToInput(resolved, locale));
       setHasExplicit(stored !== null);
       setLoading(false);
     })();
     return () => {
       cancelled = true;
     };
-  }, [year, month]);
+  }, [year, month, locale]);
 
   const handleSave = async () => {
     if (saving) return;
-    const parsed = parseAmount(amount);
+    const parsed = parseAmount(amount, locale);
     if (parsed === null) return;
     setSaving(true);
     try {

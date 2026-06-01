@@ -16,10 +16,10 @@ import { MonthYearField } from '@/ui/MonthYearField';
 import { SegmentedControl } from '@/ui/SegmentedControl';
 import { TextField } from '@/ui/TextField';
 import { useTheme, type Theme } from '@/ui/theme';
-import { useT, type TranslationKey } from '@/lib/i18n';
+import { useT, useLocale, type TranslationKey } from '@/lib/i18n';
 import { haptics } from '@/lib/haptics';
 import { currentMonth } from '@/lib/date';
-import { moneyValueToInput } from '@/lib/moneyInput';
+import { moneyValueToInput, parseMoneyInput } from '@/lib/moneyInput';
 import { useMonthStore } from '@/stores/month';
 import {
   createEntry,
@@ -27,7 +27,7 @@ import {
   getEntry,
   updateEntry,
 } from '@/db/queries/entries';
-import type { Direction, Entry, Kind, Recurrence } from '@/types';
+import type { Direction, Entry, Kind, Locale, Recurrence } from '@/types';
 
 type FormState = {
   recurrence: Recurrence;
@@ -43,11 +43,9 @@ type FormState = {
 
 type Errors = Partial<Record<'name' | 'amount' | 'dayOfMonth', TranslationKey>>;
 
-function parseAmount(raw: string): number | null {
-  const normalized = raw.replace(/\./g, '').replace(',', '.').trim();
-  if (!normalized) return null;
-  const n = Number(normalized);
-  if (!Number.isFinite(n) || n <= 0) return null;
+function parseAmount(raw: string, locale: Locale): number | null {
+  const n = parseMoneyInput(raw, locale);
+  if (n === null || n <= 0) return null;
   return n;
 }
 
@@ -57,22 +55,23 @@ function parseDay(raw: string): number | null {
   return n;
 }
 
-function validate(form: FormState): Errors {
+function validate(form: FormState, locale: Locale): Errors {
   const e: Errors = {};
   if (!form.name.trim()) e.name = 'entry.validation.nameRequired';
-  if (parseAmount(form.amount) === null) e.amount = 'entry.validation.amountInvalid';
+  if (parseAmount(form.amount, locale) === null)
+    e.amount = 'entry.validation.amountInvalid';
   if (parseDay(form.dayOfMonth) === null) e.dayOfMonth = 'entry.validation.dayInvalid';
   return e;
 }
 
-function entryToForm(entry: Entry): FormState {
+function entryToForm(entry: Entry, locale: Locale): FormState {
   const cm = currentMonth();
   return {
     recurrence: entry.recurrence,
     direction: entry.direction,
     kind: entry.kind,
     name: entry.name,
-    amount: moneyValueToInput(entry.amount),
+    amount: moneyValueToInput(entry.amount, locale),
     dayOfMonth: String(entry.dayOfMonth),
     category: entry.category ?? '',
     year: entry.oneTimeYear ?? cm.year,
@@ -83,6 +82,7 @@ function entryToForm(entry: Entry): FormState {
 export default function EntryFormScreen() {
   const theme = useTheme();
   const t = useT();
+  const locale = useLocale();
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id?: string }>();
   const isEdit = Boolean(id);
@@ -115,15 +115,15 @@ export default function EntryFormScreen() {
         setLoading(false);
         return;
       }
-      setForm(entryToForm(entry));
+      setForm(entryToForm(entry, locale));
       setLoading(false);
     })();
     return () => {
       cancelled = true;
     };
-  }, [isEdit, id]);
+  }, [isEdit, id, locale]);
 
-  const errors = useMemo(() => validate(form), [form]);
+  const errors = useMemo(() => validate(form, locale), [form, locale]);
   const isValid = Object.keys(errors).length === 0;
   const showErrors = submitted;
 
@@ -133,7 +133,7 @@ export default function EntryFormScreen() {
   const handleSave = async () => {
     setSubmitted(true);
     if (!isValid || saving) return;
-    const amount = parseAmount(form.amount);
+    const amount = parseAmount(form.amount, locale);
     const day = parseDay(form.dayOfMonth);
     if (amount === null || day === null) return;
     setSaving(true);

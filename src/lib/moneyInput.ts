@@ -1,67 +1,72 @@
+import type { Locale } from '@/types';
+
+// Separators per app locale. Drives both how typed input is grouped and how
+// it's parsed back to a number, so input matches the locale-aware display.
+const SEP: Record<Locale, { thousand: string; decimal: string }> = {
+  tr: { thousand: '.', decimal: ',' },
+  en: { thousand: ',', decimal: '.' },
+};
+
 /**
- * Formats a TextInput value for Turkish-style money entry:
- *  - thousand separator: "." (dot)
- *  - decimal separator: "," (comma)
- *  - max 2 decimal digits
+ * Formats a money TextInput value for the given app locale.
+ *  - tr: "1.250,50"  (thousands ".", decimal ",")
+ *  - en: "1,250.50"  (thousands ",", decimal ".")
  *
- * Accepts both "," and "." as decimal candidates so users on Android — where
- * the numeric keypad may only offer "." regardless of system locale — can
- * still enter decimals. Detection rules:
- *  - If the raw input contains a ",", it's treated as the decimal separator
- *    (Turkish convention). Everything before it is integer (with stray
- *    separators stripped as thousand seps).
- *  - Else if there is exactly one "." trailing 1–2 digits, that "." is the
- *    decimal. (A single "." followed by 3+ digits is read as a thousand
- *    separator instead, which is the common Turkish reading.)
- *  - Else every "." is a thousand separator and gets stripped.
+ * Separator detection is locale-agnostic on input (the user may be on a
+ * keyboard that emits the "other" separator): the last separator with 1–2
+ * trailing digits — or a trailing separator — is the decimal point; every
+ * other separator is a thousands grouper. Output is always re-rendered in
+ * the locale's style. Decimals are capped at 2.
  */
-export function formatMoneyInput(raw: string): string {
+export function formatMoneyInput(raw: string, locale: Locale): string {
+  const { thousand, decimal } = SEP[locale];
   if (!raw) return '';
 
-  // Keep only digits and separators
   const s = raw.replace(/[^\d.,]/g, '');
   if (!s) return '';
 
+  const lastSep = Math.max(s.lastIndexOf('.'), s.lastIndexOf(','));
   let intRaw: string;
   let decPart: string | null = null;
 
-  const commaIdx = s.indexOf(',');
-  if (commaIdx !== -1) {
-    // Explicit Turkish decimal: comma is the decimal point.
-    intRaw = s.slice(0, commaIdx).replace(/[.,]/g, '');
-    decPart = s.slice(commaIdx + 1).replace(/[.,]/g, '').slice(0, 2);
-  } else {
-    const lastDot = s.lastIndexOf('.');
-    if (lastDot !== -1) {
-      const afterDot = s.slice(lastDot + 1);
-      if (/^\d{1,2}$/.test(afterDot)) {
-        // Single "." with 1–2 trailing digits → decimal.
-        intRaw = s.slice(0, lastDot).replace(/\./g, '');
-        decPart = afterDot;
-      } else {
-        // Treat every "." as thousand separator.
-        intRaw = s.replace(/\./g, '');
-      }
+  if (lastSep !== -1) {
+    const after = s.slice(lastSep + 1);
+    if (after === '') {
+      // Trailing separator → the user is starting the decimal part.
+      intRaw = s.slice(0, lastSep).replace(/[.,]/g, '');
+      decPart = '';
+    } else if (/^\d{1,2}$/.test(after)) {
+      intRaw = s.slice(0, lastSep).replace(/[.,]/g, '');
+      decPart = after;
     } else {
-      intRaw = s;
+      // 3+ trailing digits → every separator is a thousands grouper.
+      intRaw = s.replace(/[.,]/g, '');
     }
+  } else {
+    intRaw = s;
   }
 
-  // Strip leading zeros, but preserve a single "0" when meaningful.
   let intDigits = intRaw.replace(/^0+/, '');
   if (intDigits === '' && (decPart !== null || intRaw === '0')) {
     intDigits = '0';
   }
 
-  const formattedInt = intDigits.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-
-  return decPart !== null ? `${formattedInt},${decPart}` : formattedInt;
+  const grouped = intDigits.replace(/\B(?=(\d{3})+(?!\d))/g, thousand);
+  return decPart !== null ? `${grouped}${decimal}${decPart}` : grouped;
 }
 
-/**
- * Convenience: format a numeric value as a money-input string (used for
- * pre-filling forms in edit mode).
- */
-export function moneyValueToInput(n: number): string {
-  return formatMoneyInput(String(Math.round(n)));
+/** Parses a locale-formatted money string back to a number (null if empty/invalid). */
+export function parseMoneyInput(formatted: string, locale: Locale): number | null {
+  const { thousand, decimal } = SEP[locale];
+  let s = formatted.trim();
+  if (!s) return null;
+  s = s.split(thousand).join('');
+  if (decimal !== '.') s = s.split(decimal).join('.');
+  const n = Number(s);
+  return Number.isFinite(n) ? n : null;
+}
+
+/** Format a numeric value as a money-input string (for pre-filling edit forms). */
+export function moneyValueToInput(n: number, locale: Locale): string {
+  return formatMoneyInput(String(Math.round(n)), locale);
 }

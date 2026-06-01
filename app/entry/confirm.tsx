@@ -13,9 +13,9 @@ import {
 import { MoneyField } from '@/ui/MoneyField';
 import { TextField } from '@/ui/TextField';
 import { useTheme, type Theme } from '@/ui/theme';
-import { useT, type TranslationKey } from '@/lib/i18n';
+import { useT, useLocale, type TranslationKey } from '@/lib/i18n';
 import { haptics } from '@/lib/haptics';
-import { moneyValueToInput } from '@/lib/moneyInput';
+import { moneyValueToInput, parseMoneyInput } from '@/lib/moneyInput';
 import { isoForDayInMonth, daysInMonth } from '@/lib/date';
 import { useMonthStore } from '@/stores/month';
 import { getEntry } from '@/db/queries/entries';
@@ -25,15 +25,13 @@ import {
   upsertInstance,
 } from '@/db/queries/instances';
 import { estimateForEntry } from '@/lib/estimate';
-import type { Entry } from '@/types';
+import type { Entry, Locale } from '@/types';
 
 type Errors = Partial<Record<'amount' | 'day', TranslationKey>>;
 
-function parseAmount(raw: string): number | null {
-  const normalized = raw.replace(/\./g, '').replace(',', '.').trim();
-  if (!normalized) return null;
-  const n = Number(normalized);
-  if (!Number.isFinite(n) || n <= 0) return null;
+function parseAmount(raw: string, locale: Locale): number | null {
+  const n = parseMoneyInput(raw, locale);
+  if (n === null || n <= 0) return null;
   return n;
 }
 
@@ -47,6 +45,7 @@ function parseDay(raw: string, year: number, month: number): number | null {
 export default function ConfirmInstanceScreen() {
   const theme = useTheme();
   const t = useT();
+  const locale = useLocale();
   const router = useRouter();
   const { entryId } = useLocalSearchParams<{ entryId: string }>();
 
@@ -94,7 +93,7 @@ export default function ConfirmInstanceScreen() {
       }
 
       setEntry(e);
-      setAmount(moneyValueToInput(defaultAmount));
+      setAmount(moneyValueToInput(defaultAmount, locale));
       setDay(String(defaultDay));
       setHasConfirmed(existing?.status === 'confirmed');
       setLoading(false);
@@ -102,14 +101,15 @@ export default function ConfirmInstanceScreen() {
     return () => {
       cancelled = true;
     };
-  }, [entryId, year, month]);
+  }, [entryId, year, month, locale]);
 
   const errors = useMemo<Errors>(() => {
     const e: Errors = {};
-    if (parseAmount(amount) === null) e.amount = 'entry.validation.amountInvalid';
+    if (parseAmount(amount, locale) === null)
+      e.amount = 'entry.validation.amountInvalid';
     if (parseDay(day, year, month) === null) e.day = 'entry.validation.dayInvalid';
     return e;
-  }, [amount, day, year, month]);
+  }, [amount, day, year, month, locale]);
   const isValid = Object.keys(errors).length === 0;
 
   const handleCancel = () => router.back();
@@ -117,7 +117,7 @@ export default function ConfirmInstanceScreen() {
   const handleSave = async () => {
     setSubmitted(true);
     if (!isValid || !entry || saving) return;
-    const amt = parseAmount(amount);
+    const amt = parseAmount(amount, locale);
     const d = parseDay(day, year, month);
     if (amt === null || d === null) return;
     setSaving(true);

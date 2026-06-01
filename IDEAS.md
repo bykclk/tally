@@ -22,6 +22,7 @@ Bir özellik bitince **Çıkanlar**'a taşı, git tag'iyle eşleştir.
 ### v1.1.0 — sıradaki build (henüz yayınlanmadı)
 - Tek seferlik gider/gelir (doktor, hediye, beklenmedik alışveriş) → "ay sonu kalan" doğru
 - Ayarlar → "Tüm verileri sıfırla"
+- Locale-duyarlı para *girişi* (TR `1.250,50` / EN `1,250.50`) — gösterimle tutarlı
 - (altyapı) Info.plist encryption muafiyeti, App Store destek sayfası
 
 > Yayınlamadan önce: `app.json` → `version: 1.1.0`, `eas build`, `eas submit`,
@@ -31,9 +32,8 @@ Bir özellik bitince **Çıkanlar**'a taşı, git tag'iyle eşleştir.
 
 ## Sırada (öncelikli adaylar)
 
-1. **Locale-duyarlı para *girişi***
-   - Gösterim locale-duyarlı oldu; giriş hâlâ Türkçe-stil (`1.250,50`)
-   - İngilizce kullanıcı `1,250.50` yazabilsin — küçük ama uluslararası için doğru
+_(Şu an net bir aday yok — bir sonraki yön "Daha büyük / sonra"dan seçilebilir
+ya da gerçek kullanım sürtünmesinden gelir.)_
 
 ---
 

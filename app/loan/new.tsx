@@ -16,9 +16,9 @@ import { MonthYearField } from '@/ui/MonthYearField';
 import { SegmentedControl } from '@/ui/SegmentedControl';
 import { TextField } from '@/ui/TextField';
 import { useTheme, type Theme } from '@/ui/theme';
-import { useT, type TranslationKey } from '@/lib/i18n';
+import { useT, useLocale, type TranslationKey } from '@/lib/i18n';
 import { haptics } from '@/lib/haptics';
-import { moneyValueToInput } from '@/lib/moneyInput';
+import { moneyValueToInput, parseMoneyInput } from '@/lib/moneyInput';
 import { currentMonth } from '@/lib/date';
 import {
   createLoan,
@@ -27,7 +27,7 @@ import {
   updateLoan,
 } from '@/db/queries/loans';
 import { bulkSeedLoanPayments } from '@/db/queries/loanPayments';
-import type { Loan, LoanType } from '@/types';
+import type { Loan, LoanType, Locale } from '@/types';
 
 type FormState = {
   type: LoanType;
@@ -58,11 +58,9 @@ type Errors = Partial<
   >
 >;
 
-function parsePositive(raw: string): number | null {
-  const normalized = raw.replace(/\./g, '').replace(',', '.').trim();
-  if (!normalized) return null;
-  const n = Number(normalized);
-  if (!Number.isFinite(n) || n <= 0) return null;
+function parsePositive(raw: string, locale: Locale): number | null {
+  const n = parseMoneyInput(raw, locale);
+  if (n === null || n <= 0) return null;
   return n;
 }
 
@@ -100,21 +98,21 @@ function parseNonNegInt(raw: string): number | null {
   return n;
 }
 
-function validate(form: FormState): Errors {
+function validate(form: FormState, locale: Locale): Errors {
   const e: Errors = {};
   if (!form.name.trim()) e.name = 'loan.validation.nameRequired';
   if (parseDay(form.dayOfMonth) === null)
     e.dayOfMonth = 'loan.validation.dayInvalid';
 
   if (form.type === 'open') {
-    if (parsePositive(form.balance) === null)
+    if (parsePositive(form.balance, locale) === null)
       e.balance = 'loan.validation.balanceInvalid';
     if (parseRate(form.ratePercent) === null)
       e.ratePercent = 'loan.validation.rateInvalid';
-    if (parsePositive(form.payment) === null)
+    if (parsePositive(form.payment, locale) === null)
       e.payment = 'loan.validation.paymentInvalid';
   } else {
-    if (parsePositive(form.installmentAmount) === null)
+    if (parsePositive(form.installmentAmount, locale) === null)
       e.installmentAmount = 'loan.validation.paymentInvalid';
     const numI = parseInt1ToMax(form.numInstallments, 999);
     if (numI === null) e.numInstallments = 'loan.validation.numInstallmentsInvalid';
@@ -131,15 +129,15 @@ function validate(form: FormState): Errors {
   return e;
 }
 
-function loanToForm(loan: Loan): FormState {
+function loanToForm(loan: Loan, locale: Locale): FormState {
   const cm = currentMonth();
   return {
     type: loan.loanType,
     name: loan.name,
-    balance: moneyValueToInput(loan.balance),
+    balance: moneyValueToInput(loan.balance, locale),
     ratePercent: (loan.monthlyRate * 100).toString(),
-    payment: moneyValueToInput(loan.monthlyPayment),
-    installmentAmount: moneyValueToInput(loan.monthlyPayment),
+    payment: moneyValueToInput(loan.monthlyPayment, locale),
+    installmentAmount: moneyValueToInput(loan.monthlyPayment, locale),
     numInstallments: loan.numInstallments != null ? String(loan.numInstallments) : '',
     startYear: loan.startYear != null ? String(loan.startYear) : String(cm.year),
     startMonth:
@@ -169,6 +167,7 @@ function emptyForm(): FormState {
 export default function LoanFormScreen() {
   const theme = useTheme();
   const t = useT();
+  const locale = useLocale();
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id?: string }>();
   const isEdit = Boolean(id);
@@ -190,15 +189,15 @@ export default function LoanFormScreen() {
         setLoading(false);
         return;
       }
-      setForm(loanToForm(loan));
+      setForm(loanToForm(loan, locale));
       setLoading(false);
     })();
     return () => {
       cancelled = true;
     };
-  }, [isEdit, id]);
+  }, [isEdit, id, locale]);
 
-  const errors = useMemo(() => validate(form), [form]);
+  const errors = useMemo(() => validate(form, locale), [form, locale]);
   const isValid = Object.keys(errors).length === 0;
 
   const update = <K extends keyof FormState>(key: K, value: FormState[K]) =>
@@ -212,9 +211,9 @@ export default function LoanFormScreen() {
 
     let payload;
     if (form.type === 'open') {
-      const balance = parsePositive(form.balance);
+      const balance = parsePositive(form.balance, locale);
       const ratePct = parseRate(form.ratePercent);
-      const payment = parsePositive(form.payment);
+      const payment = parsePositive(form.payment, locale);
       if (balance === null || ratePct === null || payment === null) return;
       payload = {
         name: form.name,
@@ -228,7 +227,7 @@ export default function LoanFormScreen() {
         startMonth: null,
       };
     } else {
-      const amount = parsePositive(form.installmentAmount);
+      const amount = parsePositive(form.installmentAmount, locale);
       const num = parseInt1ToMax(form.numInstallments, 999);
       const sm = parseInt1ToMax(form.startMonth, 12);
       const sy = parseYear(form.startYear);

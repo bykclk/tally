@@ -1,5 +1,6 @@
 import { TextField } from './TextField';
 import { useCurrency, currencySymbol } from '@/lib/money';
+import { useLocale } from '@/lib/i18n';
 import { formatMoneyInput } from '@/lib/moneyInput';
 
 type Props = {
@@ -22,11 +23,12 @@ export function MoneyField({
   error,
 }: Props) {
   const currency = useCurrency();
+  const locale = useLocale();
   return (
     <TextField
       label={label}
       value={value}
-      onChangeText={(raw) => onChangeText(formatMoneyInput(raw))}
+      onChangeText={(raw) => onChangeText(formatMoneyInput(raw, locale))}
       placeholder={placeholder}
       prefix={prefix ?? currencySymbol(currency)}
       keyboardType="decimal-pad"
