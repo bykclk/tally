@@ -28,7 +28,10 @@ export const tr = {
   'tabs.loans': 'Krediler',
   'tabs.settings': 'Ayarlar',
 
-  'forecast.chartTitle': 'Önümüzdeki 6 ay',
+  'forecast.lowestLabel': 'En düşük',
+  'forecast.monthsShort': 'ay',
+  'forecast.tapHintActive': 'Kapatmak için noktaya tekrar dokun.',
+  'forecast.goesNegative': '{month} sonunda bakiyen eksiye düşüyor',
   'forecast.note':
     'Her ayın sonunda kalması beklenen tutar. Değişken kalemler son 3 ayın ortalamasıyla tahmin edilir; gerçek tutarlar farklı olabilir.',
   'forecast.thisMonth': 'Bu ay',

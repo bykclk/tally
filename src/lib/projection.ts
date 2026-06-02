@@ -12,6 +12,10 @@ export type ProjectionMonth = {
   confirmedRemaining: number;
   /** Starting balance + projected (confirmed + estimated) net — the headline. */
   estimatedRemaining: number;
+  /** Projected income for the month (confirmed + estimated). */
+  income: number;
+  /** Projected expense for the month (confirmed + estimated). */
+  expense: number;
   /** Whether the month has any entries/loans at all. */
   hasData: boolean;
 };
@@ -43,12 +47,20 @@ export async function buildProjection(
     }
     const items = await buildMonthlyItems(cursor.year, cursor.month);
     const totals = totalsFromItems(items, running);
+    let income = 0;
+    let expense = 0;
+    for (const it of items) {
+      if (it.direction === 'income') income += it.effectiveAmount;
+      else expense += it.effectiveAmount;
+    }
     out.push({
       year: cursor.year,
       month: cursor.month,
       startingBalance: running,
       confirmedRemaining: totals.confirmedRemaining,
       estimatedRemaining: totals.estimatedRemaining,
+      income,
+      expense,
       hasData: items.length > 0,
     });
     running = totals.estimatedRemaining;

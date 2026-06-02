@@ -33,7 +33,10 @@ export const en: Record<TranslationKey, string> = {
   'tabs.loans': 'Loans',
   'tabs.settings': 'Settings',
 
-  'forecast.chartTitle': 'Next 6 months',
+  'forecast.lowestLabel': 'Lowest',
+  'forecast.monthsShort': 'mo',
+  'forecast.tapHintActive': 'Tap the point again to dismiss.',
+  'forecast.goesNegative': "You're in the red by the end of {month}",
   'forecast.note':
     'The amount expected to be left at the end of each month. Variable items are estimated from the last 3 months; real figures may differ.',
   'forecast.thisMonth': 'This month',

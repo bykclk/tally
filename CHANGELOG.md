@@ -16,10 +16,16 @@ tag the release.
 Accumulating for the next build (1.1.0), not yet published.
 
 ### Added
-- **Forecast tab** — projects the end-of-month remaining balance for the next
-  6 months as a zero-baseline bar chart (red below zero) plus a month-by-month
-  list. Each month's projected remaining rolls into the next month's starting
-  balance; tapping a month jumps to it on the home tab.
+- **Forecast tab** — projects the end-of-month remaining balance forward as a
+  smoothed balance-trajectory area/line chart: gradient fill, the sub-zero
+  region of the fill and line turn red with a dashed zero reference line, and
+  the lowest month is emphasised. Includes a hero summary (projected end month
+  + lowest month), a 3/6/12-month horizon selector, a warning banner when a
+  month dips into the red (tap to jump there), and a month-by-month list where
+  each row shows its net change and ending balance. Tapping a point on the chart
+  shows a floating tooltip with that month's income/expense/projected breakdown.
+  Each month's projected remaining rolls into the next month's starting balance;
+  tapping a month jumps to it on the home tab.
 - One-time income/expense entries (doctor visit, gift, unexpected purchase) so
   the "remaining at month end" figure stays correct.
 - Settings → "Reset all data".
