@@ -53,6 +53,9 @@ export const tr = {
   'home.nextMonth': 'Sonraki ay',
   'home.thisMonth': 'Bu aya dön',
   'home.tag.loan': 'Kredi',
+  'home.due.overdue': 'Gecikti',
+  'home.due.today': 'Bugün',
+  'home.due.overdueCount': '{count} gecikti',
 
   'breakdown.title': 'Harcama dağılımı',
   'breakdown.totalExpense': 'toplam gider',

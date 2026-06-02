@@ -58,6 +58,9 @@ export const en: Record<TranslationKey, string> = {
   'home.nextMonth': 'Next month',
   'home.thisMonth': 'Back to this month',
   'home.tag.loan': 'Loan',
+  'home.due.overdue': 'Overdue',
+  'home.due.today': 'Due today',
+  'home.due.overdueCount': '{count} overdue',
 
   'breakdown.title': 'Spending breakdown',
   'breakdown.totalExpense': 'total expense',

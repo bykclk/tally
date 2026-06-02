@@ -5,11 +5,11 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Card } from '@/ui/Card';
 import { FloatingActionButton } from '@/ui/FloatingActionButton';
-import { ListItem } from '@/ui/ListItem';
+import { ListItem, type DueState } from '@/ui/ListItem';
 import { MoneyText } from '@/ui/MoneyText';
 import { useTheme, type Theme } from '@/ui/theme';
 import { useT, useLocale } from '@/lib/i18n';
-import { currentMonth, monthLabel } from '@/lib/date';
+import { currentMonth, monthLabel, isoForDayInMonth } from '@/lib/date';
 import { haptics } from '@/lib/haptics';
 import { useMonthStore } from '@/stores/month';
 import {
@@ -62,6 +62,17 @@ export default function HomeScreen() {
     [items, startingBalance],
   );
   const hasAny = items.length > 0;
+
+  const todayISO = useMemo(() => {
+    const n = new Date();
+    return isoForDayInMonth(n.getFullYear(), n.getMonth() + 1, n.getDate());
+  }, []);
+  const overdueCount = useMemo(
+    () =>
+      pending.filter((it) => dueStateFor(it.effectiveDate, todayISO) === 'overdue')
+        .length,
+    [pending, todayISO],
+  );
 
   const onItemPress = (item: MonthlyItem) => {
     if (item.source.kind === 'loan') {
@@ -268,6 +279,8 @@ export default function HomeScreen() {
                 items={pending}
                 onItemPress={onItemPress}
                 theme={theme}
+                todayISO={todayISO}
+                overdueCount={overdueCount}
               />
             )}
           </>
@@ -282,17 +295,28 @@ export default function HomeScreen() {
   );
 }
 
+function dueStateFor(iso: string, today: string): DueState {
+  if (iso < today) return 'overdue';
+  if (iso === today) return 'today';
+  return 'upcoming';
+}
+
 function Section({
   title,
   items,
   onItemPress,
   theme,
+  todayISO,
+  overdueCount = 0,
 }: {
   title: string;
   items: MonthlyItem[];
   onItemPress: (item: MonthlyItem) => void;
   theme: Theme;
+  todayISO?: string;
+  overdueCount?: number;
 }) {
+  const t = useT();
   return (
     <View style={{ gap: theme.spacing(2) }}>
       <View
@@ -303,17 +327,30 @@ function Section({
           paddingHorizontal: theme.spacing(1),
         }}
       >
-        <Text
-          style={{
-            color: theme.colors.textMuted,
-            fontSize: theme.font.size.xs,
-            fontWeight: theme.font.weight.semibold,
-            textTransform: 'uppercase',
-            letterSpacing: 0.6,
-          }}
-        >
-          {title}
-        </Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+          <Text
+            style={{
+              color: theme.colors.textMuted,
+              fontSize: theme.font.size.xs,
+              fontWeight: theme.font.weight.semibold,
+              textTransform: 'uppercase',
+              letterSpacing: 0.6,
+            }}
+          >
+            {title}
+          </Text>
+          {overdueCount > 0 && (
+            <Text
+              style={{
+                color: theme.colors.expense,
+                fontSize: theme.font.size.xs,
+                fontWeight: theme.font.weight.semibold,
+              }}
+            >
+              {t('home.due.overdueCount', { count: overdueCount })}
+            </Text>
+          )}
+        </View>
         <Text
           style={{
             color: theme.colors.textMuted,
@@ -337,7 +374,11 @@ function Section({
                 }}
               />
             )}
-            <ListItem item={it} onPress={() => onItemPress(it)} />
+            <ListItem
+              item={it}
+              onPress={() => onItemPress(it)}
+              dueState={todayISO ? dueStateFor(it.effectiveDate, todayISO) : undefined}
+            />
           </View>
         ))}
       </Card>

@@ -16,6 +16,11 @@ tag the release.
 Accumulating for the next build (1.1.0), not yet published.
 
 ### Added
+- **Due / overdue flags on the home screen** — pending items whose date has
+  arrived show a "Due today" badge (accent) and those whose date has passed
+  show an "Overdue" badge (red) with a red day chip; the "Pending" section
+  header shows how many are overdue. Purely visual — figures are unchanged and
+  tapping a row still opens the confirm flow. (Notifications stay separate.)
 - **Forecast tab** — projects the end-of-month remaining balance forward as a
   smoothed balance-trajectory area/line chart: gradient fill, the sub-zero
   region of the fill and line turn red with a dashed zero reference line, and
