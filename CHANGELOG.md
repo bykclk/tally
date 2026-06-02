@@ -16,6 +16,10 @@ tag the release.
 Accumulating for the next build (1.1.0), not yet published.
 
 ### Added
+- **Forecast tab** — projects the end-of-month remaining balance for the next
+  6 months as a zero-baseline bar chart (red below zero) plus a month-by-month
+  list. Each month's projected remaining rolls into the next month's starting
+  balance; tapping a month jumps to it on the home tab.
 - One-time income/expense entries (doctor visit, gift, unexpected purchase) so
   the "remaining at month end" figure stays correct.
 - Settings → "Reset all data".

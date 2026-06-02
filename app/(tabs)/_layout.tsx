@@ -36,6 +36,19 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
+        name="forecast"
+        options={{
+          title: t('tabs.forecast'),
+          tabBarIcon: ({ focused, color, size }) => (
+            <Ionicons
+              name={focused ? 'trending-up' : 'trending-up-outline'}
+              size={size}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="loans"
         options={{
           title: t('tabs.loans'),

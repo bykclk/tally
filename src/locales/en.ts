@@ -29,8 +29,18 @@ export const en: Record<TranslationKey, string> = {
     'All your data is stored only on this device. Nothing is sent to a server, and there is no tracking or analytics. There is no bank connection.',
 
   'tabs.home': 'This month',
+  'tabs.forecast': 'Forecast',
   'tabs.loans': 'Loans',
   'tabs.settings': 'Settings',
+
+  'forecast.chartTitle': 'Next 6 months',
+  'forecast.note':
+    'The amount expected to be left at the end of each month. Variable items are estimated from the last 3 months; real figures may differ.',
+  'forecast.thisMonth': 'This month',
+  'forecast.empty.title': 'Nothing to project yet',
+  'forecast.empty.subtitle':
+    'Add a few income and expense entries and the coming months will be projected here.',
+  'forecast.empty.cta': 'Add your first entry',
 
   'home.confirmedRemaining': 'Confirmed remaining',
   'home.estimatedRemaining': 'Estimated remaining',

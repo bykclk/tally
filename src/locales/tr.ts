@@ -24,8 +24,18 @@ export const tr = {
     'Tüm verin yalnızca bu cihazda saklanır. Hiçbir bilgi sunucuya gönderilmez, hiçbir takip veya analiz yapılmaz. Banka bağlantısı yoktur.',
 
   'tabs.home': 'Bu ay',
+  'tabs.forecast': 'Projeksiyon',
   'tabs.loans': 'Krediler',
   'tabs.settings': 'Ayarlar',
+
+  'forecast.chartTitle': 'Önümüzdeki 6 ay',
+  'forecast.note':
+    'Her ayın sonunda kalması beklenen tutar. Değişken kalemler son 3 ayın ortalamasıyla tahmin edilir; gerçek tutarlar farklı olabilir.',
+  'forecast.thisMonth': 'Bu ay',
+  'forecast.empty.title': 'Projeksiyon için veri yok',
+  'forecast.empty.subtitle':
+    'Birkaç gelir ve gider ekleyince önümüzdeki ayların tahmini burada görünür.',
+  'forecast.empty.cta': 'İlk kaydı ekle',
 
   'home.confirmedRemaining': 'Kesin kalan',
   'home.estimatedRemaining': 'Tahmini kalan',
