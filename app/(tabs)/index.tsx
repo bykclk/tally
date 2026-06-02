@@ -29,10 +29,12 @@ export default function HomeScreen() {
   const isCurrentMonth = year === cm.year && month === cm.month;
   const [items, setItems] = useState<MonthlyItem[]>([]);
   const [startingBalance, setStartingBalance] = useState(0);
+  const [todayISO, setTodayISO] = useState(todayIso);
 
   useFocusEffect(
     useCallback(() => {
       let cancelled = false;
+      setTodayISO(todayIso()); // refresh in case the app crossed midnight
       (async () => {
         const [nextItems, start] = await Promise.all([
           buildMonthlyItems(year, month),
@@ -63,10 +65,6 @@ export default function HomeScreen() {
   );
   const hasAny = items.length > 0;
 
-  const todayISO = useMemo(() => {
-    const n = new Date();
-    return isoForDayInMonth(n.getFullYear(), n.getMonth() + 1, n.getDate());
-  }, []);
   const overdueCount = useMemo(
     () =>
       pending.filter((it) => dueStateFor(it.effectiveDate, todayISO) === 'overdue')
@@ -293,6 +291,11 @@ export default function HomeScreen() {
       />
     </SafeAreaView>
   );
+}
+
+function todayIso(): string {
+  const n = new Date();
+  return isoForDayInMonth(n.getFullYear(), n.getMonth() + 1, n.getDate());
 }
 
 function dueStateFor(iso: string, today: string): DueState {

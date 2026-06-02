@@ -50,6 +50,8 @@ export default function ForecastScreen() {
   useFocusEffect(
     useCallback(() => {
       let cancelled = false;
+      setSelected(null); // drop any stale tooltip selection on refocus
+      setTipPos(null);
       (async () => {
         const cm = currentMonth();
         const data = await buildProjection(cm.year, cm.month, horizon);

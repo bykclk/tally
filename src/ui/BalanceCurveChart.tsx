@@ -94,6 +94,10 @@ export function BalanceCurveChart({
   const innerH = Math.max(1, height - TOP_PAD - BOTTOM_PAD);
   const floorY = TOP_PAD + innerH;
 
+  // Keep tap targets from overlapping when points are dense (12-month horizon),
+  // which would otherwise select a neighbouring month.
+  const hitR = n > 1 ? Math.max(10, Math.min(20, innerW / (2 * (n - 1)))) : 20;
+
   const xAt = (i: number) =>
     n <= 1 ? SIDE_PAD + innerW / 2 : SIDE_PAD + (i / (n - 1)) * innerW;
   const yAt = (v: number) =>
@@ -236,7 +240,7 @@ export function BalanceCurveChart({
                 key={`hit${i}`}
                 cx={pts[i].x}
                 cy={pts[i].y}
-                r={18}
+                r={hitR}
                 fill="transparent"
                 onPress={() => onSelectPoint(i, { x: pts[i].x, y: pts[i].y })}
               />
