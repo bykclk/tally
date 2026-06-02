@@ -83,6 +83,17 @@ Accumulating for the next build (1.1.0), not yet published.
 
 ## Backlog (candidates, not committed)
 
+- **Credit-card breakdown** — a "credit card" container that holds its
+  individual purchases, so a high balance becomes legible ("what did I buy?").
+  Each purchase is either an *installment* (reuses the existing installment-loan
+  engine) or a *one-off* charge; the card's balance rolls up from the remaining
+  purchase amounts and its monthly total feeds the month view. The reporting
+  user's debt is mostly installments **plus a lot of one-off charges**, so both
+  purchase kinds are required. Keep it math-only — no spend categories/analytics
+  and no bank sync — so it stays a cash-flow aid, not a budgeting/expense
+  tracker (which CLAUDE.md rules out). Likely a new `credit_cards` table + a
+  `card_id` on purchase rows, a card detail screen listing purchases, and a
+  rollup into the loans/month views. Sizeable: data model + migration + screens.
 - **iCloud sync** — multi-device (iPhone + iPad). Architectural work; doesn't
   break the "no own server" principle (uses Apple iCloud).
 - **Home-screen widget** — "remaining this month" at a glance (WidgetKit).
