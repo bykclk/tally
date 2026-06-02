@@ -141,6 +141,7 @@ export default function HomeScreen() {
         <Pressable
           onPress={() => router.push('/breakdown')}
           hitSlop={12}
+          accessibilityRole="button"
           accessibilityLabel={t('breakdown.title')}
           style={({ pressed }) => ({
             padding: theme.spacing(2),
@@ -200,7 +201,12 @@ export default function HomeScreen() {
           />
 
           <Pressable
-            onPress={() => router.push('/balance')}
+            onPress={() => {
+              haptics.light();
+              router.push('/balance');
+            }}
+            accessibilityRole="button"
+            accessibilityLabel={t('home.startingBalance')}
             style={({ pressed }) => [styles.summaryRow, { opacity: pressed ? 0.6 : 1 }]}
           >
             <Text style={{ color: theme.colors.textMuted, fontSize: theme.font.size.sm }}>
@@ -221,6 +227,12 @@ export default function HomeScreen() {
 
         {!hasAny ? (
           <Card style={{ alignItems: 'center', paddingVertical: theme.spacing(10) }}>
+            <Ionicons
+              name="calendar-outline"
+              size={40}
+              color={theme.colors.textMuted}
+              style={{ marginBottom: theme.spacing(3), opacity: 0.6 }}
+            />
             <Text
               style={{
                 color: theme.colors.text,
@@ -244,6 +256,7 @@ export default function HomeScreen() {
             <Pressable
               onPress={() => router.push('/entry/new')}
               hitSlop={8}
+              accessibilityRole="button"
               style={({ pressed }) => ({
                 paddingVertical: theme.spacing(2),
                 paddingHorizontal: theme.spacing(3),

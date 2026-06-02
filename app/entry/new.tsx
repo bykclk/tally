@@ -424,6 +424,7 @@ function HeaderButton({
       onPress={onPress}
       disabled={disabled}
       hitSlop={12}
+      accessibilityRole="button"
       style={({ pressed }) => [
         styles.headerBtn,
         { opacity: disabled ? 0.4 : pressed ? 0.6 : 1 },

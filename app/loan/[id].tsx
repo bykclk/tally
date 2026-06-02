@@ -381,6 +381,7 @@ export default function LoanDetailScreen() {
                 max={extraMax}
                 step={100}
                 onChange={setExtra}
+                accessibilityLabel={t('loan.sim.extra')}
               />
               <View
                 style={{

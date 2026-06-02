@@ -2,6 +2,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { MoneyText } from './MoneyText';
 import { useTheme } from './theme';
 import { useT } from '@/lib/i18n';
+import { haptics } from '@/lib/haptics';
 import type { MonthlyItem } from '@/lib/monthlyItems';
 
 export type DueState = 'overdue' | 'today' | 'upcoming';
@@ -43,8 +44,16 @@ export function ListItem({ item, onPress, dueState }: Props) {
 
   return (
     <Pressable
-      onPress={onPress}
+      onPress={
+        onPress
+          ? () => {
+              haptics.light();
+              onPress();
+            }
+          : undefined
+      }
       disabled={!onPress}
+      accessibilityRole={onPress ? 'button' : undefined}
       style={({ pressed }) => [
         styles.row,
         {

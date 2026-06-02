@@ -57,6 +57,9 @@ export function SegmentedControl<T extends string | number>({
                   onChange(opt.value);
                 }
               }}
+              accessibilityRole="button"
+              accessibilityState={{ selected: active }}
+              accessibilityLabel={opt.label}
               style={({ pressed }) => [
                 styles.segment,
                 {

@@ -290,6 +290,7 @@ export default function ConfirmInstanceScreen() {
               })
             }
             hitSlop={8}
+            accessibilityRole="button"
             style={({ pressed }) => [
               styles.editLink,
               { opacity: pressed ? 0.6 : 1 },
@@ -316,6 +317,7 @@ export default function ConfirmInstanceScreen() {
             })
           }
           hitSlop={8}
+          accessibilityRole="button"
           style={({ pressed }) => [
             styles.editLink,
             { opacity: pressed ? 0.6 : 1 },
@@ -338,6 +340,7 @@ export default function ConfirmInstanceScreen() {
             onPress={handleUnconfirm}
             disabled={saving}
             hitSlop={8}
+            accessibilityRole="button"
             style={({ pressed }) => [
               styles.unconfirm,
               {
@@ -384,6 +387,7 @@ function HeaderButton({
       onPress={onPress}
       disabled={disabled}
       hitSlop={12}
+      accessibilityRole="button"
       style={({ pressed }) => [
         styles.headerBtn,
         { opacity: disabled ? 0.4 : pressed ? 0.6 : 1 },

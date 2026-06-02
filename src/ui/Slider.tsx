@@ -3,6 +3,7 @@ import {
   PanResponder,
   StyleSheet,
   View,
+  type AccessibilityActionEvent,
   type LayoutChangeEvent,
 } from 'react-native';
 import { useTheme } from './theme';
@@ -13,6 +14,7 @@ type Props = {
   max: number;
   step?: number;
   onChange: (value: number) => void;
+  accessibilityLabel?: string;
 };
 
 const THUMB_SIZE = 24;
@@ -25,8 +27,18 @@ export function Slider({
   max,
   step = 1,
   onChange,
+  accessibilityLabel,
 }: Props) {
   const theme = useTheme();
+
+  const onAccessibilityAction = (e: AccessibilityActionEvent) => {
+    const delta = step > 0 ? step : 1;
+    if (e.nativeEvent.actionName === 'increment') {
+      onChange(Math.min(max, value + delta));
+    } else if (e.nativeEvent.actionName === 'decrement') {
+      onChange(Math.max(min, value - delta));
+    }
+  };
   const [width, setWidth] = useState(0);
   const widthRef = useRef(0);
 
@@ -66,6 +78,12 @@ export function Slider({
     <View
       onLayout={onLayout}
       {...pan.panHandlers}
+      accessible
+      accessibilityRole="adjustable"
+      accessibilityLabel={accessibilityLabel}
+      accessibilityValue={{ min, max, now: value }}
+      accessibilityActions={[{ name: 'increment' }, { name: 'decrement' }]}
+      onAccessibilityAction={onAccessibilityAction}
       style={styles.hit}
     >
       <View

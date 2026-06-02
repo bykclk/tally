@@ -1,5 +1,6 @@
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useMemo, useState } from 'react';
+import { Ionicons } from '@expo/vector-icons';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Card } from '@/ui/Card';
@@ -8,6 +9,7 @@ import { MoneyText } from '@/ui/MoneyText';
 import { useTheme, type Theme } from '@/ui/theme';
 import { useT } from '@/lib/i18n';
 import { useFormatMoney } from '@/lib/money';
+import { haptics } from '@/lib/haptics';
 import {
   listLoansWithProgress,
   type LoanWithProgress,
@@ -56,6 +58,12 @@ export default function LoansScreen() {
       >
         {loans.length === 0 ? (
           <Card style={{ alignItems: 'center', paddingVertical: theme.spacing(10) }}>
+            <Ionicons
+              name="wallet-outline"
+              size={40}
+              color={theme.colors.textMuted}
+              style={{ marginBottom: theme.spacing(3), opacity: 0.6 }}
+            />
             <Text
               style={{
                 color: theme.colors.text,
@@ -79,6 +87,7 @@ export default function LoansScreen() {
             <Pressable
               onPress={() => router.push('/loan/new')}
               hitSlop={8}
+              accessibilityRole="button"
               style={({ pressed }) => ({
                 paddingVertical: theme.spacing(2),
                 paddingHorizontal: theme.spacing(3),
@@ -189,7 +198,11 @@ function LoanRow({
 
   return (
     <Pressable
-      onPress={onPress}
+      onPress={() => {
+        haptics.light();
+        onPress();
+      }}
+      accessibilityRole="button"
       style={({ pressed }) => [
         rowStyles.row,
         {

@@ -15,6 +15,15 @@ tag the release.
 
 Accumulating for the next build (1.1.0), not yet published.
 
+### Changed
+- **Polish pass** — empty states (home, loans, forecast) now show an icon;
+  tapping a list row (home entries, loan rows) gives light haptic feedback for
+  consistency with the rest of the app; and an accessibility sweep adds
+  `accessibilityRole="button"` to tappable rows/cards, segmented-control
+  options (with selected state), modal Save/Cancel and body links, while the
+  loan extra-payment slider is now VoiceOver-adjustable (role, value, and
+  increment/decrement actions).
+
 ### Added
 - **Due / overdue flags on the home screen** — pending items whose date has
   arrived show a "Due today" badge (accent) and those whose date has passed

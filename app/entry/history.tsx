@@ -204,6 +204,7 @@ function HeaderButton({
     <View>
       <Text
         onPress={onPress}
+        accessibilityRole="button"
         style={{
           color: accent ? theme.colors.accent : theme.colors.text,
           fontSize: theme.font.size.md,

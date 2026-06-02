@@ -107,6 +107,12 @@ export default function ForecastScreen() {
       >
         {!hasAny ? (
           <Card style={{ alignItems: 'center', paddingVertical: theme.spacing(10) }}>
+            <Ionicons
+              name="trending-up-outline"
+              size={40}
+              color={theme.colors.textMuted}
+              style={{ marginBottom: theme.spacing(3), opacity: 0.6 }}
+            />
             <Text
               style={{
                 color: theme.colors.text,
@@ -130,6 +136,7 @@ export default function ForecastScreen() {
             <Pressable
               onPress={() => router.push('/entry/new')}
               hitSlop={8}
+              accessibilityRole="button"
               style={({ pressed }) => ({
                 paddingVertical: theme.spacing(2),
                 paddingHorizontal: theme.spacing(3),
@@ -161,6 +168,7 @@ export default function ForecastScreen() {
             {firstNeg && (
               <Pressable
                 onPress={() => openMonth(firstNeg)}
+                accessibilityRole="button"
                 style={({ pressed }) => [
                   styles.banner,
                   {
@@ -482,6 +490,7 @@ function ForecastRow({
   return (
     <Pressable
       onPress={onPress}
+      accessibilityRole="button"
       style={({ pressed }) => [
         styles.row,
         {

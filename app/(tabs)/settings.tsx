@@ -289,6 +289,8 @@ export default function SettingsScreen() {
 
         <Pressable
           onPress={() => router.push('/about')}
+          accessibilityRole="button"
+          accessibilityLabel={t('about.title')}
           style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
         >
           <Card
