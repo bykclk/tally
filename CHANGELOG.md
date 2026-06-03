@@ -13,7 +13,9 @@ tag the release.
 
 ## [Unreleased]
 
-Accumulating for the next build (1.1.0), not yet published.
+_Nothing yet._
+
+## [1.1.0] — 2026-06-02
 
 ### Changed
 - **Polish pass** — empty states (home, loans, forecast) now show an icon;
