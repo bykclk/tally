@@ -171,6 +171,16 @@ export async function bulkSeedLoanPayments(
   });
 }
 
+export async function countLoanPayments(loanId: string): Promise<number> {
+  const db = getDb();
+  const r = await db.execute(
+    'SELECT COUNT(*) AS n FROM loan_payments WHERE loan_id = ?;',
+    [loanId],
+  );
+  const row = (r.rows as unknown as { n: number }[])[0];
+  return row ? Number(row.n) : 0;
+}
+
 export async function deleteLoanPayment(paymentId: string): Promise<void> {
   const db = getDb();
   const r = await db.execute(

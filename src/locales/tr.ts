@@ -146,10 +146,6 @@ export const tr = {
   'loan.payments.outOfSchedule': 'Bu ay için taksit yok',
   'loan.detail.progress': 'Ödenen taksit',
   'loan.detail.lastPayment': 'Son ödeme',
-  'loan.field.paidInstallments': 'Ödenmiş taksit (opsiyonel)',
-  'loan.field.paidInstallments.hint':
-    'Şu ana kadar kaç taksit ödendi? Kalanları sonradan ay ay işaretlersin.',
-  'loan.validation.paidInstallmentsInvalid': '0 ile toplam taksit arası bir sayı gir.',
   'loan.schedule.unpaid': 'Ödenecek',
   'loan.schedule.paid': 'Ödenen',
   'loan.schedule.installmentN': '{n}. Taksit',

@@ -26,7 +26,7 @@ import {
   getLoan,
   updateLoan,
 } from '@/db/queries/loans';
-import { bulkSeedLoanPayments } from '@/db/queries/loanPayments';
+import { countLoanPayments } from '@/db/queries/loanPayments';
 import type { Loan, LoanType, Locale } from '@/types';
 
 type FormState = {
@@ -39,7 +39,6 @@ type FormState = {
   numInstallments: string;
   startYear: string;
   startMonth: string;
-  paidInstallments: string;
   dayOfMonth: string;
 };
 
@@ -52,7 +51,6 @@ type Errors = Partial<
     | 'installmentAmount'
     | 'numInstallments'
     | 'start'
-    | 'paidInstallments'
     | 'dayOfMonth',
     TranslationKey
   >
@@ -90,14 +88,6 @@ function parseYear(raw: string): number | null {
   return n;
 }
 
-function parseNonNegInt(raw: string): number | null {
-  const trimmed = raw.trim();
-  if (trimmed === '') return 0;
-  const n = Number(trimmed);
-  if (!Number.isInteger(n) || n < 0) return null;
-  return n;
-}
-
 function validate(form: FormState, locale: Locale): Errors {
   const e: Errors = {};
   if (!form.name.trim()) e.name = 'loan.validation.nameRequired';
@@ -121,10 +111,6 @@ function validate(form: FormState, locale: Locale): Errors {
       parseYear(form.startYear) === null
     )
       e.start = 'loan.validation.startInvalid';
-    const paid = parseNonNegInt(form.paidInstallments);
-    if (paid === null || (numI !== null && paid > numI)) {
-      e.paidInstallments = 'loan.validation.paidInstallmentsInvalid';
-    }
   }
   return e;
 }
@@ -142,7 +128,6 @@ function loanToForm(loan: Loan, locale: Locale): FormState {
     startYear: loan.startYear != null ? String(loan.startYear) : String(cm.year),
     startMonth:
       loan.startMonth != null ? String(loan.startMonth) : String(cm.month),
-    paidInstallments: '',
     dayOfMonth: String(loan.dayOfMonth),
   };
 }
@@ -159,7 +144,6 @@ function emptyForm(): FormState {
     numInstallments: '',
     startYear: String(cm.year),
     startMonth: String(cm.month),
-    paidInstallments: '',
     dayOfMonth: '1',
   };
 }
@@ -177,12 +161,18 @@ export default function LoanFormScreen() {
   const [notFound, setNotFound] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [saving, setSaving] = useState(false);
+  // Installments already paid on the loan being edited — used so editing
+  // recomputes the remaining balance instead of resetting it to the full total.
+  const [paidCount, setPaidCount] = useState(0);
 
   useEffect(() => {
     if (!isEdit || !id) return;
     let cancelled = false;
     (async () => {
-      const loan = await getLoan(id);
+      const [loan, paid] = await Promise.all([
+        getLoan(id),
+        countLoanPayments(id),
+      ]);
       if (cancelled) return;
       if (!loan) {
         setNotFound(true);
@@ -190,6 +180,7 @@ export default function LoanFormScreen() {
         return;
       }
       setForm(loanToForm(loan, locale));
+      setPaidCount(paid);
       setLoading(false);
     })();
     return () => {
@@ -232,9 +223,15 @@ export default function LoanFormScreen() {
       const sm = parseInt1ToMax(form.startMonth, 12);
       const sy = parseYear(form.startYear);
       if (amount === null || num === null || sm === null || sy === null) return;
+      // On edit, keep the remaining balance consistent with payments already
+      // made (recompute from the new terms) instead of resetting to the full
+      // total, which would wipe out recorded payments.
+      const remaining = isEdit
+        ? Math.max(0, (num - paidCount) * amount)
+        : amount * num;
       payload = {
         name: form.name,
-        balance: amount * num,
+        balance: remaining,
         monthlyRate: 0,
         monthlyPayment: amount,
         dayOfMonth: day,
@@ -250,13 +247,7 @@ export default function LoanFormScreen() {
       if (isEdit && id) {
         await updateLoan(id, payload);
       } else {
-        const created = await createLoan(payload);
-        if (form.type === 'installment') {
-          const paidCount = parseNonNegInt(form.paidInstallments) ?? 0;
-          if (paidCount > 0) {
-            await bulkSeedLoanPayments(created.id, paidCount);
-          }
-        }
+        await createLoan(payload);
       }
       haptics.success();
       router.back();
@@ -462,37 +453,6 @@ export default function LoanFormScreen() {
               }
               error={submitted && errors.start ? t(errors.start) : null}
             />
-            {!isEdit && (
-              <View style={{ gap: theme.spacing(1) }}>
-                <TextField
-                  label={t('loan.field.paidInstallments')}
-                  value={form.paidInstallments}
-                  onChangeText={(v) =>
-                    update(
-                      'paidInstallments',
-                      v.replace(/\D/g, '').slice(0, 3),
-                    )
-                  }
-                  placeholder="0"
-                  keyboardType="number-pad"
-                  maxLength={3}
-                  error={
-                    submitted && errors.paidInstallments
-                      ? t(errors.paidInstallments)
-                      : null
-                  }
-                />
-                <Text
-                  style={{
-                    color: theme.colors.textMuted,
-                    fontSize: theme.font.size.xs,
-                    lineHeight: theme.font.size.xs * 1.4,
-                  }}
-                >
-                  {t('loan.field.paidInstallments.hint')}
-                </Text>
-              </View>
-            )}
           </>
         )}
 

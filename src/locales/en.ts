@@ -153,11 +153,6 @@ export const en: Record<TranslationKey, string> = {
   'loan.payments.outOfSchedule': 'No installment for this month',
   'loan.detail.progress': 'Installments paid',
   'loan.detail.lastPayment': 'Last payment',
-  'loan.field.paidInstallments': 'Installments already paid (optional)',
-  'loan.field.paidInstallments.hint':
-    'How many installments have been paid so far? Mark the rest month by month later.',
-  'loan.validation.paidInstallmentsInvalid':
-    'Enter a number between 0 and total installments.',
   'loan.schedule.unpaid': 'To pay',
   'loan.schedule.paid': 'Paid',
   'loan.schedule.installmentN': 'Installment {n}',
