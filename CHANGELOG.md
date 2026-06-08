@@ -15,6 +15,18 @@ tag the release.
 
 _Nothing yet._
 
+## [1.1.1] — 2026-06-08
+
+### Fixed
+- **Installment loan "remaining" no longer corrupts on edit.** Editing an
+  installment loan after recording some payments used to reset its remaining
+  balance to the full total (wiping the recorded payments); the remaining is now
+  derived as `(installments − payments made) × amount`. Also removed the
+  "paid installments" quick-setup field that was feeding the bug.
+
+### Infrastructure
+- Aligned Expo SDK 56 patch versions (expo-doctor green).
+
 ## [1.1.0] — 2026-06-02
 
 ### Changed
