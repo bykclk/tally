@@ -110,6 +110,7 @@ export const tr = {
   'confirm.status.confirmed': 'Ödendi',
   'confirm.field.amount': 'Tutar',
   'confirm.field.day': 'Hangi gün?',
+  'confirm.savePaid': 'Ödendi olarak kaydet',
   'confirm.reset': 'Bu ayın değerini sıfırla',
   'confirm.editTemplate': 'Şablonu düzenle',
   'confirm.history': 'Geçmiş aylar',

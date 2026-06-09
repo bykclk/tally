@@ -10,6 +10,8 @@ import {
   Text,
   View,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Button } from '@/ui/Button';
 import { MoneyField } from '@/ui/MoneyField';
 import { SegmentedControl } from '@/ui/SegmentedControl';
 import { TextField } from '@/ui/TextField';
@@ -47,6 +49,7 @@ export default function ConfirmInstanceScreen() {
   const theme = useTheme();
   const t = useT();
   const locale = useLocale();
+  const insets = useSafeAreaInsets();
   const router = useRouter();
   const { entryId } = useLocalSearchParams<{ entryId: string }>();
 
@@ -224,19 +227,11 @@ export default function ConfirmInstanceScreen() {
               theme={theme}
             />
           ),
-          headerRight: () => (
-            <HeaderButton
-              label={t('common.save')}
-              onPress={handleSave}
-              disabled={saving}
-              theme={theme}
-              accent
-            />
-          ),
         }}
       />
 
       <ScrollView
+        style={{ flex: 1 }}
         contentContainerStyle={{
           padding: theme.spacing(4),
           gap: theme.spacing(4),
@@ -365,6 +360,23 @@ export default function ConfirmInstanceScreen() {
           </Pressable>
         )}
       </ScrollView>
+
+      <View
+        style={{
+          paddingHorizontal: theme.spacing(4),
+          paddingTop: theme.spacing(2),
+          paddingBottom: insets.bottom + theme.spacing(2),
+          borderTopWidth: StyleSheet.hairlineWidth,
+          borderTopColor: theme.colors.border,
+          backgroundColor: theme.colors.bg,
+        }}
+      >
+        <Button
+          label={status === 'confirmed' ? t('confirm.savePaid') : t('common.save')}
+          onPress={handleSave}
+          disabled={saving}
+        />
+      </View>
     </KeyboardAvoidingView>
   );
 }

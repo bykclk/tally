@@ -13,7 +13,18 @@ tag the release.
 
 ## [Unreleased]
 
-_Nothing yet._
+### Added
+- **Swipe between months on the home screen** — swipe left for the next month,
+  right for the previous one (the ‹ › buttons stay for discoverability and
+  accessibility). A horizontal pan that cancels an in-progress row tap, so
+  dragging across a list row no longer accidentally opens it.
+
+### Changed
+- **Faster bill confirmation** — the confirm sheet now has a large, thumb-reach
+  primary "Save as paid" button just above the keyboard. Combined with the
+  amount already arriving pre-filled (the variable-bill estimate) and the number
+  pad auto-opening, confirming a bill is usually a single tap. (Removed the small
+  top-right Save in favour of the one clear button.)
 
 ## [1.1.1] — 2026-06-08
 

@@ -115,6 +115,7 @@ export const en: Record<TranslationKey, string> = {
   'confirm.status.confirmed': 'Paid',
   'confirm.field.amount': 'Amount',
   'confirm.field.day': 'Which day?',
+  'confirm.savePaid': 'Save as paid',
   'confirm.reset': 'Reset this month',
   'confirm.editTemplate': 'Edit template',
   'confirm.history': 'Past months',
