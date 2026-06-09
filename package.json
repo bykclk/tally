@@ -2,6 +2,26 @@
   "name": "tally",
   "main": "expo-router/entry",
   "version": "1.0.0",
+  "description": "A simple, fully offline personal finance app for tracking monthly cash flow and planning early loan payoff. Turkish-first, local-only.",
+  "homepage": "https://github.com/bykclk/tally#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bykclk/tally.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bykclk/tally/issues"
+  },
+  "author": "Ömer Büyükçelik (@bykclk)",
+  "license": "MIT",
+  "keywords": [
+    "personal-finance",
+    "cash-flow",
+    "loan-payoff",
+    "react-native",
+    "expo",
+    "offline-first",
+    "sqlite"
+  ],
   "dependencies": {
     "@expo/vector-icons": "^15.0.2",
     "@op-engineering/op-sqlite": "^16.2.0",
@@ -32,6 +52,8 @@
   },
   "devDependencies": {
     "@types/react": "~19.2.2",
+    "eslint": "^9.0.0",
+    "eslint-config-expo": "~56.0.4",
     "typescript": "~6.0.3"
   },
   "scripts": {
@@ -39,7 +61,8 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "typecheck": "tsc --noEmit"
   },
   "private": true
 }

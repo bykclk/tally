@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useToastStore } from '@/stores/toast';
@@ -17,7 +17,9 @@ export function ToastHost() {
   const action = useToastStore((s) => s.action);
   const seq = useToastStore((s) => s.seq);
   const hide = useToastStore((s) => s.hide);
-  const anim = useRef(new Animated.Value(0)).current;
+  // Lazy state (not a ref) so reading it in render stays lint-clean; it's
+  // created once and never replaced.
+  const [anim] = useState(() => new Animated.Value(0));
 
   const dismiss = useCallback(() => {
     Animated.timing(anim, {

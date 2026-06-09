@@ -7,6 +7,9 @@ spreadsheet.
 
 Built with React Native (Expo). Turkish-first, with full English support.
 
+[![CI](https://github.com/bykclk/tally/actions/workflows/ci.yml/badge.svg)](https://github.com/bykclk/tally/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
+
 ## Features
 
 - **Monthly view** — confirmed vs. estimated remaining, shown live as you
@@ -53,8 +56,21 @@ npm install
 npx expo run:ios     # or: npx expo run:android
 ```
 
+## Contributing
+
+Contributions are welcome — especially bug fixes, polish, accessibility, and
+translations. Please read [`CONTRIBUTING.md`](./CONTRIBUTING.md) first; it covers
+the dev setup and the scope rules that keep Tally small and focused. For security
+issues, see [`SECURITY.md`](./SECURITY.md).
+
 ## Project docs
 
+- [`CONTRIBUTING.md`](./CONTRIBUTING.md) — dev setup, conventions, scope rules
+- [`SECURITY.md`](./SECURITY.md) — how to report a vulnerability
 - [`PUBLISHING.md`](./PUBLISHING.md) — App Store release checklist
 - [`CHANGELOG.md`](./CHANGELOG.md) — version history, backlog and out-of-scope notes
 - [`docs/privacy.md`](./docs/privacy.md) — privacy policy (also at the URL above)
+
+## License
+
+[MIT](./LICENSE) © 2026 Ömer Büyükçelik
