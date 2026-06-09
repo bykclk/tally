@@ -3,6 +3,8 @@ import { useCallback, useMemo, useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import { runOnJS } from 'react-native-reanimated';
 import { Card } from '@/ui/Card';
 import { FloatingActionButton } from '@/ui/FloatingActionButton';
 import { ListItem, type DueState } from '@/ui/ListItem';
@@ -72,6 +74,37 @@ export default function HomeScreen() {
     [pending, todayISO],
   );
 
+  // Swipe left → next month, swipe right → previous month. Fling gestures only
+  // fire on a horizontal flick, so they coexist with the vertical ScrollView.
+  // The ‹ › buttons stay for discoverability/accessibility.
+  const goNext = useCallback(() => {
+    haptics.light();
+    next();
+  }, [next]);
+  const goPrev = useCallback(() => {
+    haptics.light();
+    prev();
+  }, [prev]);
+  // A horizontal pan (not a fling): it needs ~20px sideways travel to activate,
+  // which ignores taps and *cancels* an in-progress row tap, so dragging across
+  // a list row no longer accidentally opens it. failOffsetY lets a mostly-
+  // vertical drag fall through to the ScrollView. onEnd runs as a UI worklet, so
+  // hop back to JS with runOnJS before touching the store / haptics.
+  const monthSwipe = useMemo(
+    () =>
+      Gesture.Pan()
+        .activeOffsetX([-20, 20])
+        .failOffsetY([-18, 18])
+        .onEnd((e) => {
+          if (e.translationX <= -45 || e.velocityX <= -500) {
+            runOnJS(goNext)();
+          } else if (e.translationX >= 45 || e.velocityX >= 500) {
+            runOnJS(goPrev)();
+          }
+        }),
+    [goNext, goPrev],
+  );
+
   const onItemPress = (item: MonthlyItem) => {
     if (item.source.kind === 'loan') {
       router.push({
@@ -91,6 +124,8 @@ export default function HomeScreen() {
       edges={['top']}
       style={[styles.root, { backgroundColor: theme.colors.bg }]}
     >
+      <GestureDetector gesture={monthSwipe}>
+        <View style={styles.swipeArea}>
       <View style={[styles.header, { paddingHorizontal: theme.spacing(4) }]}>
         <View style={styles.monthNav}>
           <Pressable
@@ -297,6 +332,8 @@ export default function HomeScreen() {
           </>
         )}
       </ScrollView>
+        </View>
+      </GestureDetector>
 
       <FloatingActionButton
         onPress={() => router.push('/entry/new')}
@@ -404,6 +441,7 @@ function Section({
 
 const styles = StyleSheet.create({
   root: { flex: 1 },
+  swipeArea: { flex: 1 },
   summaryRow: {
     flexDirection: 'row',
     alignItems: 'center',

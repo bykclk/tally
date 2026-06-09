@@ -1,4 +1,7 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
+// RNGH's Pressable (not RN's) so the home screen's month-swipe Pan can cancel a
+// row tap mid-drag — otherwise dragging across a row accidentally opens it.
+import { Pressable } from 'react-native-gesture-handler';
 import { MoneyText } from './MoneyText';
 import { useTheme } from './theme';
 import { useT } from '@/lib/i18n';
