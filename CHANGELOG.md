@@ -26,6 +26,8 @@ tag the release.
   brief toast with a one-tap "Undo" that restores the month's previous state
   (or clears it if there was none), backed by a small global toast + refresh
   signal reused elsewhere.
+- **One-tap confirm** — pending bill rows on the home screen now have a ✓ button
+  that banks the estimate as paid without opening the sheet (same undo toast).
 
 ### Changed
 - **Faster bill confirmation** — the confirm sheet now has a large, thumb-reach

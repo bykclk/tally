@@ -29,6 +29,8 @@ import {
   type MonthlyItem,
 } from '@/lib/monthlyItems';
 import { resolveStartingBalance } from '@/lib/monthlyBalance';
+import { upsertInstance, deleteInstance } from '@/db/queries/instances';
+import { showToast } from '@/stores/toast';
 
 export default function HomeScreen() {
   const theme = useTheme();
@@ -133,6 +135,44 @@ export default function HomeScreen() {
           }
         }),
     [goNext, goPrev],
+  );
+
+  // One-tap confirm from the pending list (no modal): bank the estimate as a
+  // confirmed instance and offer an undo that restores the previous state.
+  const onQuickConfirm = useCallback(
+    async (item: MonthlyItem) => {
+      if (item.source.kind !== 'entry') return;
+      const entry = item.source.entry;
+      const prev = item.source.instance;
+      await upsertInstance({
+        entryId: entry.id,
+        year,
+        month,
+        amount: item.effectiveAmount,
+        date: item.effectiveDate,
+        status: 'confirmed',
+        isEstimate: false,
+      });
+      await loadData();
+      showToast(t('confirm.toast.paid'), {
+        label: t('common.undo'),
+        onPress: () => {
+          const undo = prev
+            ? upsertInstance({
+                entryId: entry.id,
+                year,
+                month,
+                amount: prev.amount,
+                date: prev.date,
+                status: prev.status,
+                isEstimate: prev.isEstimate,
+              })
+            : deleteInstance(entry.id, year, month);
+          void undo.then(() => loadData());
+        },
+      });
+    },
+    [year, month, loadData, t],
   );
 
   const onItemPress = (item: MonthlyItem) => {
@@ -365,6 +405,7 @@ export default function HomeScreen() {
                 title={t('home.section.pending')}
                 items={pending}
                 onItemPress={onItemPress}
+                onQuickConfirm={onQuickConfirm}
                 theme={theme}
                 todayISO={todayISO}
                 overdueCount={overdueCount}
@@ -399,6 +440,7 @@ function Section({
   title,
   items,
   onItemPress,
+  onQuickConfirm,
   theme,
   todayISO,
   overdueCount = 0,
@@ -406,6 +448,7 @@ function Section({
   title: string;
   items: MonthlyItem[];
   onItemPress: (item: MonthlyItem) => void;
+  onQuickConfirm?: (item: MonthlyItem) => void;
   theme: Theme;
   todayISO?: string;
   overdueCount?: number;
@@ -471,6 +514,11 @@ function Section({
             <ListItem
               item={it}
               onPress={() => onItemPress(it)}
+              onQuickConfirm={
+                onQuickConfirm && it.status === 'pending' && it.source.kind === 'entry'
+                  ? () => onQuickConfirm(it)
+                  : undefined
+              }
               dueState={todayISO ? dueStateFor(it.effectiveDate, todayISO) : undefined}
             />
           </View>

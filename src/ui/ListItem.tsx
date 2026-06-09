@@ -2,6 +2,7 @@ import { StyleSheet, Text, View } from 'react-native';
 // RNGH's Pressable (not RN's) so the home screen's month-swipe Pan can cancel a
 // row tap mid-drag — otherwise dragging across a row accidentally opens it.
 import { Pressable } from 'react-native-gesture-handler';
+import { Ionicons } from '@expo/vector-icons';
 import { MoneyText } from './MoneyText';
 import { useTheme } from './theme';
 import { useT } from '@/lib/i18n';
@@ -13,11 +14,13 @@ export type DueState = 'overdue' | 'today' | 'upcoming';
 type Props = {
   item: MonthlyItem;
   onPress?: () => void;
+  /** When set on a pending row, shows a ✓ button for one-tap confirmation. */
+  onQuickConfirm?: () => void;
   /** Due flag for pending items (relative to today). Ignored when confirmed. */
   dueState?: DueState;
 };
 
-export function ListItem({ item, onPress, dueState }: Props) {
+export function ListItem({ item, onPress, onQuickConfirm, dueState }: Props) {
   const theme = useTheme();
   const t = useT();
   const isPending = item.status === 'pending';
@@ -142,6 +145,29 @@ export function ListItem({ item, onPress, dueState }: Props) {
         bold={!isPending}
         tone={isPending ? 'muted' : isIncome ? 'income' : 'expense'}
       />
+
+      {isPending && onQuickConfirm && (
+        <Pressable
+          onPress={() => {
+            haptics.success();
+            onQuickConfirm();
+          }}
+          hitSlop={8}
+          accessibilityRole="button"
+          accessibilityLabel={t('confirm.savePaid')}
+          style={({ pressed }) => [
+            styles.confirmBtn,
+            {
+              borderColor: theme.colors.accent,
+              backgroundColor: theme.colors.accent + '14',
+              marginLeft: theme.spacing(3),
+              opacity: pressed ? 0.5 : 1,
+            },
+          ]}
+        >
+          <Ionicons name="checkmark" size={18} color={theme.colors.accent} />
+        </Pressable>
+      )}
     </Pressable>
   );
 }
@@ -166,5 +192,13 @@ const styles = StyleSheet.create({
   dueChip: {
     paddingHorizontal: 6,
     paddingVertical: 1,
+  },
+  confirmBtn: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    borderWidth: StyleSheet.hairlineWidth,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
