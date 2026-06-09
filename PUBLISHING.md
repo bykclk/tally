@@ -1,7 +1,7 @@
 # Tally — Yayın Runbook'u (App Store)
 
-İlk gönderim tamamlandı. Bu doküman artık **yeni sürüm yayınlama** döngüsü +
-bir kez yapılıp biten kurulumun kaydı.
+Yaşayan runbook: her yeni sürümde izlenen adımlar + bir kez yapılıp biten
+kurulumun kaydı. (Son yayınlanan sürüm: **1.2.0**)
 
 - **App Store Connect:** https://appstoreconnect.apple.com/apps/6774515046
 - **Mağaza adı:** Cash Flow Tally · **Bundle ID:** com.omertally.app
@@ -9,24 +9,40 @@ bir kez yapılıp biten kurulumun kaydı.
 
 ---
 
-## Yeni sürüm yayınlama (her güncellemede tekrar)
+## Yeni sürüm yayınlama (her güncellemede)
 
+Sürüm `X.Y.Z` (patch düzeltme: 1.2.0 → 1.2.1; yeni özellik: 1.2.0 → 1.3.0).
+
+**0. Ön kontrol** — ikisi de temiz olmalı (CI de bunları koşar):
 ```bash
-# 1. app.json → "version" artır (örn. 1.0.0 → 1.1.0)
-#    (build numarası EAS'te autoIncrement, elle dokunma)
+npm run typecheck
+npm run lint
+```
 
-# 2. Build + gönder
+**1. CHANGELOG.md** — `[Unreleased]` altındakileri `## [X.Y.Z] — YYYY-MM-DD`
+başlığına taşı; `[Unreleased]`'i boşalt.
+
+**2. `app.json` → `version`** = `X.Y.Z` (build numarası EAS'te autoIncrement,
+elle dokunma).
+
+**3. Commit + tag + push:**
+```bash
+git commit -am "Cut vX.Y.Z: ..."
+git push
+git tag vX.Y.Z && git push origin vX.Y.Z
+```
+
+**4. Build + gönder:**
+```bash
 eas build --platform ios --profile production
 eas submit --platform ios --latest
 ```
 
-Sonra:
-- [ ] TestFlight'ta işleme bitince **cihazda test et** (en kritik adım)
-- [ ] App Store Connect → yeni sürüm oluştur → **"What's New"** notu gir
-- [ ] Yeni build'i seç → **Submit for Review**
+**5. App Store Connect:**
+- [ ] TestFlight'ta işlenince **cihazda test et** (en kritik adım)
+- [ ] Yeni sürüm oluştur (`X.Y.Z`) → **"What's New"** notu gir
+- [ ] İşlenen build'i seç → **Submit for Review**
 - [ ] Onay sonrası: otomatik/manuel yayınla
-- [ ] Yayınlanınca commit'i tag'le: `git tag v1.1.0 && git push --tags`
-      ve `CHANGELOG.md`'de **Unreleased**'i sürüm başlığına taşı
 
 > **Encryption / export compliance:** `app.json`'da
 > `ITSAppUsesNonExemptEncryption: false` gömülü → her build'de otomatik
