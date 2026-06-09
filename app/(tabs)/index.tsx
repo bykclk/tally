@@ -1,5 +1,5 @@
 import { useFocusEffect, useRouter } from 'expo-router';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import {
   Pressable,
@@ -71,8 +71,20 @@ export default function HomeScreen() {
       return () => {
         cancelled = true;
       };
-    }, [year, month, refreshTick]),
+    }, [year, month]),
   );
+
+  // Reload when an off-screen mutation (e.g. a toast "Undo") bumps the global
+  // refresh signal — the focus effect won't re-run while we stay on this screen.
+  // Skip the initial run so it doesn't double-load on mount alongside focus.
+  const firstTick = useRef(true);
+  useEffect(() => {
+    if (firstTick.current) {
+      firstTick.current = false;
+      return;
+    }
+    void loadData();
+  }, [refreshTick, loadData]);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);

@@ -59,7 +59,12 @@ export function Slider({
     onChange(bounded);
   };
 
-  const pan = useRef(
+  // Lazy state (not a ref) so reading pan.panHandlers in render stays
+  // lint-clean. Created once; the handlers read the latest width via widthRef —
+  // a standard PanResponder idiom that the react-hooks/refs rule false-positives
+  // on (the closures only run on gesture, never during render).
+  /* eslint-disable react-hooks/refs */
+  const [pan] = useState(() =>
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onMoveShouldSetPanResponder: () => true,
@@ -67,7 +72,8 @@ export function Slider({
       onPanResponderGrant: (e) => update(e.nativeEvent.locationX),
       onPanResponderMove: (e) => update(e.nativeEvent.locationX),
     }),
-  ).current;
+  );
+  /* eslint-enable react-hooks/refs */
 
   const ratio =
     max > min ? Math.max(0, Math.min(1, (value - min) / (max - min))) : 0;

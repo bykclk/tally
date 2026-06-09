@@ -169,7 +169,7 @@ export default function ConfirmInstanceScreen() {
       router.back();
     } catch (e) {
       setSaving(false);
-      // eslint-disable-next-line no-console
+       
       console.error('upsertInstance failed', e);
     }
   };
@@ -183,7 +183,7 @@ export default function ConfirmInstanceScreen() {
       router.back();
     } catch (e) {
       setSaving(false);
-      // eslint-disable-next-line no-console
+       
       console.error('deleteInstance failed', e);
     }
   };

@@ -72,7 +72,7 @@ export default function BalanceScreen() {
       router.back();
     } catch (e) {
       setSaving(false);
-      // eslint-disable-next-line no-console
+       
       console.error('setMonthBalance failed', e);
     }
   };
@@ -86,7 +86,7 @@ export default function BalanceScreen() {
       router.back();
     } catch (e) {
       setSaving(false);
-      // eslint-disable-next-line no-console
+       
       console.error('deleteMonthBalance failed', e);
     }
   };

@@ -6,8 +6,8 @@ on:
   pull_request:
 
 jobs:
-  typecheck:
-    name: Typecheck
+  check:
+    name: Typecheck & lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -17,6 +17,4 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run typecheck
-      # `npm run lint` is intentionally not gated in CI yet: the codebase still
-      # has pre-existing eslint findings to clean up first. Re-add a lint step
-      # once `npm run lint` is green.
+      - run: npm run lint

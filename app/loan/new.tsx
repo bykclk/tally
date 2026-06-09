@@ -253,7 +253,7 @@ export default function LoanFormScreen() {
       router.back();
     } catch (e) {
       setSaving(false);
-      // eslint-disable-next-line no-console
+       
       console.error('save loan failed', e);
     }
   };
@@ -277,7 +277,7 @@ export default function LoanFormScreen() {
               router.dismissAll();
               router.back();
             } catch (e) {
-              // eslint-disable-next-line no-console
+               
               console.error('deleteLoan failed', e);
             }
           },

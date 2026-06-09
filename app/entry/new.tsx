@@ -160,7 +160,7 @@ export default function EntryFormScreen() {
       router.back();
     } catch (e) {
       setSaving(false);
-      // eslint-disable-next-line no-console
+       
       console.error('save entry failed', e);
     }
   };
@@ -183,7 +183,7 @@ export default function EntryFormScreen() {
               haptics.warning();
               router.dismissAll();
             } catch (e) {
-              // eslint-disable-next-line no-console
+               
               console.error('deleteEntry failed', e);
             }
           },

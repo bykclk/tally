@@ -203,7 +203,7 @@ export default function LoanDetailScreen() {
               }
               await refresh();
             } catch (e) {
-              // eslint-disable-next-line no-console
+               
               console.error('recordLoanPayment failed', e);
             } finally {
               setBusy(false);
@@ -234,7 +234,7 @@ export default function LoanDetailScreen() {
               await deleteLoanPayment(last.id);
               await refresh();
             } catch (e) {
-              // eslint-disable-next-line no-console
+               
               console.error('deleteLoanPayment failed', e);
             } finally {
               setBusy(false);

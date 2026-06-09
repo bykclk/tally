@@ -57,7 +57,7 @@ export default function SettingsScreen() {
               haptics.success();
               router.navigate('/');
             } catch (e) {
-              // eslint-disable-next-line no-console
+               
               console.error('seedSampleData failed', e);
             }
           },
@@ -83,7 +83,7 @@ export default function SettingsScreen() {
               haptics.warning();
               router.navigate('/');
             } catch (e) {
-              // eslint-disable-next-line no-console
+               
               console.error('resetAllData failed', e);
             }
           },
