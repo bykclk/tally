@@ -13,6 +13,10 @@ tag the release.
 
 ## [Unreleased]
 
+_Nothing yet._
+
+## [1.2.0] — 2026-06-09
+
 ### Added
 - **Swipe between months on the home screen** — swipe left for the next month,
   right for the previous one (the ‹ › buttons stay for discoverability and
