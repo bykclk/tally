@@ -28,7 +28,9 @@ import {
   upsertInstance,
 } from '@/db/queries/instances';
 import { estimateForEntry } from '@/lib/estimate';
-import type { Entry, InstanceStatus, Locale } from '@/types';
+import { showToast } from '@/stores/toast';
+import { bumpRefresh } from '@/stores/refresh';
+import type { Entry, Instance, InstanceStatus, Locale } from '@/types';
 
 type Errors = Partial<Record<'amount' | 'day', TranslationKey>>;
 
@@ -66,6 +68,7 @@ export default function ConfirmInstanceScreen() {
   const [submitted, setSubmitted] = useState(false);
   const [saving, setSaving] = useState(false);
   const [hasInstance, setHasInstance] = useState(false);
+  const [prevInstance, setPrevInstance] = useState<Instance | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -102,6 +105,7 @@ export default function ConfirmInstanceScreen() {
       setDay(String(defaultDay));
       setStatus(existing?.status ?? 'confirmed');
       setHasInstance(existing !== null);
+      setPrevInstance(existing);
       setLoading(false);
     })();
     return () => {
@@ -138,6 +142,30 @@ export default function ConfirmInstanceScreen() {
         isEstimate: status === 'pending',
       });
       haptics.success();
+      // Toast with one-tap undo. Undo restores the previous instance for this
+      // month, or deletes the new one if the month had none before.
+      const eId = entry.id;
+      const snapshot = prevInstance;
+      showToast(
+        status === 'confirmed' ? t('confirm.toast.paid') : t('confirm.toast.saved'),
+        {
+          label: t('common.undo'),
+          onPress: () => {
+            const undo = snapshot
+              ? upsertInstance({
+                  entryId: eId,
+                  year,
+                  month,
+                  amount: snapshot.amount,
+                  date: snapshot.date,
+                  status: snapshot.status,
+                  isEstimate: snapshot.isEstimate,
+                })
+              : deleteInstance(eId, year, month);
+            void undo.then(() => bumpRefresh());
+          },
+        },
+      );
       router.back();
     } catch (e) {
       setSaving(false);

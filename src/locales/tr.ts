@@ -111,6 +111,8 @@ export const tr = {
   'confirm.field.amount': 'Tutar',
   'confirm.field.day': 'Hangi gün?',
   'confirm.savePaid': 'Ödendi olarak kaydet',
+  'confirm.toast.paid': 'Ödendi olarak işaretlendi',
+  'confirm.toast.saved': 'Güncellendi',
   'confirm.reset': 'Bu ayın değerini sıfırla',
   'confirm.editTemplate': 'Şablonu düzenle',
   'confirm.history': 'Geçmiş aylar',
@@ -204,6 +206,7 @@ export const tr = {
   'common.save': 'Kaydet',
   'common.delete': 'Sil',
   'common.done': 'Tamam',
+  'common.undo': 'Geri al',
 
   'error.title': 'Bir şey ters gitti',
   'error.body':

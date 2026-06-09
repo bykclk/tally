@@ -22,6 +22,7 @@ import { useT, useLocale } from '@/lib/i18n';
 import { currentMonth, monthLabel, isoForDayInMonth } from '@/lib/date';
 import { haptics } from '@/lib/haptics';
 import { useMonthStore } from '@/stores/month';
+import { useRefreshStore } from '@/stores/refresh';
 import {
   buildMonthlyItems,
   totalsFromItems,
@@ -35,6 +36,7 @@ export default function HomeScreen() {
   const locale = useLocale();
   const router = useRouter();
   const { year, month, next, prev, reset } = useMonthStore();
+  const refreshTick = useRefreshStore((s) => s.tick);
   const cm = currentMonth();
   const isCurrentMonth = year === cm.year && month === cm.month;
   const [items, setItems] = useState<MonthlyItem[]>([]);
@@ -67,7 +69,7 @@ export default function HomeScreen() {
       return () => {
         cancelled = true;
       };
-    }, [year, month]),
+    }, [year, month, refreshTick]),
   );
 
   const onRefresh = useCallback(async () => {

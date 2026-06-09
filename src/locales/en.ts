@@ -116,6 +116,8 @@ export const en: Record<TranslationKey, string> = {
   'confirm.field.amount': 'Amount',
   'confirm.field.day': 'Which day?',
   'confirm.savePaid': 'Save as paid',
+  'confirm.toast.paid': 'Marked as paid',
+  'confirm.toast.saved': 'Updated',
   'confirm.reset': 'Reset this month',
   'confirm.editTemplate': 'Edit template',
   'confirm.history': 'Past months',
@@ -213,6 +215,7 @@ export const en: Record<TranslationKey, string> = {
   'common.save': 'Save',
   'common.delete': 'Delete',
   'common.done': 'Done',
+  'common.undo': 'Undo',
 
   'error.title': 'Something went wrong',
   'error.body':

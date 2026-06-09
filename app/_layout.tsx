@@ -19,6 +19,7 @@ import { useNotificationStore } from '@/stores/notifications';
 import { initNotifications, rescheduleAll } from '@/lib/notifications';
 import { ErrorBoundary } from '@/ui/ErrorBoundary';
 import { Onboarding } from '@/ui/Onboarding';
+import { ToastHost } from '@/ui/ToastHost';
 import { useTheme } from '@/ui/theme';
 
 const ONBOARDING_KEY = 'onboarding.done';
@@ -119,6 +120,7 @@ export default function RootLayout() {
         <Stack.Screen name="about" options={{ presentation: 'modal', title: '' }} />
         </Stack>
       </ErrorBoundary>
+      <ToastHost />
     </GestureHandlerRootView>
   );
 }

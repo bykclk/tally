@@ -22,6 +22,10 @@ tag the release.
   count up or down to their new value (on month change, confirmation, etc.)
   instead of snapping.
 - **Pull-to-refresh** on the home screen.
+- **Undo toast on bill confirmation** — saving a bill (new or edited) shows a
+  brief toast with a one-tap "Undo" that restores the month's previous state
+  (or clears it if there was none), backed by a small global toast + refresh
+  signal reused elsewhere.
 
 ### Changed
 - **Faster bill confirmation** — the confirm sheet now has a large, thumb-reach
