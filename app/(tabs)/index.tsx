@@ -1,7 +1,14 @@
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useMemo, useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import {
+  Pressable,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { runOnJS } from 'react-native-reanimated';
@@ -9,6 +16,7 @@ import { Card } from '@/ui/Card';
 import { FloatingActionButton } from '@/ui/FloatingActionButton';
 import { ListItem, type DueState } from '@/ui/ListItem';
 import { MoneyText } from '@/ui/MoneyText';
+import { AnimatedMoney } from '@/ui/AnimatedMoney';
 import { useTheme, type Theme } from '@/ui/theme';
 import { useT, useLocale } from '@/lib/i18n';
 import { currentMonth, monthLabel, isoForDayInMonth } from '@/lib/date';
@@ -32,6 +40,16 @@ export default function HomeScreen() {
   const [items, setItems] = useState<MonthlyItem[]>([]);
   const [startingBalance, setStartingBalance] = useState(0);
   const [todayISO, setTodayISO] = useState(todayIso);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const loadData = useCallback(async () => {
+    const [nextItems, start] = await Promise.all([
+      buildMonthlyItems(year, month),
+      resolveStartingBalance(year, month),
+    ]);
+    setItems(nextItems);
+    setStartingBalance(start);
+  }, [year, month]);
 
   useFocusEffect(
     useCallback(() => {
@@ -51,6 +69,16 @@ export default function HomeScreen() {
       };
     }, [year, month]),
   );
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    setTodayISO(todayIso());
+    try {
+      await loadData();
+    } finally {
+      setRefreshing(false);
+    }
+  }, [loadData]);
 
   const { confirmed, pending } = useMemo(() => {
     const c: MonthlyItem[] = [];
@@ -197,6 +225,13 @@ export default function HomeScreen() {
           paddingBottom: theme.spacing(20),
           gap: theme.spacing(4),
         }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor={theme.colors.textMuted}
+          />
+        }
       >
         <Card style={{ gap: theme.spacing(3) }}>
           <View>
@@ -212,7 +247,7 @@ export default function HomeScreen() {
             >
               {t('home.confirmedRemaining')}
             </Text>
-            <MoneyText
+            <AnimatedMoney
               amount={totals.confirmedRemaining}
               size="xxl"
               bold
@@ -228,7 +263,11 @@ export default function HomeScreen() {
             <Text style={{ color: theme.colors.textMuted, fontSize: theme.font.size.sm }}>
               {t('home.estimatedRemaining')}
             </Text>
-            <MoneyText amount={totals.estimatedRemaining} size="md" tone="muted" />
+            <AnimatedMoney
+              amount={totals.estimatedRemaining}
+              size="md"
+              tone="muted"
+            />
           </View>
 
           <View

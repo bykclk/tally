@@ -18,6 +18,10 @@ tag the release.
   right for the previous one (the ‹ › buttons stay for discoverability and
   accessibility). A horizontal pan that cancels an in-progress row tap, so
   dragging across a list row no longer accidentally opens it.
+- **Animated headline figures** — the confirmed/estimated remaining numbers
+  count up or down to their new value (on month change, confirmation, etc.)
+  instead of snapping.
+- **Pull-to-refresh** on the home screen.
 
 ### Changed
 - **Faster bill confirmation** — the confirm sheet now has a large, thumb-reach
