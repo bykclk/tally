@@ -57,3 +57,12 @@ export async function clearPendingChange(
     [tableName, recordId],
   );
 }
+
+/**
+ * Toggle the change-tracking guard. While applying=1 the sync triggers don't
+ * record changes, so pulled remote rows aren't re-queued for push (no loop).
+ */
+export async function setApplyingRemote(applying: boolean): Promise<void> {
+  const db = getDb();
+  await db.execute('UPDATE sync_meta SET applying = ?;', [applying ? 1 : 0]);
+}

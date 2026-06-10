@@ -19,9 +19,22 @@ export type CloudRecord = {
 
 export type PushResult = { saved: number; deleted: number };
 
+export type CloudChange = {
+  recordType: string;
+  recordName: string;
+  fields: Record<string, unknown>;
+};
+export type CloudDeletion = { recordName: string; recordType: string };
+export type PullResult = {
+  changes: CloudChange[];
+  deletions: CloudDeletion[];
+  token: string | null;
+};
+
 type CloudSyncNative = {
   accountStatus(): Promise<ICloudAccountStatus>;
   push(upserts: CloudRecord[], deletes: string[]): Promise<PushResult>;
+  pull(token: string | null): Promise<PullResult>;
 };
 
 // Optional so the app never crashes when the native module is missing — it just
@@ -47,4 +60,10 @@ export async function pushToCloud(
 ): Promise<PushResult> {
   if (!CloudSync) throw new Error('CloudSync native module is unavailable');
   return CloudSync.push(upserts, deletes);
+}
+
+/** Fetch zone changes since `token` (null = full fetch). */
+export async function pullFromCloud(token: string | null): Promise<PullResult> {
+  if (!CloudSync) throw new Error('CloudSync native module is unavailable');
+  return CloudSync.pull(token);
 }

@@ -1,17 +1,7 @@
 import { getDb } from '@/db/client';
 import { listPendingChanges, clearPendingChange } from '@/db/queries/sync';
 import { pushToCloud, type CloudRecord } from './icloud';
-
-// Local table → CloudKit record type. Only these tables sync (prefs are
-// device-local). Record name = the row's stable id (UUID, or `year-month`
-// for monthly_balances), which is unique across tables.
-const RECORD_TYPE: Record<string, string> = {
-  entries: 'Entry',
-  instances: 'Instance',
-  loans: 'Loan',
-  loan_payments: 'LoanPayment',
-  monthly_balances: 'MonthlyBalance',
-};
+import { RECORD_TYPE } from './mapping';
 
 type Row = Record<string, unknown>;
 
@@ -45,7 +35,9 @@ export async function pushPendingChanges(): Promise<PushSummary> {
   let skipped = 0;
 
   for (const change of pending) {
-    const recordType = RECORD_TYPE[change.tableName];
+    const recordType = (RECORD_TYPE as Record<string, string | undefined>)[
+      change.tableName
+    ];
     if (!recordType) {
       skipped += 1;
       continue;

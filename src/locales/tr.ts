@@ -269,6 +269,10 @@ export const tr = {
   'settings.icloud.pushing': 'Yükleniyor…',
   'settings.icloud.pushDone': '{count} kayıt buluta yüklendi',
   'settings.icloud.pushError': 'Yükleme başarısız',
+  'settings.icloud.pull': 'Şimdi indir',
+  'settings.icloud.pulling': 'İndiriliyor…',
+  'settings.icloud.pullDone': '{count} değişiklik indirildi',
+  'settings.icloud.pullError': 'İndirme başarısız',
 
   'sample.salary': 'Maaş',
   'sample.sideIncome': 'Ek gelir',

@@ -27,6 +27,12 @@ public class CloudSyncModule: Module {
     AsyncFunction("push") { (upserts: [[String: Any]], deletes: [String], promise: Promise) in
       self.push(upserts: upserts, deletes: deletes, promise: promise)
     }
+
+    // Fetch changes from the zone since the given (base64) server change token.
+    // Resolves { changes, deletions, token }.
+    AsyncFunction("pull") { (tokenBase64: String?, promise: Promise) in
+      self.pull(tokenBase64: tokenBase64, promise: promise)
+    }
   }
 
   private func push(upserts: [[String: Any]], deletes: [String], promise: Promise) {
@@ -79,6 +85,98 @@ public class CloudSyncModule: Module {
       }
     }
     db.add(op)
+  }
+
+  private func pull(tokenBase64: String?, promise: Promise) {
+    let db = CKContainer(identifier: containerIdentifier).privateCloudDatabase
+    let zone = CKRecordZone(zoneName: zoneName)
+
+    // Ensure the zone exists — nothing to pull from one that was never created.
+    let zoneOp = CKModifyRecordZonesOperation(
+      recordZonesToSave: [zone], recordZoneIDsToDelete: nil)
+    zoneOp.modifyRecordZonesResultBlock = { result in
+      switch result {
+      case .failure(let error):
+        promise.reject("ERR_ZONE", error.localizedDescription)
+      case .success:
+        self.fetchChanges(
+          db: db, zoneID: zone.zoneID, tokenBase64: tokenBase64, promise: promise)
+      }
+    }
+    db.add(zoneOp)
+  }
+
+  private func fetchChanges(
+    db: CKDatabase, zoneID: CKRecordZone.ID, tokenBase64: String?, promise: Promise
+  ) {
+    let config = CKFetchRecordZoneChangesOperation.ZoneConfiguration()
+    config.previousServerChangeToken = CloudSyncModule.decodeToken(tokenBase64)
+
+    let op = CKFetchRecordZoneChangesOperation(
+      recordZoneIDs: [zoneID], configurationsByRecordZoneID: [zoneID: config])
+
+    var changes: [[String: Any]] = []
+    var deletions: [[String: String]] = []
+    var newToken: CKServerChangeToken?
+
+    op.recordWasChangedBlock = { _, result in
+      if case .success(let record) = result {
+        changes.append(CloudSyncModule.serialize(record))
+      }
+    }
+    op.recordWithIDWasDeletedBlock = { recordID, recordType in
+      deletions.append(["recordName": recordID.recordName, "recordType": recordType])
+    }
+    op.recordZoneFetchResultBlock = { _, result in
+      if case .success(let (token, _, _)) = result {
+        newToken = token
+      }
+    }
+    op.fetchRecordZoneChangesResultBlock = { result in
+      switch result {
+      case .failure(let error):
+        promise.reject("ERR_PULL", error.localizedDescription)
+      case .success:
+        promise.resolve([
+          "changes": changes,
+          "deletions": deletions,
+          "token": CloudSyncModule.encodeToken(newToken).map { $0 as Any } ?? NSNull(),
+        ])
+      }
+    }
+    db.add(op)
+  }
+
+  // CKRecord → { recordType, recordName, fields }. Only the value types we store
+  // (strings, numbers) are read back.
+  private static func serialize(_ record: CKRecord) -> [String: Any] {
+    var fields: [String: Any] = [:]
+    for key in record.allKeys() {
+      if let s = record[key] as? String {
+        fields[key] = s
+      } else if let n = record[key] as? NSNumber {
+        fields[key] = n
+      }
+    }
+    return [
+      "recordType": record.recordType,
+      "recordName": record.recordID.recordName,
+      "fields": fields,
+    ]
+  }
+
+  private static func encodeToken(_ token: CKServerChangeToken?) -> String? {
+    guard let token = token,
+      let data = try? NSKeyedArchiver.archivedData(
+        withRootObject: token, requiringSecureCoding: true)
+    else { return nil }
+    return data.base64EncodedString()
+  }
+
+  private static func decodeToken(_ base64: String?) -> CKServerChangeToken? {
+    guard let base64 = base64, let data = Data(base64Encoded: base64) else { return nil }
+    return try? NSKeyedUnarchiver.unarchivedObject(
+      ofClass: CKServerChangeToken.self, from: data)
   }
 
   // JS values arrive bridged as NSString / NSNumber (or Swift natives); map them

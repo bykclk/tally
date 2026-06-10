@@ -25,6 +25,7 @@ import {
   type ICloudAccountStatus,
 } from '@/lib/sync/icloud';
 import { pushPendingChanges } from '@/lib/sync/push';
+import { applyRemoteChanges } from '@/lib/sync/apply';
 import { showToast } from '@/stores/toast';
 import type { Currency, LocaleMode, ThemeMode } from '@/types';
 import type { TranslationKey } from '@/lib/i18n';
@@ -37,6 +38,7 @@ export default function SettingsScreen() {
   const [canSeed, setCanSeed] = useState(false);
   const [icloud, setIcloud] = useState<ICloudAccountStatus | null>(null);
   const [pushing, setPushing] = useState(false);
+  const [pulling, setPulling] = useState(false);
 
   const handlePush = async () => {
     if (pushing) return;
@@ -51,6 +53,22 @@ export default function SettingsScreen() {
       console.error('iCloud push failed', e);
     } finally {
       setPushing(false);
+    }
+  };
+
+  const handlePull = async () => {
+    if (pulling) return;
+    setPulling(true);
+    try {
+      const r = await applyRemoteChanges();
+      haptics.success();
+      showToast(t('settings.icloud.pullDone', { count: r.applied + r.deleted }));
+    } catch (e) {
+      haptics.warning();
+      showToast(t('settings.icloud.pullError'));
+      console.error('iCloud pull failed', e);
+    } finally {
+      setPulling(false);
     }
   };
 
@@ -380,6 +398,30 @@ export default function SettingsScreen() {
                 }}
               >
                 {pushing ? t('settings.icloud.pushing') : t('settings.icloud.push')}
+              </Text>
+            </Pressable>
+          )}
+          {icloud === 'available' && (
+            <Pressable
+              onPress={() => {
+                haptics.light();
+                void handlePull();
+              }}
+              disabled={pulling}
+              accessibilityRole="button"
+              style={({ pressed }) => ({
+                paddingVertical: theme.spacing(1),
+                opacity: pulling ? 0.4 : pressed ? 0.6 : 1,
+              })}
+            >
+              <Text
+                style={{
+                  color: theme.colors.accent,
+                  fontSize: theme.font.size.sm,
+                  fontWeight: theme.font.weight.semibold,
+                }}
+              >
+                {pulling ? t('settings.icloud.pulling') : t('settings.icloud.pull')}
               </Text>
             </Pressable>
           )}

@@ -278,6 +278,10 @@ export const en: Record<TranslationKey, string> = {
   'settings.icloud.pushing': 'Uploading…',
   'settings.icloud.pushDone': 'Uploaded {count} records to iCloud',
   'settings.icloud.pushError': 'Upload failed',
+  'settings.icloud.pull': 'Download now',
+  'settings.icloud.pulling': 'Downloading…',
+  'settings.icloud.pullDone': 'Applied {count} changes',
+  'settings.icloud.pullError': 'Download failed',
 
   'sample.salary': 'Salary',
   'sample.sideIncome': 'Side income',

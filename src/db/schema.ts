@@ -1,4 +1,4 @@
-export const CURRENT_USER_VERSION = 8;
+export const CURRENT_USER_VERSION = 9;
 
 // ── iCloud-sync groundwork (Phase 1, pure-local) ────────────────────────────
 // A change log the eventual sync engine reads to know what to push. SQLite
@@ -35,15 +35,29 @@ function syncTriggers({
        VALUES ('${table}', ${idExpr}, '${op}', ${NOW_MS})
        ON CONFLICT (table_name, record_id)
        DO UPDATE SET op = excluded.op, changed_at = excluded.changed_at;`;
+  // The WHEN guard skips recording while we're applying pulled remote changes
+  // (sync_meta.applying = 1), so an incoming change isn't re-queued for push.
+  const guard = `WHEN (SELECT applying FROM sync_meta) = 0`;
   return [
     `CREATE TRIGGER IF NOT EXISTS trg_sync_${table}_ai AFTER INSERT ON ${table}
+       ${guard}
        BEGIN ${mark(recordIdExpr('NEW', key), 'upsert')} END;`,
     `CREATE TRIGGER IF NOT EXISTS trg_sync_${table}_au AFTER UPDATE ON ${table}
+       ${guard}
        BEGIN ${mark(recordIdExpr('NEW', key), 'upsert')} END;`,
     `CREATE TRIGGER IF NOT EXISTS trg_sync_${table}_ad AFTER DELETE ON ${table}
+       ${guard}
        BEGIN ${mark(recordIdExpr('OLD', key), 'delete')} END;`,
   ];
 }
+
+// Drop the un-guarded Phase-1 triggers so the guarded ENSURE versions replace
+// them (CREATE TRIGGER IF NOT EXISTS won't overwrite an existing trigger).
+const DROP_SYNC_TRIGGERS: string[] = SYNCABLE_TABLES.flatMap(({ table }) => [
+  `DROP TRIGGER IF EXISTS trg_sync_${table}_ai;`,
+  `DROP TRIGGER IF EXISTS trg_sync_${table}_au;`,
+  `DROP TRIGGER IF EXISTS trg_sync_${table}_ad;`,
+]);
 
 const SYNC_SCHEMA: string[] = [
   `CREATE TABLE IF NOT EXISTS sync_pending (
@@ -53,6 +67,10 @@ const SYNC_SCHEMA: string[] = [
     changed_at INTEGER NOT NULL,
     PRIMARY KEY (table_name, record_id)
   );`,
+  // Single-row flag the triggers read; set to 1 while applying remote pulls.
+  `CREATE TABLE IF NOT EXISTS sync_meta (applying INTEGER NOT NULL DEFAULT 0);`,
+  `INSERT INTO sync_meta (applying)
+     SELECT 0 WHERE NOT EXISTS (SELECT 1 FROM sync_meta);`,
   ...SYNCABLE_TABLES.flatMap(syncTriggers),
 ];
 
@@ -156,4 +174,7 @@ export const MIGRATIONS: Record<number, string[]> = {
     `ALTER TABLE entries ADD COLUMN one_time_month INTEGER;`,
   ],
   8: SYNC_SCHEMA,
+  // Replace the un-guarded triggers; ENSURE_SCHEMA recreates the guarded ones
+  // and creates sync_meta right after the migration loop.
+  9: DROP_SYNC_TRIGGERS,
 };
