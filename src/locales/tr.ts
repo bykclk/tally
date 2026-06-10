@@ -265,6 +265,10 @@ export const tr = {
   'settings.icloud.status.temporarilyUnavailable': 'Geçici olarak yok',
   'settings.icloud.status.unknown': 'Bilinmiyor',
   'settings.icloud.status.unavailable': 'Bu sürümde yok',
+  'settings.icloud.push': 'Şimdi yükle',
+  'settings.icloud.pushing': 'Yükleniyor…',
+  'settings.icloud.pushDone': '{count} kayıt buluta yüklendi',
+  'settings.icloud.pushError': 'Yükleme başarısız',
 
   'sample.salary': 'Maaş',
   'sample.sideIncome': 'Ek gelir',

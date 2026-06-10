@@ -274,6 +274,10 @@ export const en: Record<TranslationKey, string> = {
   'settings.icloud.status.temporarilyUnavailable': 'Temporarily unavailable',
   'settings.icloud.status.unknown': 'Unknown',
   'settings.icloud.status.unavailable': 'Not in this build',
+  'settings.icloud.push': 'Upload now',
+  'settings.icloud.pushing': 'Uploading…',
+  'settings.icloud.pushDone': 'Uploaded {count} records to iCloud',
+  'settings.icloud.pushError': 'Upload failed',
 
   'sample.salary': 'Salary',
   'sample.sideIncome': 'Side income',

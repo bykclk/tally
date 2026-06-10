@@ -24,6 +24,8 @@ import {
   iCloudAccountStatus,
   type ICloudAccountStatus,
 } from '@/lib/sync/icloud';
+import { pushPendingChanges } from '@/lib/sync/push';
+import { showToast } from '@/stores/toast';
 import type { Currency, LocaleMode, ThemeMode } from '@/types';
 import type { TranslationKey } from '@/lib/i18n';
 
@@ -34,6 +36,23 @@ export default function SettingsScreen() {
 
   const [canSeed, setCanSeed] = useState(false);
   const [icloud, setIcloud] = useState<ICloudAccountStatus | null>(null);
+  const [pushing, setPushing] = useState(false);
+
+  const handlePush = async () => {
+    if (pushing) return;
+    setPushing(true);
+    try {
+      const r = await pushPendingChanges();
+      haptics.success();
+      showToast(t('settings.icloud.pushDone', { count: r.saved + r.deleted }));
+    } catch (e) {
+      haptics.warning();
+      showToast(t('settings.icloud.pushError'));
+      console.error('iCloud push failed', e);
+    } finally {
+      setPushing(false);
+    }
+  };
 
   useFocusEffect(
     useCallback(() => {
@@ -340,6 +359,30 @@ export default function SettingsScreen() {
               {t('settings.icloud.check')}
             </Text>
           </Pressable>
+          {icloud === 'available' && (
+            <Pressable
+              onPress={() => {
+                haptics.light();
+                void handlePush();
+              }}
+              disabled={pushing}
+              accessibilityRole="button"
+              style={({ pressed }) => ({
+                paddingVertical: theme.spacing(1),
+                opacity: pushing ? 0.4 : pressed ? 0.6 : 1,
+              })}
+            >
+              <Text
+                style={{
+                  color: theme.colors.accent,
+                  fontSize: theme.font.size.sm,
+                  fontWeight: theme.font.weight.semibold,
+                }}
+              >
+                {pushing ? t('settings.icloud.pushing') : t('settings.icloud.push')}
+              </Text>
+            </Pressable>
+          )}
         </Section>
 
         <Pressable

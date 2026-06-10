@@ -11,8 +11,17 @@ export type ICloudAccountStatus =
   | 'unknown'
   | 'unavailable';
 
+export type CloudRecord = {
+  recordType: string;
+  recordName: string;
+  fields: Record<string, unknown>;
+};
+
+export type PushResult = { saved: number; deleted: number };
+
 type CloudSyncNative = {
   accountStatus(): Promise<ICloudAccountStatus>;
+  push(upserts: CloudRecord[], deletes: string[]): Promise<PushResult>;
 };
 
 // Optional so the app never crashes when the native module is missing — it just
@@ -29,4 +38,13 @@ export async function iCloudAccountStatus(): Promise<ICloudAccountStatus> {
   } catch {
     return 'unknown';
   }
+}
+
+/** Upload records to / delete records from the private CloudKit zone. */
+export async function pushToCloud(
+  upserts: CloudRecord[],
+  deletes: string[],
+): Promise<PushResult> {
+  if (!CloudSync) throw new Error('CloudSync native module is unavailable');
+  return CloudSync.push(upserts, deletes);
 }
