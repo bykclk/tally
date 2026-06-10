@@ -1,5 +1,5 @@
 import { open, type DB } from '@op-engineering/op-sqlite';
-import { CURRENT_USER_VERSION, MIGRATIONS } from './schema';
+import { CURRENT_USER_VERSION, ENSURE_SCHEMA, MIGRATIONS } from './schema';
 
 const DB_NAME = 'tally.db';
 
@@ -11,6 +11,9 @@ export function getDb(): DB {
     dbInstance = open({ name: DB_NAME });
     dbInstance.execute('PRAGMA foreign_keys = ON;');
     dbInstance.execute('PRAGMA journal_mode = WAL;');
+    // So that ON DELETE CASCADE also fires the child tables' sync triggers
+    // (otherwise cascade-deleted rows wouldn't leave a delete tombstone).
+    dbInstance.execute('PRAGMA recursive_triggers = ON;');
   }
   return dbInstance;
 }
@@ -39,6 +42,12 @@ export async function runMigrations(): Promise<void> {
       }
       await setUserVersion(db, next);
       current = next;
+    }
+    // Idempotent safety net: guarantees the sync schema exists even if the
+    // device's user_version is ahead of this code (see ENSURE_SCHEMA). No-op
+    // once migrations have already created it.
+    for (const sql of ENSURE_SCHEMA) {
+      await db.execute(sql);
     }
   })();
   return migrationsPromise;
