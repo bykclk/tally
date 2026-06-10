@@ -255,6 +255,17 @@ export const tr = {
   'settings.reset.confirmBody':
     'Tüm kayıtların, kredilerin ve bakiyelerin kalıcı olarak silinecek. Bu işlem geri alınamaz.',
 
+  'settings.icloud.title': 'iCloud (deneysel)',
+  'settings.icloud.statusLabel': 'Hesap durumu',
+  'settings.icloud.check': 'Yeniden kontrol et',
+  'settings.icloud.status.available': 'Bağlı',
+  'settings.icloud.status.noAccount': 'iCloud hesabı yok',
+  'settings.icloud.status.restricted': 'Kısıtlı',
+  'settings.icloud.status.couldNotDetermine': 'Belirlenemedi',
+  'settings.icloud.status.temporarilyUnavailable': 'Geçici olarak yok',
+  'settings.icloud.status.unknown': 'Bilinmiyor',
+  'settings.icloud.status.unavailable': 'Bu sürümde yok',
+
   'sample.salary': 'Maaş',
   'sample.sideIncome': 'Ek gelir',
   'sample.rent': 'Kira',

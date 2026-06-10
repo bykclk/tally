@@ -12,6 +12,15 @@
       "supportsTablet": false,
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
+      },
+      "entitlements": {
+        "com.apple.developer.icloud-container-identifiers": [
+          "iCloud.com.omertally.app"
+        ],
+        "com.apple.developer.icloud-services": ["CloudKit"],
+        "com.apple.developer.ubiquity-container-identifiers": [
+          "iCloud.com.omertally.app"
+        ]
       }
     },
     "android": {

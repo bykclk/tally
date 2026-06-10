@@ -264,6 +264,17 @@ export const en: Record<TranslationKey, string> = {
   'settings.reset.confirmBody':
     'All your entries, loans and balances will be permanently deleted. This cannot be undone.',
 
+  'settings.icloud.title': 'iCloud (experimental)',
+  'settings.icloud.statusLabel': 'Account status',
+  'settings.icloud.check': 'Re-check',
+  'settings.icloud.status.available': 'Signed in',
+  'settings.icloud.status.noAccount': 'No iCloud account',
+  'settings.icloud.status.restricted': 'Restricted',
+  'settings.icloud.status.couldNotDetermine': 'Could not determine',
+  'settings.icloud.status.temporarilyUnavailable': 'Temporarily unavailable',
+  'settings.icloud.status.unknown': 'Unknown',
+  'settings.icloud.status.unavailable': 'Not in this build',
+
   'sample.salary': 'Salary',
   'sample.sideIncome': 'Side income',
   'sample.rent': 'Rent',

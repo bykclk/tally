@@ -20,7 +20,12 @@ import {
 import { isDataEmpty, seedSampleData } from '@/lib/sampleData';
 import { resetAllData } from '@/db/queries/reset';
 import { haptics } from '@/lib/haptics';
+import {
+  iCloudAccountStatus,
+  type ICloudAccountStatus,
+} from '@/lib/sync/icloud';
 import type { Currency, LocaleMode, ThemeMode } from '@/types';
+import type { TranslationKey } from '@/lib/i18n';
 
 export default function SettingsScreen() {
   const theme = useTheme();
@@ -28,12 +33,16 @@ export default function SettingsScreen() {
   const router = useRouter();
 
   const [canSeed, setCanSeed] = useState(false);
+  const [icloud, setIcloud] = useState<ICloudAccountStatus | null>(null);
 
   useFocusEffect(
     useCallback(() => {
       let cancelled = false;
       isDataEmpty().then((empty) => {
         if (!cancelled) setCanSeed(empty);
+      });
+      iCloudAccountStatus().then((s) => {
+        if (!cancelled) setIcloud(s);
       });
       return () => {
         cancelled = true;
@@ -287,6 +296,52 @@ export default function SettingsScreen() {
           )}
         </Section>
 
+        <Section title={t('settings.icloud.title')} theme={theme}>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
+            <Text
+              style={{ color: theme.colors.textMuted, fontSize: theme.font.size.sm }}
+            >
+              {t('settings.icloud.statusLabel')}
+            </Text>
+            <Text
+              style={{
+                color: theme.colors.text,
+                fontSize: theme.font.size.sm,
+                fontWeight: theme.font.weight.medium,
+              }}
+            >
+              {icloud ? t(icloudStatusKey(icloud)) : '…'}
+            </Text>
+          </View>
+          <Pressable
+            onPress={() => {
+              haptics.light();
+              iCloudAccountStatus().then(setIcloud);
+            }}
+            accessibilityRole="button"
+            style={({ pressed }) => ({
+              paddingVertical: theme.spacing(1),
+              opacity: pressed ? 0.6 : 1,
+            })}
+          >
+            <Text
+              style={{
+                color: theme.colors.accent,
+                fontSize: theme.font.size.sm,
+                fontWeight: theme.font.weight.semibold,
+              }}
+            >
+              {t('settings.icloud.check')}
+            </Text>
+          </Pressable>
+        </Section>
+
         <Pressable
           onPress={() => router.push('/about')}
           accessibilityRole="button"
@@ -314,6 +369,10 @@ export default function SettingsScreen() {
       </ScrollView>
     </View>
   );
+}
+
+function icloudStatusKey(status: ICloudAccountStatus): TranslationKey {
+  return `settings.icloud.status.${status}` as TranslationKey;
 }
 
 function Section({
