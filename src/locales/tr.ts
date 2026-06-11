@@ -273,6 +273,11 @@ export const tr = {
   'settings.icloud.pulling': 'İndiriliyor…',
   'settings.icloud.pullDone': '{count} değişiklik indirildi',
   'settings.icloud.pullError': 'İndirme başarısız',
+  'settings.icloud.sync': 'Şimdi senkronla',
+  'settings.icloud.syncing': 'Senkronlanıyor…',
+  'settings.icloud.syncDone': 'Senkron tamamlandı',
+  'settings.icloud.syncError': 'Senkron yapılamadı',
+  'settings.icloud.lastSync': 'Son senkron',
 
   'sample.salary': 'Maaş',
   'sample.sideIncome': 'Ek gelir',

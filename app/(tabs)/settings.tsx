@@ -26,6 +26,7 @@ import {
 } from '@/lib/sync/icloud';
 import { pushPendingChanges } from '@/lib/sync/push';
 import { applyRemoteChanges } from '@/lib/sync/apply';
+import { syncNow, lastSyncAt } from '@/lib/sync/auto';
 import { showToast } from '@/stores/toast';
 import type { Currency, LocaleMode, ThemeMode } from '@/types';
 import type { TranslationKey } from '@/lib/i18n';
@@ -39,6 +40,26 @@ export default function SettingsScreen() {
   const [icloud, setIcloud] = useState<ICloudAccountStatus | null>(null);
   const [pushing, setPushing] = useState(false);
   const [pulling, setPulling] = useState(false);
+  const [syncing, setSyncing] = useState(false);
+  const [lastSync, setLastSync] = useState<number | null>(null);
+
+  const handleSync = async () => {
+    if (syncing) return;
+    setSyncing(true);
+    try {
+      const ok = await syncNow();
+      if (ok) {
+        haptics.success();
+        showToast(t('settings.icloud.syncDone'));
+      } else {
+        haptics.warning();
+        showToast(t('settings.icloud.syncError'));
+      }
+      setLastSync(await lastSyncAt());
+    } finally {
+      setSyncing(false);
+    }
+  };
 
   const handlePush = async () => {
     if (pushing) return;
@@ -80,6 +101,9 @@ export default function SettingsScreen() {
       });
       iCloudAccountStatus().then((s) => {
         if (!cancelled) setIcloud(s);
+      });
+      lastSyncAt().then((ts) => {
+        if (!cancelled) setLastSync(ts);
       });
       return () => {
         cancelled = true;
@@ -356,6 +380,54 @@ export default function SettingsScreen() {
               {icloud ? t(icloudStatusKey(icloud)) : '…'}
             </Text>
           </View>
+          {lastSync !== null && (
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
+              <Text
+                style={{ color: theme.colors.textMuted, fontSize: theme.font.size.sm }}
+              >
+                {t('settings.icloud.lastSync')}
+              </Text>
+              <Text
+                style={{
+                  color: theme.colors.textMuted,
+                  fontSize: theme.font.size.sm,
+                  fontVariant: ['tabular-nums'],
+                }}
+              >
+                {new Date(lastSync).toLocaleString()}
+              </Text>
+            </View>
+          )}
+          {icloud === 'available' && (
+            <Pressable
+              onPress={() => {
+                haptics.light();
+                void handleSync();
+              }}
+              disabled={syncing}
+              accessibilityRole="button"
+              style={({ pressed }) => ({
+                paddingVertical: theme.spacing(1),
+                opacity: syncing ? 0.4 : pressed ? 0.6 : 1,
+              })}
+            >
+              <Text
+                style={{
+                  color: theme.colors.accent,
+                  fontSize: theme.font.size.sm,
+                  fontWeight: theme.font.weight.semibold,
+                }}
+              >
+                {syncing ? t('settings.icloud.syncing') : t('settings.icloud.sync')}
+              </Text>
+            </Pressable>
+          )}
           <Pressable
             onPress={() => {
               haptics.light();

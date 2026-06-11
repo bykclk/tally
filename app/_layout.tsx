@@ -17,6 +17,7 @@ import { useLocaleStore } from '@/stores/locale';
 import { useThemeModeStore } from '@/stores/themeMode';
 import { useNotificationStore } from '@/stores/notifications';
 import { initNotifications, rescheduleAll } from '@/lib/notifications';
+import { syncNow } from '@/lib/sync/auto';
 import { ErrorBoundary } from '@/ui/ErrorBoundary';
 import { Onboarding } from '@/ui/Onboarding';
 import { ToastHost } from '@/ui/ToastHost';
@@ -43,6 +44,7 @@ export default function RootLayout() {
         ]);
         setOnboardingDone((await getPref(ONBOARDING_KEY)) === '1');
         setDbReady(true);
+        void syncNow(); // fire-and-forget; quiet no-op when iCloud is absent
         await initNotifications();
         await rescheduleAll();
       } catch (e) {
@@ -58,7 +60,10 @@ export default function RootLayout() {
 
   useEffect(() => {
     const sub = AppState.addEventListener('change', (state) => {
-      if (state === 'active') void rescheduleAll();
+      if (state === 'active') {
+        void rescheduleAll();
+        void syncNow();
+      }
     });
     return () => sub.remove();
   }, []);

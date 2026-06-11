@@ -22,3 +22,13 @@ export const TABLE_BY_RECORD_TYPE = Object.fromEntries(
 /** Tables keyed by (year, month) instead of a UUID `id`; their record name is
  * `${year}-${month}`. */
 export const COMPOSITE_KEY_TABLES = new Set<SyncTable>(['monthly_balances']);
+
+/** Column used for last-writer-wins comparison. loan_payments rows are
+ * immutable (created/deleted, never updated), so created_at stands in. */
+export const TIMESTAMP_COLUMN: Record<SyncTable, string> = {
+  entries: 'updated_at',
+  instances: 'updated_at',
+  loans: 'updated_at',
+  loan_payments: 'created_at',
+  monthly_balances: 'updated_at',
+};

@@ -282,6 +282,11 @@ export const en: Record<TranslationKey, string> = {
   'settings.icloud.pulling': 'Downloading…',
   'settings.icloud.pullDone': 'Applied {count} changes',
   'settings.icloud.pullError': 'Download failed',
+  'settings.icloud.sync': 'Sync now',
+  'settings.icloud.syncing': 'Syncing…',
+  'settings.icloud.syncDone': 'Sync complete',
+  'settings.icloud.syncError': 'Sync failed',
+  'settings.icloud.lastSync': 'Last sync',
 
   'sample.salary': 'Salary',
   'sample.sideIncome': 'Side income',
